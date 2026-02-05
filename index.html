@@ -83,15 +83,28 @@
             justify-content: space-between;
             align-items: flex-start;
             padding: 15px 0;
-            height: 90px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
             height: 80px;
         }
+
+      .logo {
+    display: flex;
+    align-items: flex-start;
+    height: 70px;
+}
+        .logo > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 15px;
+}
+        .logo-text {
+    line-height: 1.1;
+    margin: 0;
+}
+
+.logo-subtext {
+    margin-top: 2px;
+}
 
         .logo img {
             height: 100%;
@@ -1178,13 +1191,6 @@
                 margin-left: 20px;
             }
         }
-        .logo {
-    height: 100px !important;
-}
-
-.logo img {
-    max-height: 100px !important;
-}
     </style>
 </head>
 <body>
