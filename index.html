@@ -68,7 +68,7 @@
             padding: 0 15px;
         }
 
-        /* Header & Navigation - GÜNCELLENDİ */
+        /* Header & Navigation */
         header {
             background-color: var(--gece-mavisi);
             position: sticky;
@@ -90,14 +90,21 @@
             display: flex;
             align-items: center;
             text-decoration: none;
-            height: 80px;
+            height: 100px;
         }
 
         .logo img {
-            height: 100%;
+            height: 80px;
             width: auto;
-            max-height: 80px;
             object-fit: contain;
+        }
+
+        .logo > div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: 15px;
+            height: 100%;
         }
 
         .logo-text {
@@ -105,14 +112,16 @@
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--beyaz);
-            margin-left: 15px;
+            line-height: 1;
+            margin: 0;
         }
 
         .logo-subtext {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--kum-beji);
-            display: block;
             font-weight: 400;
+            line-height: 1.2;
+            margin-top: 5px;
         }
 
         .menu-toggle {
@@ -212,7 +221,7 @@
             display: none;
         }
 
-        /* Hero Section - GÜNCELLENDİ */
+        /* Hero Section */
         .hero {
             background: linear-gradient(rgba(45, 84, 94, 0.85), rgba(18, 52, 59, 0.85)), url('https://www.domuzyagi.com/images/domuzyagi-banner.webp');
             background-size: cover;
@@ -414,7 +423,7 @@
             color: var(--beyaz);
         }
 
-        /* BUTONLARI MAVİ YAP - GÜNCELLENDİ */
+        /* BUTONLARI MAVİ YAP */
         .btn-call {
             background-color: var(--mavi);
             color: var(--beyaz);
@@ -556,7 +565,7 @@
             background-color: var(--beyaz);
             border-radius: var(--kose-yuvarlak);
             overflow: hidden;
-            box-shadow: var(--golge);
+            box-shadow: var(--golfe);
             transition: var(--gecis);
             border: 1px solid var(--acik-gri);
             height: 100%;
@@ -613,7 +622,7 @@
             color: var(--kum-beji);
         }
 
-        /* Google Reviews Section - YENİ EKLENDİ */
+        /* Google Reviews Section */
         .reviews-section {
             background-color: var(--gece-mavisi);
             padding: 60px 0;
@@ -768,7 +777,7 @@
             color: var(--kum-beji);
         }
 
-        /* Fixed Contact Buttons - GÜNCELLENDİ (MAVİ YAPILDI) */
+        /* Fixed Contact Buttons */
         .fixed-contact {
             position: fixed;
             bottom: 30px;
@@ -805,7 +814,7 @@
             background-color: var(--yesil);
         }
 
-        /* Footer - GÜNCELLENDİ */
+        /* Footer */
         footer {
             background-color: var(--gece-mavisi-golge);
             color: var(--beyaz);
@@ -886,7 +895,7 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        /* Responsive Design - Masaüstü Uyumlu */
+        /* Responsive Design */
         @media (max-width: 1200px) {
             .container {
                 padding: 0 30px;
@@ -916,7 +925,7 @@
         }
 
         @media (max-width: 768px) {
-            /* Mobil Menü - GÜNCELLENDİ */
+            /* Mobil Menü */
             .menu-toggle {
                 display: block;
             }
@@ -975,11 +984,19 @@
             }
             
             .logo {
-                height: 60px;
+                height: 70px;
             }
             
             .logo img {
-                max-height: 60px;
+                height: 60px;
+            }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
+            
+            .logo-subtext {
+                font-size: 0.75rem;
             }
             
             /* Hero Section */
@@ -1112,11 +1129,11 @@
             
             /* Logo */
             .logo-text {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
             }
             
-            .logo img {
-                max-height: 50px;
+            .logo-subtext {
+                font-size: 0.7rem;
             }
             
             .review-card {
@@ -1143,11 +1160,11 @@
             }
             
             .logo-text {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
             }
             
             .logo-subtext {
-                font-size: 0.7rem;
+                font-size: 0.65rem;
             }
             
             .reviews-section .section-title h2 {
@@ -1173,13 +1190,6 @@
                 margin-left: 20px;
             }
         }
-        .logo {
-    height: 100px !important;
-}
-
-.logo img {
-    max-height: 100px !important;
-}
     </style>
 </head>
 <body>
@@ -1564,7 +1574,7 @@
         </div>
     </section>
 
-    <!-- Google Reviews Section - YENİ EKLENDİ -->
+    <!-- Google Reviews Section -->
     <section class="reviews-section">
         <div class="container">
             <div class="section-title">
@@ -1733,7 +1743,6 @@
                         <li><a href="#home">Ana Sayfa</a></li>
                         <li><a href="#products">Ürünler</a></li>
                         <li><a href="#faq">SSS</a></li>
-                        <!-- Faydaları ve Nerede Satılır? butonları kaldırıldı -->
                         <li><a href="#contact">İletişim</a></li>
                     </ul>
                 </div>
