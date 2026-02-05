@@ -91,12 +91,6 @@
     align-items: flex-start;
     height: 70px;
 }
-        .logo > div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-left: 15px;
-}
         .logo-text {
     line-height: 1.1;
     margin: 0;
@@ -183,7 +177,9 @@
             background-color: var(--kum-beji);
             transition: var(--gecis);
         }
-
+.logo::after {
+    display: none !important;
+}
         .nav-menu a:hover::after {
             width: 100%;
         }
