@@ -68,34 +68,33 @@
             padding: 0 15px;
         }
 
-        /* Header & Navigation - LOGO %50 BÜYÜTÜLDÜ ve HEADER %40 AZALTILDI */
+        /* Header & Navigation - LOGO %50 BÜYÜTÜLDÜ */
         header {
             background-color: var(--gece-mavisi);
             position: sticky;
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            padding: 0; /* Padding azaltıldı */
+            padding: 10px 0;
         }
 
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0; /* Padding azaltıldı */
-            height: 81px; /* %40 azaltıldı: 135px × 0.6 = 81px */
+            padding: 15px 0;
+            height: 135px; /* %50 büyütüldü: 90px × 1.5 = 135px */
         }
 
         .logo {
             display: flex;
             align-items: center;
             text-decoration: none;
-            height: 120px; /* %50 büyütülmüş hali korundu */
-            margin-left: -20px; /* Logo ve başlık sola kaydırıldı */
+            height: 120px; /* %50 büyütüldü: 80px × 1.5 = 120px */
         }
 
         .logo img {
-            height: 120px; /* %50 büyütülmüş hali korundu */
+            height: 120px; /* %50 büyütüldü: 80px × 1.5 = 120px */
             width: auto;
             object-fit: contain;
         }
@@ -104,13 +103,15 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-left: 15px; /* Boşluk azaltıldı */
+            margin-left: 20px;
             height: 100%;
+            /* SOLA KAYDIRMA İÇİN EKLENDİ */
+            padding-left: 20px;
         }
 
         .logo-text {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.7rem; /* %50 büyütülmüş hali korundu */
+            font-size: 2.7rem; /* %50 büyütüldü: 1.8rem × 1.5 = 2.7rem */
             font-weight: 700;
             color: var(--beyaz);
             line-height: 1;
@@ -118,11 +119,11 @@
         }
 
         .logo-subtext {
-            font-size: 1.35rem; /* %50 büyütülmüş hali korundu */
+            font-size: 1.35rem; /* %50 büyütüldü: 0.9rem × 1.5 = 1.35rem */
             color: var(--kum-beji);
             font-weight: 400;
             line-height: 1.2;
-            margin-top: 5px; /* Margin azaltıldı */
+            margin-top: 8px;
         }
 
         .menu-toggle {
@@ -896,7 +897,7 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        /* Responsive Design - LOGO %50 BÜYÜTÜLMÜŞ HALİ İÇİN MOBİL AYARLARI ve HEADER %40 KÜÇÜLTÜLMÜŞ HALİ */
+        /* Responsive Design - LOGO %50 BÜYÜTÜLMÜŞ HALİ İÇİN MOBİL AYARLARI */
         @media (max-width: 1200px) {
             .container {
                 padding: 0 30px;
@@ -933,10 +934,10 @@
             
             .nav-menu {
                 position: fixed;
-                top: 81px; /* Header yüksekliği azaltıldığı için bu da azaldı */
+                top: 135px; /* Header yüksekliği arttığı için bu da arttı */
                 left: -100%;
                 width: 100%;
-                height: calc(100vh - 81px); /* Header yüksekliği azaltıldığı için bu da azaldı */
+                height: calc(100vh - 135px); /* Header yüksekliği arttığı için bu da arttı */
                 background-color: var(--gece-mavisi);
                 flex-direction: column;
                 align-items: center;
@@ -981,25 +982,23 @@
             
             /* Header düzenlemesi - MOBİLDE LOGO BİRAZ KÜÇÜLTÜLDÜ */
             .header-container {
-                height: 60px; /* Mobilde %40 azaltılmış hali korunsun */
+                height: 100px; /* Mobilde biraz daha küçük */
             }
             
             .logo {
-                height: 54px; /* Mobilde biraz daha küçük */
-                margin-left: -10px; /* Mobilde daha az kaydır */
+                height: 90px; /* Mobilde biraz daha küçük */
             }
             
             .logo img {
-                height: 54px; /* Mobilde biraz daha küçük */
+                height: 90px; /* Mobilde biraz daha küçük */
             }
             
             .logo-text {
-                font-size: 1.2rem; /* Mobilde daha küçük */
+                font-size: 2rem; /* Mobilde biraz daha küçük */
             }
             
             .logo-subtext {
-                font-size: 0.6rem; /* Mobilde daha küçük */
-                margin-top: 2px;
+                font-size: 1rem; /* Mobilde biraz daha küçük */
             }
             
             /* Hero Section */
@@ -1132,23 +1131,23 @@
             
             /* Logo - KÜÇÜK EKRANLARDA DAHA KÜÇÜK */
             .header-container {
-                height: 54px; /* Küçük ekranlarda daha küçük */
+                height: 90px; /* Küçük ekranlarda daha küçük */
             }
             
             .logo {
-                height: 48px; /* Küçük ekranlarda daha küçük */
+                height: 80px; /* Küçük ekranlarda daha küçük */
             }
             
             .logo img {
-                height: 48px; /* Küçük ekranlarda daha küçük */
+                height: 80px; /* Küçük ekranlarda daha küçük */
             }
             
             .logo-text {
-                font-size: 0.9rem; /* Küçük ekranlarda daha küçük */
+                font-size: 1.5rem; /* Küçük ekranlarda daha küçük */
             }
             
             .logo-subtext {
-                font-size: 0.45rem; /* Küçük ekranlarda daha küçük */
+                font-size: 0.75rem; /* Küçük ekranlarda daha küçük */
             }
             
             .review-card {
@@ -1157,8 +1156,8 @@
             
             /* Mobil menü yüksekliği güncellemesi */
             .nav-menu {
-                top: 54px; /* Küçük ekranlarda header yüksekliği 54px */
-                height: calc(100vh - 54px);
+                top: 90px; /* Küçük ekranlarda header yüksekliği 90px */
+                height: calc(100vh - 90px);
             }
         }
 
@@ -1181,11 +1180,11 @@
             }
             
             .logo-text {
-                font-size: 0.8rem; /* Çok küçük ekranlarda daha da küçük */
+                font-size: 1.3rem; /* Çok küçük ekranlarda daha da küçük */
             }
             
             .logo-subtext {
-                font-size: 0.4rem; /* Çok küçük ekranlarda daha da küçük */
+                font-size: 0.65rem; /* Çok küçük ekranlarda daha da küçük */
             }
             
             .reviews-section .section-title h2 {
