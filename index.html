@@ -103,9 +103,8 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-left: 20px;
+            margin-left: 10px; /* SAĞA YAKINLAŞTIRMAK İÇİN 20px'den 10px'e düşürüldü */
             height: 100%;
-            margin-left: 40px;
         }
 
         .logo-text {
@@ -1000,6 +999,11 @@
                 font-size: 1rem; /* Mobilde biraz daha küçük */
             }
             
+            /* Mobilde logo metni daha da yakın yapalım */
+            .logo > div {
+                margin-left: 8px; /* Mobilde daha yakın */
+            }
+            
             /* Hero Section */
             .hero {
                 padding: 80px 0;
@@ -1149,6 +1153,11 @@
                 font-size: 0.75rem; /* Küçük ekranlarda daha küçük */
             }
             
+            /* Küçük ekranlarda logo metni daha da yakın */
+            .logo > div {
+                margin-left: 5px; /* Küçük ekranlarda daha yakın */
+            }
+            
             .review-card {
                 padding: 20px;
             }
@@ -1186,6 +1195,11 @@
                 font-size: 0.65rem; /* Çok küçük ekranlarda daha da küçük */
             }
             
+            /* Çok küçük ekranlarda logo metni daha da yakın */
+            .logo > div {
+                margin-left: 3px; /* Çok küçük ekranlarda daha da yakın */
+            }
+            
             .reviews-section .section-title h2 {
                 font-size: 1.6rem;
             }
@@ -1207,6 +1221,11 @@
             
             .nav-menu li {
                 margin-left: 20px;
+            }
+            
+            /* Tablet için logo metni biraz daha yakın */
+            .logo > div {
+                margin-left: 15px;
             }
         }
     </style>
