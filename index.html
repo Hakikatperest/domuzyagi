@@ -81,7 +81,7 @@
         .header-container {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             padding: 15px 0;
             height: 90px;
         }
@@ -114,6 +114,11 @@
             display: block;
             font-weight: 400;
         }
+        .logo > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
         .menu-toggle {
             display: none;
