@@ -22,6 +22,8 @@
             --koyu-gri: #333333;
             --yesil: #27ae60;
             --kirmizi: #e74c3c;
+            --mavi: #3498db;
+            --mavi-koyu: #2980b9;
             --gecis: all 0.3s ease;
             --golge: 0 5px 15px rgba(0, 0, 0, 0.08);
             --kose-yuvarlak: 10px;
@@ -31,6 +33,10 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -53,13 +59,14 @@
             padding: 0 15px;
         }
 
-        /* Header & Navigation */
+        /* Header & Navigation - GÜNCELLENDİ */
         header {
             background-color: var(--gece-mavisi);
             position: sticky;
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            padding: 10px 0; /* Header'ı büyütmek için padding eklendi */
         }
 
         .header-container {
@@ -67,18 +74,21 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
+            height: 90px; /* Header yüksekliği arttırıldı */
         }
 
         .logo {
             display: flex;
             align-items: center;
             text-decoration: none;
+            height: 70px; /* Logo yüksekliği arttırıldı */
         }
 
-        .logo-icon {
-            color: var(--kum-beji);
-            font-size: 2rem;
-            margin-right: 10px;
+        .logo img {
+            height: 100%;
+            width: auto;
+            max-height: 70px;
+            object-fit: contain;
         }
 
         .logo-text {
@@ -86,6 +96,7 @@
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--beyaz);
+            margin-left: 15px;
         }
 
         .logo-subtext {
@@ -102,6 +113,10 @@
             cursor: pointer;
             background: none;
             border: none;
+            position: absolute;
+            right: 20px; /* Sağa yakınlaştırıldı */
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         nav {
@@ -188,11 +203,12 @@
             display: none;
         }
 
-        /* Hero Section */
+        /* Hero Section - GÜNCELLENDİ */
         .hero {
-            background: linear-gradient(rgba(45, 84, 94, 0.9), rgba(18, 52, 59, 0.9)), url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background: linear-gradient(rgba(45, 84, 94, 0.85), rgba(18, 52, 59, 0.85)), url('https://www.domuzyagi.com/images/domuzyagi-banner.webp');
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             color: var(--beyaz);
             padding: 100px 0;
             text-align: center;
@@ -215,59 +231,20 @@
 
         .cta-button {
             display: inline-block;
-            background-color: var(--kum-beji);
-            color: var(--gece-mavisi);
+            background-color: var(--yesil);
+            color: var(--beyaz);
             padding: 14px 32px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
             transition: var(--gecis);
-            border: 2px solid var(--kum-beji);
+            border: 2px solid var(--yesil);
             font-size: 1.1rem;
         }
 
         .cta-button:hover {
             background-color: transparent;
-            color: var(--kum-beji);
-        }
-
-        /* Keyword Cloud */
-        .keyword-cloud {
-            background-color: var(--acik-gri);
-            padding: 30px 0;
-            margin-bottom: 60px;
-            text-align: center;
-        }
-
-        .keyword-cloud h3 {
-            margin-bottom: 20px;
-            color: var(--gece-mavisi);
-        }
-
-        .keywords {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .keyword {
-            background-color: var(--beyaz);
-            color: var(--gece-mavisi);
-            padding: 10px 20px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--gecis);
-            border: 2px solid var(--kum-beji);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .keyword:hover {
-            background-color: var(--kum-beji);
-            color: var(--beyaz);
+            color: var(--yesil);
             transform: translateY(-3px);
         }
 
@@ -428,13 +405,14 @@
             color: var(--beyaz);
         }
 
+        /* BUTONLARI MAVİ YAP - GÜNCELLENDİ */
         .btn-call {
-            background-color: var(--gece-mavisi);
+            background-color: var(--mavi);
             color: var(--beyaz);
         }
 
         .btn-call:hover {
-            background-color: var(--gece-mavisi-golge);
+            background-color: var(--mavi-koyu);
             color: var(--beyaz);
         }
 
@@ -489,10 +467,73 @@
             margin-bottom: 10px;
         }
 
+        /* FAQ Section */
+        .faq-section {
+            padding: 80px 0;
+            background-color: var(--beyaz);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            border-radius: var(--kose-yuvarlak);
+            overflow: hidden;
+            box-shadow: var(--golge);
+            border: 1px solid var(--acik-gri);
+        }
+
+        .faq-question {
+            background-color: var(--gece-mavisi);
+            color: var(--beyaz);
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--gecis);
+        }
+
+        .faq-question:hover {
+            background-color: var(--gece-mavisi-golge);
+        }
+
+        .faq-question h3 {
+            font-size: 1.2rem;
+            color: var(--beyaz);
+            margin: 0;
+        }
+
+        .faq-toggle {
+            font-size: 1.2rem;
+            transition: var(--gecis);
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background-color: var(--beyaz);
+        }
+
+        .faq-answer.active {
+            padding: 20px;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            margin-bottom: 0;
+            color: var(--koyu-gri);
+        }
+
         /* Articles Section */
         .articles-section {
             padding: 60px 0;
-            background-color: var(--beyaz);
+            background-color: var(--acik-gri);
         }
 
         .articles-grid {
@@ -563,12 +604,52 @@
             color: var(--kum-beji);
         }
 
+        /* Keyword Cloud (Footer üzerinde) */
+        .keyword-cloud {
+            background-color: var(--gece-mavisi);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .keyword-cloud h3 {
+            margin-bottom: 25px;
+            color: var(--beyaz);
+            font-size: 1.8rem;
+        }
+
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .keyword {
+            background-color: var(--kum-beji);
+            color: var(--gece-mavisi);
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--gecis);
+            border: 2px solid var(--kum-beji);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .keyword:hover {
+            background-color: transparent;
+            color: var(--kum-beji);
+            transform: translateY(-3px);
+        }
+
         /* Contact Info */
         .contact-info-section {
-            background-color: var(--gece-mavisi);
+            background-color: var(--gece-mavisi-golge);
             color: var(--beyaz);
             padding: 60px 0;
-            margin-bottom: 60px;
+            margin-bottom: 0;
         }
 
         .contact-container {
@@ -612,7 +693,7 @@
             color: var(--kum-beji);
         }
 
-        /* Fixed Contact Buttons */
+        /* Fixed Contact Buttons - GÜNCELLENDİ (MAVİ YAPILDI) */
         .fixed-contact {
             position: fixed;
             bottom: 30px;
@@ -642,7 +723,7 @@
         }
 
         .fixed-call {
-            background-color: var(--gece-mavisi);
+            background-color: var(--mavi);
         }
 
         .fixed-whatsapp {
@@ -673,9 +754,9 @@
             color: var(--beyaz);
         }
 
-        .footer-logo-icon {
-            color: var(--kum-beji);
-            font-size: 1.8rem;
+        .footer-logo img {
+            height: 50px;
+            width: auto;
             margin-right: 10px;
         }
 
@@ -730,7 +811,13 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        /* Responsive Design */
+        /* Responsive Design - Masaüstü Uyumlu */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 30px;
+            }
+        }
+
         @media (max-width: 992px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -739,25 +826,35 @@
             .section-title h2 {
                 font-size: 2rem;
             }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .articles-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
         }
 
         @media (max-width: 768px) {
+            /* Mobil Menü */
             .menu-toggle {
                 display: block;
             }
             
             .nav-menu {
                 position: fixed;
-                top: 80px;
+                top: 90px; /* Header yüksekliğine göre ayarlandı */
                 left: -100%;
                 width: 100%;
-                height: calc(100vh - 80px);
+                height: calc(100vh - 90px);
                 background-color: var(--gece-mavisi);
                 flex-direction: column;
                 align-items: center;
                 padding-top: 40px;
                 transition: var(--gecis);
                 z-index: 999;
+                overflow-y: auto;
             }
             
             .nav-menu.active {
@@ -766,6 +863,8 @@
             
             .nav-menu li {
                 margin: 15px 0;
+                width: 80%;
+                text-align: center;
             }
             
             .dropdown {
@@ -778,12 +877,27 @@
                 background-color: var(--gece-mavisi-golge);
                 margin-top: 10px;
                 border-radius: 8px;
+                width: 100%;
             }
             
             .nav-menu li:hover .dropdown {
                 display: block;
             }
             
+            /* Header düzenlemesi */
+            .header-container {
+                height: 80px; /* Mobilde biraz daha küçük */
+            }
+            
+            .logo {
+                height: 60px;
+            }
+            
+            .logo img {
+                max-height: 60px;
+            }
+            
+            /* Hero Section */
             .hero {
                 padding: 80px 0;
             }
@@ -792,10 +906,18 @@
                 font-size: 2rem;
             }
             
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            .hero p {
+                font-size: 1.1rem;
+                padding: 0 15px;
             }
             
+            /* Products Grid */
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            /* Fixed Buttons */
             .fixed-contact {
                 bottom: 20px;
                 right: 20px;
@@ -807,23 +929,62 @@
                 font-size: 1.3rem;
             }
             
+            /* Buttons */
             .btn {
                 padding: 10px 15px;
                 font-size: 0.9rem;
             }
             
+            /* Articles Grid */
             .articles-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            /* Info Section */
+            .info-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            /* Keyword Cloud */
+            .keywords {
+                gap: 10px;
+                padding: 0 10px;
+            }
+            
+            .keyword {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            /* Contact Container */
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
             }
         }
 
         @media (max-width: 576px) {
-            .products-grid {
-                grid-template-columns: 1fr;
+            /* Küçük Ekranlar */
+            .container {
+                padding: 0 15px;
             }
             
             .hero {
                 padding: 60px 0;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                padding: 12px 25px;
+                font-size: 1rem;
             }
             
             .product-actions {
@@ -839,12 +1000,75 @@
             }
             
             .keywords {
-                gap: 10px;
+                gap: 8px;
             }
             
             .keyword {
-                padding: 8px 15px;
-                font-size: 0.9rem;
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .faq-question {
+                padding: 15px;
+            }
+            
+            .faq-question h3 {
+                font-size: 1.1rem;
+            }
+            
+            /* Logo */
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .logo img {
+                max-height: 50px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            /* Çok küçük ekranlar */
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            
+            .product-info h3 {
+                font-size: 1.3rem;
+            }
+            
+            .price {
+                font-size: 1.6rem;
+            }
+            
+            .keyword-cloud h3 {
+                font-size: 1.5rem;
+            }
+            
+            .logo-text {
+                font-size: 1.3rem;
+            }
+            
+            .logo-subtext {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Tablet için özel ayarlar */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .articles-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .nav-menu li {
+                margin-left: 20px;
             }
         }
     </style>
@@ -854,7 +1078,7 @@
     <header>
         <div class="container header-container">
             <a href="#" class="logo">
-                <i class="fas fa-leaf logo-icon"></i>
+                <img src="https://www.domuzyagi.com/images/domuzyagi-logo.png" alt="Doğal Domuz Yağı Logo">
                 <div>
                     <span class="logo-text">Doğal Domuz Yağı</span>
                     <span class="logo-subtext">%100 Saf ve Doğal</span>
@@ -877,8 +1101,8 @@
                             <li><a href="https://www.domuzyagi.com/domuz-yaginin-hayvanlara-faydalari">Hayvanlara Faydaları</a></li>
                         </ul>
                     </li>
+                    <li><a href="#faq">SSS</a></li>
                     <li><a href="https://www.domuzyagi.com/domuz-yagi-fiyatlari">Domuz Yağı Fiyatları</a></li>
-                    <li><a href="https://www.domuzyagi.com/domuz-yagi-nerede-satilir">Nerede Satılır?</a></li>
                     <li><a href="#contact">İletişim</a></li>
                 </ul>
             </nav>
@@ -891,24 +1115,9 @@
             <h1>%100 Saf ve Doğal Domuz Yağı Ürünleri</h1>
             <p><strong>Domuz yağı ne işe yarar?</strong> Cilt bakımı, yanık tedavisi ve hayvan sağlığı için etkili çözümler. Doğal içerik, uygun fiyat, hızlı kargo! Domuz yağı satın almak için doğru adrestesiniz.</p>
             <p>Domuz yağı faydaları saymakla bitmez: cilt yanıkları, lazer sonrası tahrişler, yatak yaraları, sivilce izleri, hemoroid, ameliyat dikiş izleri, cilt kırışıklıkları, diz kireçlenmesi ve menisküs ağrıları için doğal bir bakım sunar.</p>
-            <a href="#products" class="cta-button">ÜRÜNLERİ İNCELE</a>
-        </div>
-    </section>
-
-    <!-- Keyword Cloud -->
-    <section class="keyword-cloud">
-        <div class="container">
-            <h3>Popüler Domuz Yağı Anahtar Kelimeleri</h3>
-            <div class="keywords">
-                <a href="https://www.domuzyagi.com/domuz-yagi-fiyatlari" class="keyword">domuz yağı fiyatları</a>
-                <a href="https://www.domuzyagi.com/domuz-yagi-nerede-satilir" class="keyword">domuz yağı nereden alınır</a>
-                <a href="https://www.domuzyagi.com/domuz-yaginin-faydalari" class="keyword">domuz yağı faydaları</a>
-                <a href="#products" class="keyword">domuz yağı kremi</a>
-                <a href="https://www.domuzyagi.com/domuz-yaginin-faydalari" class="keyword">domuz yağı ne işe yarar</a>
-                <a href="#testimonials" class="keyword">domuz yağı kremi kullananlar</a>
-                <a href="https://www.domuzyagi.com/domuz-yaginin-insanlara-faydalari" class="keyword">domuz yağı insanlara faydaları</a>
-                <a href="https://www.domuzyagi.com/domuz-yaginin-hayvanlara-faydalari" class="keyword">domuz yağı hayvanlara faydaları</a>
-            </div>
+            <a href="https://wa.me/905516412065?text=Doğal%20Domuz%20Yağı%20hakkında%20bilgi%20almak%20istiyorum" class="cta-button" target="_blank">
+                <i class="fab fa-whatsapp"></i> Whatsapp İletişim Hattı
+            </a>
         </div>
     </section>
 
@@ -1096,12 +1305,74 @@
         </section>
     </div>
 
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-title">
+                <h2>Sık Sorulan Sorular</h2>
+                <p>Domuz yağı hakkında en çok merak edilen sorular ve cevapları</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>1. Domuz yağı gıda olarak tüketilebilir mi?</h3>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>Hayır, kesinlikle gıda olarak tüketilmemelidir.</strong> Ürünlerimiz sadece harici kullanım (cilt üzerine uygulama) içindir. Domuz yağı kremi olarak bilinen ürünler tamamen cilt bakımı ve tedavi amaçlıdır.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>2. Domuz yağı ne kadar sürede etki gösterir?</h3>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Etki süresi kullanım amacına ve kişiden kişiye değişiklik gösterir. Yanık ve yara tedavisinde genellikle 3-7 gün içinde gözle görülür iyileşme başlar. Cilt kırışıklıkları ve izler için düzenli kullanımda 2-4 hafta sonra etkileri fark edilebilir. Diz ağrıları için masaj uygulandığında rahatlama hemen hissedilebilir.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>3. Domuz yağı alerjik reaksiyona neden olur mu?</h3>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>%100 saf domuz yağı genellikle alerjik reaksiyona neden olmaz çünkü katkı maddesi, parfüm veya koruyucu içermez. Ancak çok nadiren hassas ciltlerde reaksiyon görülebilir. İlk kullanımda küçük bir alanda test etmenizi öneririz. Alerjik bir reaksiyon fark ederseniz kullanımı durdurup doktorunuza danışın.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>4. Domuz yağı nasıl saklanmalıdır?</h3>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Domuz yağı serin ve kuru yerde saklanmalıdır. Direkt güneş ışığından uzak tutulmalıdır. Açıldıktan sonra buzdolabında muhafaza edilmesi önerilir. Uygun şartlarda saklandığında 1 yıl boyunca etkinliğini korur. Isıya dayanıklı özel ambalajlarımız sayesinde kargo sırasında bozulma riski minimumdur.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>5. Domuz yağı kremi kullananlar memnun mu?</h3>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Evet, domuz yağı kremi kullananların büyük çoğunluğu üründen memnun kalmaktadır. Özellikle yanık tedavisinde, ameliyat izlerinde ve cilt problemlerinde olumlu sonuçlar bildirilmektedir. Müşteri yorumlarımızı web sitemizde bulabilirsiniz. 15+ yıllık tecrübemiz ve binlerce müşterimizin memnuniyeti bizim en büyük referansımızdır.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Info Section -->
     <section class="info-section">
         <div class="container">
             <div class="info-content">
                 <div class="info-image">
-                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Doğal Domuz Yağı Kullanımı">
+                    <img src="https://www.domuzyagi.com/images/domuz-yagi1.webp" alt="Doğal Domuz Yağı Kullanımı">
                 </div>
                 <div class="info-text">
                     <h2>Domuz Yağı Ne İşe Yarar?</h2>
@@ -1137,7 +1408,7 @@
             <div class="articles-grid">
                 <div class="article-card">
                     <div class="article-image">
-                        <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Domuz Yağının Faydaları">
+                        <img src="https://www.domuzyagi.com/images/domuz-yagi1.webp" alt="Domuz Yağının Faydaları">
                     </div>
                     <div class="article-content">
                         <h3>Domuz Yağının Faydaları</h3>
@@ -1148,7 +1419,7 @@
                 
                 <div class="article-card">
                     <div class="article-image">
-                        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Domuz Yağının İnsanlara Faydaları">
+                        <img src="https://www.domuzyagi.com/images/domuz-yagi2.webp" alt="Domuz Yağının İnsanlara Faydaları">
                     </div>
                     <div class="article-content">
                         <h3>Domuz Yağının İnsanlara Faydaları</h3>
@@ -1159,7 +1430,7 @@
                 
                 <div class="article-card">
                     <div class="article-image">
-                        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Domuz Yağının Hayvanlara Faydaları">
+                        <img src="https://www.domuzyagi.com/images/domuz-yagi3.webp" alt="Domuz Yağının Hayvanlara Faydaları">
                     </div>
                     <div class="article-content">
                         <h3>Domuz Yağının Hayvanlara Faydaları</h3>
@@ -1167,6 +1438,34 @@
                         <a href="https://www.domuzyagi.com/domuz-yaginin-hayvanlara-faydalari" class="article-link">Devamını Oku <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
+
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://www.domuzyagi.com/images/domuz-yagi4.webp" alt="Domuz Yağı Kullanımı">
+                    </div>
+                    <div class="article-content">
+                        <h3>Domuz Yağı Nasıl Kullanılır?</h3>
+                        <p>Domuz yağının doğru kullanım yöntemleri, uygulama teknikleri ve maksimum fayda için ipuçları.</p>
+                        <a href="https://www.domuzyagi.com/domuz-yagi-nasil-kullanilir" class="article-link">Devamını Oku <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Keyword Cloud (Footer üzerinde) -->
+    <section class="keyword-cloud">
+        <div class="container">
+            <h3>Popüler Domuz Yağı Anahtar Kelimeleri</h3>
+            <div class="keywords">
+                <a href="https://www.domuzyagi.com/domuz-yagi-fiyatlari" class="keyword">domuz yağı fiyatları</a>
+                <a href="https://www.domuzyagi.com/domuz-yagi-nerede-satilir" class="keyword">domuz yağı nereden alınır</a>
+                <a href="https://www.domuzyagi.com/domuz-yaginin-faydalari" class="keyword">domuz yağı faydaları</a>
+                <a href="#products" class="keyword">domuz yağı kremi</a>
+                <a href="https://www.domuzyagi.com/domuz-yaginin-faydalari" class="keyword">domuz yağı ne işe yarar</a>
+                <a href="#faq" class="keyword">domuz yağı kremi kullananlar</a>
+                <a href="https://www.domuzyagi.com/domuz-yaginin-insanlara-faydalari" class="keyword">domuz yağı insanlara faydaları</a>
+                <a href="https://www.domuzyagi.com/domuz-yaginin-hayvanlara-faydalari" class="keyword">domuz yağı hayvanlara faydaları</a>
             </div>
         </div>
     </section>
@@ -1214,7 +1513,7 @@
             <div class="footer-content">
                 <div class="footer-about">
                     <div class="footer-logo">
-                        <i class="fas fa-leaf footer-logo-icon"></i>
+                        <img src="https://www.domuzyagi.com/images/domuzyagi-logo.png" alt="Doğal Domuz Yağı Logo">
                         <span>Doğal Domuz Yağı</span>
                     </div>
                     <p>%100 saf ve doğal domuz yağı ürünleri. Cilt bakımı, yanık tedavisi ve hayvan sağlığı için etkili çözümler.</p>
@@ -1226,6 +1525,7 @@
                         <li><a href="#home">Ana Sayfa</a></li>
                         <li><a href="#products">Ürünler</a></li>
                         <li><a href="https://www.domuzyagi.com/domuz-yaginin-faydalari">Faydaları</a></li>
+                        <li><a href="#faq">SSS</a></li>
                         <li><a href="https://www.domuzyagi.com/domuz-yagi-fiyatlari">Fiyatlar</a></li>
                         <li><a href="https://www.domuzyagi.com/domuz-yagi-nerede-satilir">Nerede Satılır?</a></li>
                         <li><a href="#contact">İletişim</a></li>
@@ -1280,9 +1580,9 @@
         
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            if(anchor.getAttribute('href').startsWith('http')) return;
+            
             anchor.addEventListener('click', function(e) {
-                if(this.getAttribute('href').startsWith('http')) return;
-                
                 e.preventDefault();
                 
                 const targetId = this.getAttribute('href');
@@ -1291,7 +1591,7 @@
                 const targetElement = document.querySelector(targetId);
                 if(targetElement) {
                     window.scrollTo({
-                        top: targetElement.offsetTop - 80,
+                        top: targetElement.offsetTop - 100, /* Header yüksekliği arttığı için offset de arttı */
                         behavior: 'smooth'
                     });
                 }
@@ -1305,26 +1605,55 @@
             'albumLabel': "Resim %1 / %2"
         });
         
-        // Add animation to product cards on scroll
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const toggle = question.querySelector('.faq-toggle i');
+                
+                // Toggle current answer
+                answer.classList.toggle('active');
+                
+                // Toggle icon
+                if(answer.classList.contains('active')) {
+                    toggle.classList.remove('fa-chevron-down');
+                    toggle.classList.add('fa-chevron-up');
+                } else {
+                    toggle.classList.remove('fa-chevron-up');
+                    toggle.classList.add('fa-chevron-down');
+                }
+                
+                // Close other answers
+                document.querySelectorAll('.faq-answer').forEach(otherAnswer => {
+                    if(otherAnswer !== answer) {
+                        otherAnswer.classList.remove('active');
+                        otherAnswer.previousElementSibling.querySelector('.faq-toggle i').classList.remove('fa-chevron-up');
+                        otherAnswer.previousElementSibling.querySelector('.faq-toggle i').classList.add('fa-chevron-down');
+                    }
+                });
+            });
+        });
+        
+        // Add animation to elements on scroll
         function animateOnScroll() {
-            const cards = document.querySelectorAll('.product-card, .article-card');
+            const elements = document.querySelectorAll('.product-card, .article-card, .faq-item');
             
-            cards.forEach(card => {
-                const cardTop = card.getBoundingClientRect().top;
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
                 const windowHeight = window.innerHeight;
                 
-                if(cardTop < windowHeight - 100) {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
+                if(elementTop < windowHeight - 100) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
                 }
             });
         }
         
         // Set initial state for animation
-        document.querySelectorAll('.product-card, .article-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        document.querySelectorAll('.product-card, .article-card, .faq-item').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         });
         
         // Run animation on load and scroll
