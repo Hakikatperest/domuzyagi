@@ -68,7 +68,7 @@
             padding: 0 15px;
         }
 
-        /* Header & Navigation */
+        /* Header & Navigation - LOGO %50 BÜYÜTÜLDÜ */
         header {
             background-color: var(--gece-mavisi);
             position: sticky;
@@ -83,18 +83,18 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
-            height: 90px;
+            height: 135px; /* %50 büyütüldü: 90px × 1.5 = 135px */
         }
 
         .logo {
             display: flex;
             align-items: center;
             text-decoration: none;
-            height: 100px;
+            height: 120px; /* %50 büyütüldü: 80px × 1.5 = 120px */
         }
 
         .logo img {
-            height: 80px;
+            height: 120px; /* %50 büyütüldü: 80px × 1.5 = 120px */
             width: auto;
             object-fit: contain;
         }
@@ -103,13 +103,13 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-left: 15px;
+            margin-left: 20px;
             height: 100%;
         }
 
         .logo-text {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.8rem;
+            font-size: 2.7rem; /* %50 büyütüldü: 1.8rem × 1.5 = 2.7rem */
             font-weight: 700;
             color: var(--beyaz);
             line-height: 1;
@@ -117,11 +117,11 @@
         }
 
         .logo-subtext {
-            font-size: 0.9rem;
+            font-size: 1.35rem; /* %50 büyütüldü: 0.9rem × 1.5 = 1.35rem */
             color: var(--kum-beji);
             font-weight: 400;
             line-height: 1.2;
-            margin-top: 5px;
+            margin-top: 8px;
         }
 
         .menu-toggle {
@@ -895,7 +895,7 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        /* Responsive Design */
+        /* Responsive Design - LOGO %50 BÜYÜTÜLMÜŞ HALİ İÇİN MOBİL AYARLARI */
         @media (max-width: 1200px) {
             .container {
                 padding: 0 30px;
@@ -932,10 +932,10 @@
             
             .nav-menu {
                 position: fixed;
-                top: 90px;
+                top: 135px; /* Header yüksekliği arttığı için bu da arttı */
                 left: -100%;
                 width: 100%;
-                height: calc(100vh - 90px);
+                height: calc(100vh - 135px); /* Header yüksekliği arttığı için bu da arttı */
                 background-color: var(--gece-mavisi);
                 flex-direction: column;
                 align-items: center;
@@ -978,25 +978,25 @@
                 display: none;
             }
             
-            /* Header düzenlemesi */
+            /* Header düzenlemesi - MOBİLDE LOGO BİRAZ KÜÇÜLTÜLDÜ */
             .header-container {
-                height: 80px;
+                height: 100px; /* Mobilde biraz daha küçük */
             }
             
             .logo {
-                height: 70px;
+                height: 90px; /* Mobilde biraz daha küçük */
             }
             
             .logo img {
-                height: 60px;
+                height: 90px; /* Mobilde biraz daha küçük */
             }
             
             .logo-text {
-                font-size: 1.4rem;
+                font-size: 2rem; /* Mobilde biraz daha küçük */
             }
             
             .logo-subtext {
-                font-size: 0.75rem;
+                font-size: 1rem; /* Mobilde biraz daha küçük */
             }
             
             /* Hero Section */
@@ -1127,17 +1127,35 @@
                 font-size: 1.1rem;
             }
             
-            /* Logo */
+            /* Logo - KÜÇÜK EKRANLARDA DAHA KÜÇÜK */
+            .header-container {
+                height: 90px; /* Küçük ekranlarda daha küçük */
+            }
+            
+            .logo {
+                height: 80px; /* Küçük ekranlarda daha küçük */
+            }
+            
+            .logo img {
+                height: 80px; /* Küçük ekranlarda daha küçük */
+            }
+            
             .logo-text {
-                font-size: 1.2rem;
+                font-size: 1.5rem; /* Küçük ekranlarda daha küçük */
             }
             
             .logo-subtext {
-                font-size: 0.7rem;
+                font-size: 0.75rem; /* Küçük ekranlarda daha küçük */
             }
             
             .review-card {
                 padding: 20px;
+            }
+            
+            /* Mobil menü yüksekliği güncellemesi */
+            .nav-menu {
+                top: 90px; /* Küçük ekranlarda header yüksekliği 90px */
+                height: calc(100vh - 90px);
             }
         }
 
@@ -1160,11 +1178,11 @@
             }
             
             .logo-text {
-                font-size: 1.1rem;
+                font-size: 1.3rem; /* Çok küçük ekranlarda daha da küçük */
             }
             
             .logo-subtext {
-                font-size: 0.65rem;
+                font-size: 0.65rem; /* Çok küçük ekranlarda daha da küçük */
             }
             
             .reviews-section .section-title h2 {
