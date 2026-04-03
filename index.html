@@ -263,7 +263,13 @@ nav ul li:hover .dropdown {
 .campaign-badge.teal { background: linear-gradient(135deg, var(--deep-teal), var(--mid-teal)); box-shadow:0 4px 12px rgba(26,58,63,0.4); }
 
 .campaign-img-wrap { height:190px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
-.campaign-img-wrap img { max-height:100%; max-width:100%; object-fit:contain; }
+.campaign-img-wrap a { display:flex; align-items:center; justify-content:center; width:100%; height:100%; }
+.campaign-img-wrap img {
+  max-height:100%; max-width:100%; object-fit:contain;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  cursor:zoom-in;
+}
+.campaign-img-wrap a:hover img { transform:scale(1.08); }
 
 .campaign-card h3 { font-size:1.35rem; color:var(--deep-teal); margin-bottom:12px; }
 
@@ -745,7 +751,9 @@ footer { background:var(--deep-teal); padding:60px 0 32px; }
       <div class="campaign-card fade-in">
         <div class="campaign-badge red">%20 İndirim</div>
         <div class="campaign-img-wrap">
-          <img src="http://www.domuzyagi.com/images/domuz-yagi01.webp" alt="50 Gr Domuz Yağı">
+          <a href="http://www.domuzyagi.com/images/domuz-yagi01.webp" data-lightbox="kampanya" data-title="50 Gr Domuz Yağı">
+            <img src="http://www.domuzyagi.com/images/domuz-yagi01.webp" alt="50 Gr Domuz Yağı">
+          </a>
         </div>
         <h3>50 Gr Domuz Yağı</h3>
         <div class="price-row">
@@ -760,7 +768,9 @@ footer { background:var(--deep-teal); padding:60px 0 32px; }
       <div class="campaign-card featured fade-in">
         <div class="campaign-badge">⭐ En Çok Satan</div>
         <div class="campaign-img-wrap">
-          <img src="http://www.domuzyagi.com/images/domuz-yagi-kampanya.webp" alt="115 Gr Domuz Yağı">
+          <a href="http://www.domuzyagi.com/images/domuz-yagi-kampanya.webp" data-lightbox="kampanya" data-title="115 Gr Domuz Yağı">
+            <img src="http://www.domuzyagi.com/images/domuz-yagi-kampanya.webp" alt="115 Gr Domuz Yağı">
+          </a>
         </div>
         <h3>115 Gr Domuz Yağı</h3>
         <div class="price-row">
@@ -775,7 +785,9 @@ footer { background:var(--deep-teal); padding:60px 0 32px; }
       <div class="campaign-card fade-in">
         <div class="campaign-badge teal">Fırsat</div>
         <div class="campaign-img-wrap">
-          <img src="http://www.domuzyagi.com/images/domuz-yagi12.webp" alt="575 Gr Domuz Yağı">
+          <a href="http://www.domuzyagi.com/images/domuz-yagi12.webp" data-lightbox="kampanya" data-title="575 Gr Domuz Yağı">
+            <img src="http://www.domuzyagi.com/images/domuz-yagi12.webp" alt="575 Gr Domuz Yağı">
+          </a>
         </div>
         <h3>575 Gr Domuz Yağı</h3>
         <div class="price-row">
