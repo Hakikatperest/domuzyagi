@@ -908,6 +908,65 @@
             font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.7);
         }
+        .campaign-section {
+  padding: 70px 0;
+  background: linear-gradient(135deg,#f5f5f5,#ffffff);
+}
+
+.campaign-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 30px;
+}
+
+.campaign-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: 0.3s;
+  position: relative;
+}
+
+.campaign-card:hover {
+  transform: translateY(-10px) scale(1.02);
+}
+
+.campaign-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+.campaign-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.campaign-card .price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #27ae60;
+}
+
+.campaign-badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: #e74c3c;
+  color: white;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.campaign-card.highlight {
+  border: 2px solid #27ae60;
+  transform: scale(1.05);
+}
 
         /* Responsive Design - LOGO %50 BÜYÜTÜLMÜŞ HALİ İÇİN MOBİL AYARLARI */
         @media (max-width: 1200px) {
@@ -1294,6 +1353,46 @@
         </div>
     </section>
 
+    <!-- Kampanyalı Ürünler -->
+<section class="campaign-section">
+  <div class="container">
+    
+    <div class="section-title">
+      <h2>🔥 Kampanyalı Fırsat Ürünlerimiz</h2>
+      <p>Sınırlı süreli özel fiyatlar!</p>
+    </div>
+
+    <div class="campaign-grid">
+
+      <!-- Ürün 1 -->
+      <div class="campaign-card">
+        <div class="campaign-badge">EN ÇOK SATAN</div>
+        <img src="http://www.domuzyagi.com/images/domuz-yagi01.webp" alt="Domuz Yağı 50gr">
+        <h3>Domuz Yağı 50 Gr</h3>
+        <div class="price">200₺</div>
+      </div>
+
+      <!-- Ürün 2 -->
+      <div class="campaign-card highlight">
+        <div class="campaign-badge">KAMPANYA</div>
+        <img src="http://www.domuzyagi.com/images/domuz-yagi-kampanya.webp" alt="Domuz Yağı 115gr">
+        <h3>Domuz Yağı 115 Gr</h3>
+        <div class="price">400₺</div>
+      </div>
+
+      <!-- Ürün 3 -->
+      <div class="campaign-card">
+        <div class="campaign-badge">FIRSAT</div>
+        <img src="http://www.domuzyagi.com/images/domuz-yagi12.webp" alt="Domuz Yağı 575gr">
+        <h3>Domuz Yağı 575 Gr</h3>
+        <div class="price">2000₺</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
     <!-- Products Section -->
     <div class="container">
         <section id="products">
@@ -1410,7 +1509,7 @@
                     <div class="product-image-container">
                         <div class="product-image">
                             <a href="https://www.domuzyagi.com/images/domuz-yagi-100gr.webp" data-lightbox="domuz-yagi-100gr" data-title="Domuz Yağı - 100gr">
-                                <img src="https://www.domuzyagi.com/images/domuz-yagi-100gr.webp" alt="Domuz Yağı 100 gram" class="main-image">
+                                <img src="https://www.domuzyagi.com/images/domuz-yagi-100gr.webp" alt="Domuz Yağı 115 gram" class="main-image">
                             </a>
                         </div>
                     </div>
