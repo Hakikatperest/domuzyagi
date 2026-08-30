@@ -14,9 +14,9 @@
     "ilce": "Osmangazi",
     "calisma_saati": "09:00 – 21:00",
     "para_birimi": "TRY",
-    "ucretsiz_kargo_esigi": 2500,
-    "kargo_ucreti": 200,
-    "_kargo_notu": "null = feed üretilmez. Kullanıcı tutarı verince sayı yazılacak (örn. 150).",
+    "ucretsiz_kargo_esigi": 0,
+    "kargo_ucreti": 0,
+    "_kargo_notu": "KARAR (2026-08-30): TÜM ürünlerde kargo ücretsiz. esik=0 + kargo=0 → üretici ve site.js 'her siparişte bedava' diline geçer. Kargo yeniden ücretli olacaksa: kargo_ucreti'ne tutar, ucretsiz_kargo_esigi'ne eşik yaz; eski eşik dili kendiliğinden geri gelir.",
     "kargo_servis": "Standart Kargo",
     "kargo_sure": "1-3 iş günü",
     "google_kategori_id": "6104",
@@ -37,12 +37,12 @@
       "adet": 1,
       "multipack": null,
       "olcu": "50 g",
-      "fiyat": 250,
+      "fiyat": 450,
       "gorsel": "urun-50gr.webp",
       "gorsel_en": 720,
       "gorsel_boy": 1091,
       "feed_baslik": "Doğal Domuz Yağı 50 gr — %100 Saf, Katkısız",
-      "feed_aciklama": "Doğal yöntemle eritilmiş %100 saf domuz yağı. 50 gram, ısıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Harici kullanım için üretilmiştir.",
+      "feed_aciklama": "Doğal yöntemle eritilmiş %100 saf domuz yağı. 50 gram, ısıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Kargo ücretsiz. Harici kullanım için üretilmiştir.",
       "ozet": "Küçük boy deneme paketi. Cilt bakımı ve küçük alanlar için ideal.",
       "ozellikler": [
         "%100 saf ve doğal",
@@ -51,7 +51,7 @@
       ],
       "rozet": null,
       "one_cikan": false,
-      "kargo_bedava": false
+      "kargo_bedava": true
     },
     {
       "id": "DY-115",
@@ -64,21 +64,48 @@
       "adet": 1,
       "multipack": null,
       "olcu": "115 g",
-      "fiyat": 500,
+      "fiyat": 700,
       "gorsel": "urun-115gr.webp",
       "gorsel_en": 720,
       "gorsel_boy": 1073,
       "feed_baslik": "Doğal Domuz Yağı 115 gr — %100 Saf, Katkısız",
-      "feed_aciklama": "Doğal yöntemle eritilmiş %100 saf domuz yağı. 115 gram, ısıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Harici kullanım için üretilmiştir.",
+      "feed_aciklama": "Doğal yöntemle eritilmiş %100 saf domuz yağı. 115 gram, ısıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Kargo ücretsiz. Harici kullanım için üretilmiştir.",
       "ozet": "Orta boy, en çok tercih edilen paket. Düzenli kullanım için uygun.",
       "ozellikler": [
         "%100 saf ve doğal",
-        "Gram başına daha ekonomik",
+        "En çok tercih edilen boy",
         "Isıya dayanıklı ambalaj"
       ],
       "rozet": "★ En Çok Satan",
-      "one_cikan": true,
-      "kargo_bedava": false
+      "one_cikan": false,
+      "kargo_bedava": true
+    },
+    {
+      "id": "DY-250",
+      "slug": "domuz-yagi-250-gr",
+      "ad": "Domuz Yağı",
+      "tam_ad": "Domuz Yağı 250 gr",
+      "kisa": "250 gr",
+      "gramaj_etiket": "250 gram",
+      "gram": 250,
+      "adet": 1,
+      "multipack": null,
+      "olcu": "250 g",
+      "fiyat": 1500,
+      "gorsel": "urun-250gr.webp",
+      "gorsel_en": 1000,
+      "gorsel_boy": 1000,
+      "feed_baslik": "Doğal Domuz Yağı 250 gr — %100 Saf, Katkısız",
+      "feed_aciklama": "Doğal yöntemle eritilmiş %100 saf domuz yağı. 250 gram, ısıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Kargo ücretsiz. Harici kullanım için üretilmiştir.",
+      "ozet": "Orta-büyük boy. 115 gramı bitirenler için bir üst kademe.",
+      "ozellikler": [
+        "%100 saf ve doğal",
+        "Katkı maddesi içermez",
+        "Isıya dayanıklı ambalaj"
+      ],
+      "rozet": null,
+      "one_cikan": false,
+      "kargo_bedava": true
     },
     {
       "id": "DY-5LI",
@@ -97,13 +124,40 @@
       "gorsel_boy": 576,
       "feed_baslik": "Doğal Domuz Yağı 5'li Paket — 5 x 115 gr, Toplam 575 gr",
       "feed_aciklama": "Doğal yöntemle eritilmiş %100 saf domuz yağı. 5 adet 115 gramlık paket, toplam 575 gram. Isıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Kargo ücretsiz. Harici kullanım için üretilmiştir.",
-      "ozet": "Aile boyu paket. Uzun süreli kullanım için ekonomik seçenek — kargo ücretini biz karşılıyoruz.",
+      "ozet": "Gram başına en uygun seçenek. 5 ayrı kavanoz, toplam 575 gram.",
+      "ozellikler": [
+        "Gram başına en uygun fiyat",
+        "5 ayrı kavanoz",
+        "%100 saf ve doğal"
+      ],
+      "rozet": "🔥 Kampanya",
+      "one_cikan": true,
+      "kargo_bedava": true
+    },
+    {
+      "id": "DY-1KG",
+      "slug": "domuz-yagi-1-kg",
+      "ad": "Domuz Yağı",
+      "tam_ad": "Domuz Yağı 1 kg",
+      "kisa": "1 kg",
+      "gramaj_etiket": "1 kilogram",
+      "gram": 1000,
+      "adet": 1,
+      "multipack": null,
+      "olcu": "1 kg",
+      "fiyat": 5000,
+      "gorsel": "urun-1kg.webp",
+      "gorsel_en": 720,
+      "gorsel_boy": 1073,
+      "feed_baslik": "Doğal Domuz Yağı 1 kg — %100 Saf, Katkısız",
+      "feed_aciklama": "Doğal yöntemle eritilmiş %100 saf domuz yağı. 1 kilogram, ısıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Kargo ücretsiz. Harici kullanım için üretilmiştir.",
+      "ozet": "En büyük boy. Düzenli ve uzun süreli kullananlar için tek kavanozda 1 kilogram.",
       "ozellikler": [
         "%100 saf ve doğal",
-        "Kargo ücretsiz",
-        "Uzun süreli kullanım"
+        "Tek kavanozda 1 kilogram",
+        "Isıya dayanıklı ambalaj"
       ],
-      "rozet": "Kargo Bizden",
+      "rozet": "En Büyük Boy",
       "one_cikan": false,
       "kargo_bedava": true
     }

@@ -8,6 +8,7 @@
 var CFG     = window.DY_CFG || {};
 var WA_NO   = CFG.whatsapp || '905516412065';
 var ESIK    = CFG.esik     || 2500;
+var HEPBEDAVA = CFG.hepbedava === true;   // eşiksiz ücretsiz kargo
 var KARGO   = (CFG.kargo === 0 || CFG.kargo) ? CFG.kargo : null;
 var URUNLER = CFG.urunler  || {};
 
@@ -112,7 +113,7 @@ var sonAra   = 0;
 
 function ozetiCiz(satirlar, ara){
   sonAra = ara;
-  var bedava = ara >= ESIK || satirlar.bedava === true;
+  var bedava = HEPBEDAVA || ara >= ESIK || satirlar.bedava === true;
 
   var el;
   if((el = $('.sum-ara')))    el.textContent = tl(ara);
@@ -125,12 +126,13 @@ function ozetiCiz(satirlar, ara){
 
   var fill = $('.ship-fill'), txt = $('.ship-txt'), msg = $('.ship-msg');
   if(fill){
-    fill.style.width = Math.min(100, (ara / ESIK) * 100) + '%';
+    fill.style.width = (HEPBEDAVA ? 100 : Math.min(100, (ara / ESIK) * 100)) + '%';
     fill.classList.toggle('done', bedava);
   }
   if(txt) txt.classList.toggle('done', bedava);
   if(msg){
-    msg.textContent = bedava ? 'Tebrikler, kargo bizden!'
+    msg.textContent = HEPBEDAVA ? 'Tüm siparişlerde kargo ücretsiz.'
+      : bedava ? 'Tebrikler, kargo bizden!'
       : (ara === 0 ? 'Ücretsiz kargo için ' + tl(ESIK) + ' ve üzeri sipariş verin.'
                    : 'Ücretsiz kargoya ' + tl(ESIK - ara) + ' kaldı.');
   }
@@ -144,7 +146,7 @@ function ozetiCiz(satirlar, ara){
   waMesaji = satirlar.metin.length
     ? 'Merhaba, sipariş vermek istiyorum:\n' + satirlar.metin.map(function(m){ return '• ' + m; }).join('\n') +
       '\n\nAra toplam: ' + tl(ara) +
-      '\nKargo: ' + (bedava ? 'Ücretsiz (' + tl(ESIK) + ' üzeri)' : (KARGO !== null ? tl(KARGO) : 'Alıcıya ait'))
+      '\nKargo: ' + (HEPBEDAVA ? 'Ücretsiz' : bedava ? 'Ücretsiz (' + tl(ESIK) + ' üzeri)' : (KARGO !== null ? tl(KARGO) : 'Alıcıya ait'))
     : 'Merhaba, domuz yağı hakkında bilgi almak istiyorum.';
   $$('.wa-order').forEach(function(b){
     b.href = 'https://wa.me/' + WA_NO + '?text=' + encodeURIComponent(waMesaji);
@@ -160,11 +162,55 @@ function ozetiCiz(satirlar, ara){
 }
 
 
-/* ══════════ anasayfa: çoklu ürün sepeti ══════════ */
+/* ══════════ sepet — tüm sayfalarda ortak, sayfa değişince korunur ══════════
+   Anasayfadaki ürün kartları, sipariş bölümündeki seçici ve ürün sayfasındaki
+   adet kutusu aynı sepete yazar. Sepet tarayıcıda saklanır; müşteri ürün
+   sayfasına geçtiğinde seçimini baştan yapmak zorunda kalmaz.              */
 
-var cartList = $('.cart-list');
-if(cartList){
-  var sepet = {};
+var SEPET_ANAHTAR = 'dy_sepet_v1';
+var SEPET_OMUR    = 3 * 24 * 3600 * 1000;      /* 3 gün */
+
+function sepetOku(){
+  try{
+    var v = JSON.parse(localStorage.getItem(SEPET_ANAHTAR) || 'null');
+    if(!v || !v.t || Date.now() - v.t > SEPET_OMUR) return {};
+    var temiz = {};
+    Object.keys(v.s || {}).forEach(function(k){
+      if(!URUNLER[k]) return;                  /* listeden kalkmış ürünü düşür */
+      var n = parseInt(v.s[k], 10) || 0;
+      if(n > 0) temiz[k] = Math.min(99, n);
+    });
+    return temiz;
+  }catch(e){ return {}; }
+}
+
+function sepetYaz(s){
+  try{ localStorage.setItem(SEPET_ANAHTAR, JSON.stringify({ t: Date.now(), s: s })); }catch(e){}
+}
+
+var qtyKutulari = $$('.qty[data-p]');
+if(qtyKutulari.length){
+  var sepet   = sepetOku();
+  var cartList = $('.cart-list');
+  var buyEl   = $('.buy');
+  var buyId   = buyEl && buyEl.getAttribute('data-urun');
+  var buyAd   = buyEl && buyEl.getAttribute('data-ad');
+  var buyFiyat = buyEl ? (parseFloat(buyEl.getAttribute('data-fiyat')) || 0) : 0;
+
+  /* ürün sayfasına sepet boşken girildiyse o ürün 1 adet önseçili gelsin */
+  if(buyId && !Object.keys(sepet).length) sepet[buyId] = 1;
+
+  function kutulariEsitle(){
+    qtyKutulari.forEach(function(q){
+      var k = q.getAttribute('data-p'), v = sepet[k] || 0;
+      var inp = $('input', q);
+      if(inp && document.activeElement !== inp) inp.value = v;
+      var eksi = $('[data-act="eksi"]', q);
+      if(eksi) eksi.disabled = (v === 0);
+      var kutu = q.closest('.pick-i');
+      if(kutu) kutu.classList.toggle('is-secili', v > 0);
+    });
+  }
 
   function sepetiCiz(){
     var ara = 0, kutular = [], metin = [];
@@ -183,96 +229,72 @@ if(cartList){
       metin.push(u.ad + ' × ' + ad + ' = ' + tl(tutar));
     });
 
-    cartList.innerHTML = kutular.length ? kutular.join('')
-      : '<div class="cart-empty">Henüz ürün seçmediniz — yukarıdaki ürünlerden adet ekleyin.</div>';
+    if(cartList){
+      cartList.innerHTML = kutular.length ? kutular.join('')
+        : '<div class="cart-empty">Henüz ürün seçmediniz — yandaki listeden adet ekleyin.</div>';
+    }
 
     Object.keys(URUNLER).forEach(function(k){
-      var el = $('.p-sub[data-sub="' + k + '"]');
-      if(el) el.innerHTML = sepet[k] ? 'Ara toplam: <b>' + tl(URUNLER[k].fiyat * sepet[k]) + '</b>' : '';
+      var deger = sepet[k] ? 'Ara toplam: <b>' + tl(URUNLER[k].fiyat * sepet[k]) + '</b>' : '';
+      $$('.p-sub[data-sub="' + k + '"]').forEach(function(el){ el.innerHTML = deger; });
     });
 
+    /* ürün sayfasındaki tekil toplam kutusu */
+    if(buyEl){
+      var bAd = sepet[buyId] || 0;
+      var bv = $('.buy-v'); if(bv) bv.textContent = tl(buyFiyat * bAd);
+      var kEl = $('.buy-kargo');
+      if(kEl){
+        var bedavaB = HEPBEDAVA || buyEl.getAttribute('data-bedava') === '1' || (buyFiyat * bAd) >= ESIK;
+        kEl.textContent = !bAd ? 'Adet seçin.'
+          : bedavaB ? 'Bu siparişte kargo ücretsiz.'
+                    : 'Ücretsiz kargoya ' + tl(ESIK - buyFiyat * bAd) + ' kaldı.';
+        kEl.classList.toggle('done', bedavaB && bAd > 0);
+      }
+    }
+
+    kutulariEsitle();
+    sepetYaz(sepet);
     ozetiCiz({ metin: metin }, ara);
   }
 
-  $$('.qty[data-p]').forEach(function(q){
-    var k = q.getAttribute('data-p'), inp = $('input', q), eksi = $('[data-act="eksi"]', q);
-    var uygula = function(v){
-      v = Math.max(0, Math.min(99, v | 0));
-      sepet[k] = v; inp.value = v; eksi.disabled = (v === 0);
-      sepetiCiz();
-    };
-    eksi.addEventListener('click', function(){ uygula((sepet[k] || 0) - 1); });
-    $('[data-act="arti"]', q).addEventListener('click', function(){ uygula((sepet[k] || 0) + 1); });
-    inp.addEventListener('input', function(){ uygula(parseInt(inp.value, 10) || 0); });
-    inp.addEventListener('blur',  function(){ inp.value = sepet[k] || 0; });
-    uygula(0);
-  });
-
-  cartList.addEventListener('click', function(ev){
-    var b = ev.target.closest('[data-rm]');
-    if(!b) return;
-    var k = b.getAttribute('data-rm');
-    sepet[k] = 0;
-    var inp = $('.qty[data-p="' + k + '"] input'); if(inp) inp.value = 0;
-    var eksi = $('.qty[data-p="' + k + '"] [data-act="eksi"]'); if(eksi) eksi.disabled = true;
+  function uygula(k, v){
+    v = Math.max(0, Math.min(99, v | 0));
+    if(v) sepet[k] = v; else delete sepet[k];
     sepetiCiz();
+  }
+
+  qtyKutulari.forEach(function(q){
+    var k = q.getAttribute('data-p'), inp = $('input', q);
+    $('[data-act="eksi"]', q).addEventListener('click', function(){ uygula(k, (sepet[k] || 0) - 1); });
+    $('[data-act="arti"]', q).addEventListener('click', function(){ uygula(k, (sepet[k] || 0) + 1); });
+    inp.addEventListener('input', function(){ uygula(k, parseInt(inp.value, 10) || 0); });
+    inp.addEventListener('blur',  function(){ inp.value = sepet[k] || 0; });
   });
 
-  /* kart üzerindeki "Sipariş Ver" → 1 adet ekle + forma in */
+  if(cartList){
+    cartList.addEventListener('click', function(ev){
+      var b = ev.target.closest('[data-rm]');
+      if(b) uygula(b.getAttribute('data-rm'), 0);
+    });
+  }
+
+  /* kart üzerindeki "Sipariş Ver" → yoksa 1 adet ekle + forma in */
   $$('[data-ekle]').forEach(function(b){
     b.addEventListener('click', function(ev){
       ev.preventDefault();
       var k = b.getAttribute('data-ekle');
-      if(!sepet[k]){
-        sepet[k] = 1;
-        var inp = $('.qty[data-p="' + k + '"] input'); if(inp) inp.value = 1;
-        var eksi = $('.qty[data-p="' + k + '"] [data-act="eksi"]'); if(eksi) eksi.disabled = false;
-        sepetiCiz();
-      }
+      if(!sepet[k]) uygula(k, 1);
       var t = $('#siparis'); if(t) kaydir(t);
     });
   });
 
+  /* başka sekmede sepet değişirse burada da güncellensin */
+  window.addEventListener('storage', function(ev){
+    if(ev.key === SEPET_ANAHTAR){ sepet = sepetOku(); sepetiCiz(); }
+  });
+
   sepetiCiz();
-}
-
-
-/* ══════════ ürün sayfası: tek ürün adet kutusu ══════════ */
-
-var buy = $('.buy');
-if(buy){
-  var bAd     = buy.getAttribute('data-ad');
-  var bFiyat  = parseFloat(buy.getAttribute('data-fiyat')) || 0;
-  var bBedava = buy.getAttribute('data-bedava') === '1';
-  var bQty    = $('.qty', buy), bInp = $('input', bQty);
-  var bEksi   = $('[data-act="eksi"]', bQty), bArti = $('[data-act="arti"]', bQty);
-
-  var urunuCiz = function(){
-    var ad = parseInt(bInp.value, 10);
-    if(!ad || ad < 1) ad = 1;
-    if(ad > 99) ad = 99;
-    bInp.value = ad;
-    bEksi.disabled = (ad === 1);
-
-    var tutar = bFiyat * ad;
-    var bv = $('.buy-v'); if(bv) bv.textContent = tl(tutar);
-
-    var kEl = $('.buy-kargo');
-    if(kEl){
-      var bedava = bBedava || tutar >= ESIK;
-      kEl.textContent = bedava ? 'Bu siparişte kargo ücretsiz.'
-                               : 'Ücretsiz kargoya ' + tl(ESIK - tutar) + ' kaldı.';
-      kEl.classList.toggle('done', bedava);
-    }
-
-    ozetiCiz({ metin: [bAd + ' × ' + ad + ' = ' + tl(tutar)], bedava: bBedava }, tutar);
-  };
-
-  bEksi.addEventListener('click', function(){ bInp.value = (parseInt(bInp.value,10)||1) - 1; urunuCiz(); });
-  bArti.addEventListener('click', function(){ bInp.value = (parseInt(bInp.value,10)||1) + 1; urunuCiz(); });
-  bInp.addEventListener('input', urunuCiz);
-  bInp.addEventListener('blur',  urunuCiz);
-  urunuCiz();
 }
 
 

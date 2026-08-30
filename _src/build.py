@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 8                                    # assets/site.css?v=N
+VER  = 9                                    # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -30,9 +30,77 @@ IKONLAR = open(os.path.join(SRC, 'ikonlar.svg'), encoding='utf-8').read()
 URL   = S['url'].rstrip('/')
 ESIK  = S['ucretsiz_kargo_esigi']
 KARGO = S['kargo_ucreti']
+# Eşik 0 (veya kargo 0) → site 'her siparişte ücretsiz' diline geçer; eşik/ilerleme
+# çubuğu dili tamamen devre dışı kalır. products.json'a tutar yazılınca geri gelir.
+HEP_BEDAVA = KARGO == 0 or ESIK == 0
 
 
 # ─────────────────────────── yardımcılar ───────────────────────────
+_BOYUT_ONBELLEK = {}
+
+def boyut(dosya):
+    """images/<dosya> için (genişlik, yükseklik). Dosya başlığından okunur —
+    görsel değişince HTML'deki ölçüler kendiliğinden güncellenir.
+    WebP (VP8 / VP8L / VP8X), JPEG ve PNG desteklenir."""
+    if dosya in _BOYUT_ONBELLEK:
+        return _BOYUT_ONBELLEK[dosya]
+    yol = os.path.join(KOK, 'images', dosya)
+    with open(yol, 'rb') as f:
+        b = f.read()
+    en = boy = None
+
+    if b[:4] == b'RIFF' and b[8:12] == b'WEBP':
+        etiket = b[12:16]
+        if etiket == b'VP8 ':
+            i = b.index(b'\x9d\x01\x2a', 20) + 3
+            en  = int.from_bytes(b[i:i+2], 'little') & 0x3fff
+            boy = int.from_bytes(b[i+2:i+4], 'little') & 0x3fff
+        elif etiket == b'VP8L':
+            n = int.from_bytes(b[21:25], 'little')
+            en, boy = (n & 0x3fff) + 1, ((n >> 14) & 0x3fff) + 1
+        elif etiket == b'VP8X':
+            en  = int.from_bytes(b[24:27], 'little') + 1
+            boy = int.from_bytes(b[27:30], 'little') + 1
+
+    elif b[:8] == b'\x89PNG\r\n\x1a\n':
+        en  = int.from_bytes(b[16:20], 'big')
+        boy = int.from_bytes(b[20:24], 'big')
+
+    elif b[:2] == b'\xff\xd8':                      # JPEG
+        i = 2
+        while i < len(b) - 9:
+            if b[i] != 0xff:
+                i += 1
+                continue
+            im = b[i+1]
+            if im in (0xd8, 0x01) or 0xd0 <= im <= 0xd7:
+                i += 2
+                continue
+            uz = int.from_bytes(b[i+2:i+4], 'big')
+            if 0xc0 <= im <= 0xcf and im not in (0xc4, 0xc8, 0xcc):
+                boy = int.from_bytes(b[i+5:i+7], 'big')
+                en  = int.from_bytes(b[i+7:i+9], 'big')
+                break
+            i += 2 + uz
+
+    if not en or not boy:
+        raise ValueError(f'{dosya}: görsel ölçüsü okunamadı')
+    _BOYUT_ONBELLEK[dosya] = (en, boy)
+    return en, boy
+
+
+def olcu(dosya):
+    """<img> için hazır width/height çifti."""
+    en, boy = boyut(dosya)
+    return f'width="{en}" height="{boy}"'
+
+
+# Ürün görsel ölçüleri dosyanın kendisinden gelir; products.json'daki değerler
+# yalnızca yedektir. Yeni görsel yüklenince ölçü kendiliğinden güncellenir.
+for _u in URUNLER:
+    _u['gorsel_en'], _u['gorsel_boy'] = boyut(_u['gorsel'])
+
+
 def tl(n):
     """1250 → '1.250 ₺'"""
     return f"{n:,.0f}".replace(',', '.') + ' ₺'
@@ -62,9 +130,11 @@ def ikon(ad, sinif='ico'):
 
 # ─────────────────────────── ortak parçalar ───────────────────────────
 def duyuru():
+    kargo_msj = ('<b class="nabiz">Tüm siparişlerde kargo ücretsiz</b>' if HEP_BEDAVA
+                 else f'<b class="nabiz">{tl(ESIK)}</b> ve üzeri siparişlerde kargo bizden')
     return f'''<div class="announce">
   <div class="container">
-    <span>{ikon("truck")} <b>{tl(ESIK)}</b> ve üzeri siparişlerde kargo bizden</span>
+    <span>{ikon("truck","ico nabiz-ic")} {kargo_msj}</span>
     <span class="sep">•</span>
     <span class="a-hide">{ikon("shield")} Türkiye'nin her yerine gönderim</span>
     <span class="sep">•</span>
@@ -171,18 +241,49 @@ def sabitler():
 
 <div class="mbar">
   <div class="mbar-tot"><span>Toplam</span><b>0 ₺</b></div>
-  <a href="tel:{S['telefon']}" class="btn btn-line btn-sm">{ikon("phone")} Ara</a>
+  <a href="tel:{S['telefon']}" class="btn btn-tel btn-sm">{ikon("phone")} Ara</a>
   <a href="https://wa.me/{S['whatsapp']}" class="btn btn-wa btn-sm wa-order" target="_blank" rel="noopener">{ikon("wa","ico ico-f")} <span class="mbar-lbl">WhatsApp</span></a>
 </div>
 
 <div class="lb">
   <button class="lb-x" aria-label="Kapat">{ikon("x")}</button>
-  <img src="" alt="">
+  <img alt="">
   <div class="lb-cap"></div>
 </div>'''
 
 
-def siparis_bolumu(kok='/', tekil=False):
+def urun_secici(kok='/', aktif=None):
+    """Sipariş bölümündeki ürün seçici — müşteri tüm ürünlerde adet ekleyip çıkarabilir.
+    Anasayfadaki kartlarla aynı data-p anahtarını kullanır; ikisi birbirini günceller."""
+    satirlar = []
+    for u in URUNLER:
+        en, boy = boyut(u['gorsel'])
+        rozet = f'<span class="pick-b">{t(u["rozet"])}</span>' if u['rozet'] else ''
+        aktif_sinif = ' is-aktif' if u['id'] == aktif else ''
+        satirlar.append(f'''
+        <div class="pick-i{aktif_sinif}">
+          <a class="pick-g" href="{kok}urun/{u['slug']}/" tabindex="-1" aria-hidden="true">
+            <img src="{kok}images/{u['gorsel']}" alt="" width="{en}" height="{boy}" loading="lazy">
+          </a>
+          <div class="pick-t">
+            <b><a href="{kok}urun/{u['slug']}/">{t(u['tam_ad'])}</a></b>{rozet}
+            <span>{tl(u['fiyat'])} <i>· {birim(u)}</i></span>
+          </div>
+          <div class="qty qty-sm" data-p="{u['id']}">
+            <button type="button" data-act="eksi" aria-label="{e(u['tam_ad'])} adedini azalt">{ikon("minus")}</button>
+            <input type="number" value="0" min="0" max="99" aria-label="{e(u['tam_ad'])} adedi">
+            <button type="button" data-act="arti" aria-label="{e(u['tam_ad'])} adedini artır">{ikon("plus")}</button>
+          </div>
+        </div>''')
+    return ('''<div class="pick">
+      <h4>Ürün Seçimi</h4>
+      <p class="pick-n">İstediğiniz ürünlerden adet ekleyin — birden fazla ürünü aynı siparişte gönderebilirsiniz.</p>
+      <div class="pick-l">''' + "".join(satirlar) + '''
+      </div>
+    </div>''')
+
+
+def siparis_bolumu(kok='/', tekil=False, aktif=None):
     """Ürün seçimi + müşteri bilgileri tek formda. tekil=True → ürün detay sayfası."""
     ep = S.get('form_endpoint')
     action = f' action="{ep}" method="POST"' if ep else ''
@@ -190,14 +291,25 @@ def siparis_bolumu(kok='/', tekil=False):
              '<input type="hidden" name="_captcha" value="false">\n        '
              '<input type="hidden" name="_template" value="table">\n        ') if ep else ''
 
-    # özet gövdesi: anasayfada sepet listesi, ürün sayfasında tek satır
-    ozet_ic = ('<div class="cekout-tek"><span class="of-ozet-v">Henüz ürün seçilmedi</span></div>'
-               if tekil else '<div class="cart-list"></div>')
+    # ücretsiz kargo eşiği yoksa ilerleme çubuğu anlamsız — sabit bilgi satırı gösterilir
+    ship_bar = (f'''<div class="ship-bar done">
+        <div class="ship-txt">{ikon("truck")}
+          <span class="ship-msg">Tüm siparişlerde kargo ücretsiz.</span>
+        </div>
+      </div>''' if HEP_BEDAVA else f'''<div class="ship-bar">
+        <div class="ship-txt">{ikon("truck")}
+          <span class="ship-msg">Ücretsiz kargo için {tl(ESIK)} ve üzeri sipariş verin.</span>
+        </div>
+        <div class="ship-track"><div class="ship-fill"></div></div>
+      </div>''')
+
+    # özet gövdesi: her sayfada aynı sepet listesi (seçici tüm ürünleri gösterir)
+    ozet_ic = '<div class="cart-list"></div>'
 
     return f'''<div class="cekout" id="siparis">
   <div class="cekout-h">
     <h3>Siparişinizi Tamamlayın</h3>
-    <p>{"Adet seçin, bilgilerinizi bırakın." if tekil else "Yukarıdaki ürünlerden adet seçin, bilgilerinizi bırakın."} Siparişiniz WhatsApp'a hazır olarak gelsin — üyelik gerekmez.</p>
+    <p>Ürünleri seçin, bilgilerinizi bırakın. Siparişiniz WhatsApp'a hazır olarak gelsin — üyelik gerekmez.</p>
   </div>
 
   <form class="oform cekout-g"{action} novalidate>
@@ -205,6 +317,8 @@ def siparis_bolumu(kok='/', tekil=False):
     <input type="hidden" name="Sipariş" class="of-urun" value="">
 
     <div class="cekout-sol">
+      {urun_secici(kok, aktif)}
+
       <h4>Teslimat Bilgileri</h4>
       <div class="of-g">
         <label class="of-f">
@@ -243,16 +357,10 @@ def siparis_bolumu(kok='/', tekil=False):
       <h4>Sipariş Özeti</h4>
       {ozet_ic}
 
-      <div class="ship-bar">
-        <div class="ship-txt">
-          {ikon("truck")}
-          <span class="ship-msg">Ücretsiz kargo için {tl(ESIK)} ve üzeri sipariş verin.</span>
-        </div>
-        <div class="ship-track"><div class="ship-fill"></div></div>
-      </div>
+      {ship_bar}
 
       <div class="sum-row"><span>Ara toplam</span><b class="sum-ara">0 ₺</b></div>
-      <div class="sum-row"><span>Kargo</span><b class="sum-kargo">{tl(KARGO) if KARGO is not None else "Alıcıya ait"}</b></div>
+      <div class="sum-row"><span>Kargo</span><b class="sum-kargo">{"Ücretsiz" if HEP_BEDAVA else (tl(KARGO) if KARGO is not None else "Alıcıya ait")}</b></div>
       <div class="sum-tot"><span>Toplam</span><b class="sum-toplam">0 ₺</b></div>
 
       <label class="of-kvkk">
@@ -268,7 +376,7 @@ def siparis_bolumu(kok='/', tekil=False):
         <span>veya doğrudan</span>
         <div class="cekout-alt-b">
           <a href="https://wa.me/{S['whatsapp']}" class="btn btn-wa btn-sm wa-order" target="_blank" rel="noopener">{ikon("wa","ico ico-f")} WhatsApp</a>
-          <a href="tel:{S['telefon']}" class="btn btn-line btn-sm">{ikon("phone")} {S['telefon_gosterim']}</a>
+          <a href="tel:{S['telefon']}" class="btn btn-tel btn-sm">{ikon("phone")} {S['telefon_gosterim']}</a>
         </div>
       </div>
     </aside>
@@ -479,11 +587,11 @@ def urun_sayfasi(u):
 
         <div class="pdp-stok">{ikon("check")} <b>Stokta</b> — {kargo_satir}</div>
 
-        <div class="buy" data-ad="{e(u['ad'])} {e(u['gramaj_etiket'])}" data-fiyat="{u['fiyat']}" data-bedava="{1 if u['kargo_bedava'] else 0}">
+        <div class="buy" data-urun="{u['id']}" data-ad="{e(u['ad'])} {e(u['gramaj_etiket'])}" data-fiyat="{u['fiyat']}" data-bedava="{1 if u['kargo_bedava'] else 0}">
           <div class="buy-row">
-            <div class="qty" data-p="tek">
+            <div class="qty" data-p="{u['id']}">
               <button type="button" data-act="eksi" aria-label="Azalt">{ikon("minus")}</button>
-              <input type="number" value="1" min="1" max="99" aria-label="Adet">
+              <input type="number" value="1" min="0" max="99" aria-label="Adet">
               <button type="button" data-act="arti" aria-label="Artır">{ikon("plus")}</button>
             </div>
             <div class="buy-tot"><span>Toplam</span><b class="buy-v">{tl(u['fiyat'])}</b></div>
@@ -505,7 +613,7 @@ def urun_sayfasi(u):
 
 <section class="sec sec-cream">
   <div class="container">
-    {siparis_bolumu('../../', tekil=True)}
+    {siparis_bolumu('../../', tekil=True, aktif=u['id'])}
   </div>
 </section>
 
@@ -636,6 +744,16 @@ def bilgi_sayfasi(slug, baslik, ozet, govde):
 
 def bilgi_sayfalari():
     esik, kargo = tl(ESIK), tl(KARGO) if KARGO is not None else 'kargo ücreti'
+    kargo_blok = ('''<div class="note">
+        <p><b>Kargo tüm siparişlerde ücretsizdir.</b> Tutar sınırı yoktur; hangi ürünü,
+        kaç adet alırsanız alın kargo ücreti alınmaz. Türkiye'nin her yerine gönderim yapılır.</p>
+      </div>''' if HEP_BEDAVA else f'''<div class="tbl-wrap">
+        <table>
+          <tr><th>Sipariş tutarı</th><th>Kargo ücreti</th></tr>
+          <tr><td>{esik} altı</td><td>{kargo} — alıcıya aittir</td></tr>
+          <tr><td>{esik} ve üzeri</td><td><strong>Ücretsiz</strong> — kargo bize aittir</td></tr>
+        </table>
+      </div>''')
     return [
       ('gizlilik-politikasi', 'Gizlilik Politikası ve KVKK Aydınlatma Metni',
        'Sipariş sürecinde topladığımız kişisel verileri hangi amaçla işlediğimizi ve haklarınızı açıklar.',
@@ -700,16 +818,11 @@ def bilgi_sayfalari():
       <p>Uyuşmazlık durumunda, parasal sınırlara göre bulunduğunuz yerdeki Tüketici Hakem Heyetine veya Tüketici Mahkemesine başvurabilirsiniz.</p>'''),
 
       ('teslimat-ve-odeme', 'Teslimat ve Ödeme Koşulları',
-       f'Kargo ücreti, {esik} ücretsiz kargo eşiği, teslim süresi ve kabul edilen ödeme yöntemleri.',
+       ('Tüm siparişlerde ücretsiz kargo, teslim süresi ve kabul edilen ödeme yöntemleri.'
+        if HEP_BEDAVA else
+        f'Kargo ücreti, {esik} ücretsiz kargo eşiği, teslim süresi ve kabul edilen ödeme yöntemleri.'),
        f'''<h2>Kargo ücreti</h2>
-      <div class="tbl-wrap">
-        <table>
-          <tr><th>Sipariş tutarı</th><th>Kargo ücreti</th></tr>
-          <tr><td>{esik} altı</td><td>{kargo} — alıcıya aittir</td></tr>
-          <tr><td>{esik} ve üzeri</td><td><strong>Ücretsiz</strong> — kargo bize aittir</td></tr>
-        </table>
-      </div>
-      <p>5'li Paket ({tl(2500)}) doğrudan ücretsiz kargo kapsamındadır. Farklı ürünlerden oluşan siparişinizin toplamı {esik} ve üzerine ulaştığında da kargo ücreti alınmaz.</p>
+      {kargo_blok}
 
       <h2>Teslim süresi</h2>
       <p>Siparişiniz teyit edildikten sonra <strong>aynı gün</strong> kargoya verilir. Teslim süresi bulunduğunuz ile göre değişmekle birlikte genellikle <strong>{S['kargo_sure']}</strong> içindedir. Türkiye'nin her yerine gönderim yapılır.</p>
@@ -749,21 +862,54 @@ MAKALE_KART = {
 }
 
 
+def fiyat_tablosu():
+    """Makale gövdesindeki <!-- FIYAT-TABLOSU --> yerine geçer.
+    Fiyatlar products.json'dan gelir; tablo elle güncellenmez."""
+    satir = "".join(f'''
+<tr>
+<td>{t(u['tam_ad'])}</td>
+<td>{t(u['gramaj_etiket'])}</td>
+<td>{tl(u['fiyat'])}</td>
+<td>{birim(u)}</td>
+<td>{"<strong>Ücretsiz</strong>" if (HEP_BEDAVA or u['kargo_bedava']) else "Alıcıya ait"}</td>
+<td><a href="{wa(u['tam_ad'] + ' sipariş etmek istiyorum.')}" target="_blank" rel="noopener">Sipariş</a></td>
+</tr>''' for u in URUNLER)
+    return f'''<div class="tbl-wrap"><table>
+<thead>
+<tr><th>Ürün</th><th>Gramaj</th><th>Fiyat</th><th>Gram başına</th><th>Kargo</th><th>İşlem</th></tr>
+</thead>
+<tbody>{satir}
+</tbody>
+</table></div>'''
+
+
+def kargo_notu():
+    """Makale gövdesindeki <!-- KARGO-NOTU --> yerine geçer."""
+    if HEP_BEDAVA:
+        return ('<p><strong>• Kargo:</strong> Tüm ürünlerde kargo ücretsizdir; '
+                'alt tutar sınırı yoktur.</p>')
+    return (f'<p><strong>• Kargo Ücreti:</strong> Kargo ücreti alıcıya aittir.</p>\n'
+            f'<p><strong>• Ücretsiz Kargo:</strong> {tl(ESIK)} ve üzeri siparişlerde '
+            f'kargo ücretini biz karşılıyoruz.</p>')
+
+
 def makale_sayfasi(slug):
     m = MAKALE_META[slug]
     govde = open(os.path.join(SRC, 'makaleler', slug + '.html'), encoding='utf-8').read()
+    govde = govde.replace('<!-- FIYAT-TABLOSU -->', fiyat_tablosu())
+    govde = govde.replace('<!-- KARGO-NOTU -->', kargo_notu())
 
     digerleri = [x for x in MAKALE_SIRA if x != slug]
     ilgili = "".join(f'''
         <a class="art" href="../{x}/">
-          <div class="art-i"><img src="../images/{MAKALE_KART[x][1]}" alt="{e(MAKALE_KART[x][0])}" loading="lazy"></div>
+          <div class="art-i"><img src="../images/{MAKALE_KART[x][1]}" alt="{e(MAKALE_KART[x][0])}" {olcu(MAKALE_KART[x][1])} loading="lazy"></div>
           <div class="art-b"><h3>{t(MAKALE_KART[x][0])}</h3>
           <span class="art-l">Devamını Oku {ikon("right")}</span></div>
         </a>''' for x in digerleri)
 
     urun_serit = "".join(f'''
         <a class="mini" href="../urun/{u['slug']}/">
-          <img src="../images/{u['gorsel']}" alt="{e(u['tam_ad'])}" loading="lazy">
+          <img src="../images/{u['gorsel']}" alt="{e(u['tam_ad'])}" {olcu(u['gorsel'])} loading="lazy">
           <span><b>{t(u['tam_ad'])}</b><i>{tl(u['fiyat'])}</i></span>
         </a>''' for u in URUNLER)
 
@@ -856,7 +1002,7 @@ def makale_sayfasi(slug):
     <div class="sec-h">
       <span class="tag">Satın Al</span>
       <h2>Domuz Yağı Fiyatları</h2>
-      <p>%100 saf ve doğal. {tl(ESIK)} ve üzeri siparişlerde kargo bizden.</p>
+      <p>%100 saf ve doğal. {"Tüm siparişlerde kargo bizden." if HEP_BEDAVA else f"{tl(ESIK)} ve üzeri siparişlerde kargo bizden."}</p>
       <div class="rule"></div>
     </div>
     <div class="mini-g">{urun_serit}
@@ -990,13 +1136,18 @@ def anasayfa():
     ogeler = []
     for i, u in enumerate(URUNLER):
         if i: ogeler.append('<div class="hp-div"></div>')
-        rozet = '<span class="hp-free">Ücretsiz Kargo</span>' if u['kargo_bedava'] else ''
-        sinif = ' hp-item--free' if u['kargo_bedava'] else ''
+        # kargo hepsinde bedavayken ürün başına rozet bilgi taşımaz; öne çıkan ürün vurgulanır
+        vurgu = u['one_cikan'] if HEP_BEDAVA else u['kargo_bedava']
+        etiket = (u['rozet'] or 'Fırsat') if HEP_BEDAVA else 'Ücretsiz Kargo'
+        rozet = f'<span class="hp-free">{t(etiket)}</span>' if vurgu else ''
+        sinif = ' hp-item--free' if vurgu else ''
         ogeler.append(
             f'<div class="hp-item{sinif}">{rozet}'
             f'<span class="hp-g">{t(u["gramaj_etiket"].split(" —")[0])}</span>'
             f'<span class="hp-v">{tl(u["fiyat"])}</span></div>')
     serit = ('<div class="hero-price">\n        ' + "\n        ".join(ogeler) + '\n      </div>\n'
+             '      <p class="hero-kargo"><span>🙂</span> <b>Tüm siparişlerde</b> kargo bizden!</p>'
+             if HEP_BEDAVA else
              f'      <p class="hero-kargo"><span>🙂</span> <b>{tl(ESIK)} ve üzeri</b> alışverişlerde kargo bizden!</p>')
     s = isaretci_degistir(s, 'HERO-FIYAT', '      ' + serit)
 
@@ -1032,6 +1183,7 @@ def anasayfa():
     cfg = {
         "whatsapp": S['whatsapp'],
         "esik": ESIK,
+        "hepbedava": HEP_BEDAVA,
         "kargo": KARGO,
         "urunler": {u['id']: {"ad": u['tam_ad'], "fiyat": u['fiyat']} for u in URUNLER},
     }
