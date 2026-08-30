@@ -11,6 +11,9 @@ var ESIK    = CFG.esik     || 2500;
 var HEPBEDAVA = CFG.hepbedava === true;   // eşiksiz ücretsiz kargo
 var KARGO   = (CFG.kargo === 0 || CFG.kargo) ? CFG.kargo : null;
 var URUNLER = CFG.urunler  || {};
+/* Sipariş uç noktası: tanımlıysa sipariş SİTEDE tamamlanır (Merchant Center şartı),
+   null ise eski davranış (WhatsApp'a aktarma) sürer. */
+var UCNOKTA = CFG.ucnokta || null;
 
 function tl(n){ return n.toLocaleString('tr-TR') + ' ₺'; }
 function $(s,c){ return (c||document).querySelector(s); }
@@ -218,6 +221,7 @@ if(lb){
    Hem anasayfadaki sepet hem ürün sayfasındaki adet kutusu buraya yazar.
    Ekranda ne varsa onu günceller; olmayan öğeyi sessizce atlar.        */
 
+var sonKalemler = [];
 var waMesaji = 'Merhaba, domuz yağı hakkında bilgi almak istiyorum.';
 var sonAra   = 0;
 
@@ -246,6 +250,9 @@ function ozetiCiz(satirlar, ara){
       : (ara === 0 ? 'Ücretsiz kargo için ' + tl(ESIK) + ' ve üzeri sipariş verin.'
                    : 'Ücretsiz kargoya ' + tl(ESIK - ara) + ' kaldı.');
   }
+
+  /* sipariş gönderimi için son sepet dökümü (kod, ad, adet, tutar) */
+  sonKalemler = satirlar.kalem || [];
 
   /* form için düz metin */
   var duz = satirlar.metin.join(' · ');
@@ -550,6 +557,53 @@ if(onl){
 }
 
 
+/* ══════════ sipariş alındı ekranı ══════════
+   Sipariş sunucuya gittikten sonra müşteri buraya düşer. İçerik
+   sessionStorage'daki son siparişten yazılır; sayfa yenilense de durur. */
+var okKutu = $('[data-ok-no]');
+if(okKutu){
+  var pk = null;
+  try{ pk = JSON.parse(sessionStorage.getItem('dy_son_siparis') || 'null'); }catch(e){}
+  var url = new URLSearchParams(location.search).get('no');
+  if(pk && url && pk.no !== url) pk.no = url;
+
+  if(pk && pk.kalemler && pk.kalemler.length){
+    okKutu.textContent = pk.no || (url || '—');
+    var liste = $('[data-ok-kalem]');
+    if(liste){
+      liste.innerHTML = pk.kalemler.map(function(x){
+        return '<div class="ok-satir"><span>' + oz(x.ad) + ' <i>× ' + x.adet + '</i></span>' +
+               '<b>' + tl(x.tutar) + '</b></div>';
+      }).join('');
+    }
+    var tp = $('[data-ok-toplam]'); if(tp) tp.textContent = tl(pk.toplam);
+  } else if(url){
+    okKutu.textContent = url;          /* özet yok ama numara var (sayfa paylaşılmış olabilir) */
+  } else {
+    var yok = $('[data-ok-yok]'); if(yok) yok.hidden = false;
+    var ok1 = $('.ok-kutu'), ok2 = $('.ok-ozet');
+    if(ok1) ok1.hidden = true;
+    if(ok2) ok2.hidden = true;
+  }
+
+  var kopya = $('.ok-kopya');
+  if(kopya){
+    kopya.addEventListener('click', function(){
+      var no = kopya.getAttribute('data-iban');
+      var bitir = function(){ kopya.textContent = 'Kopyalandı'; setTimeout(function(){ kopya.textContent = 'Kopyala'; }, 2000); };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(no).then(bitir, function(){});
+      } else {
+        var g = document.createElement('textarea');
+        g.value = no; document.body.appendChild(g); g.select();
+        try{ document.execCommand('copy'); bitir(); }catch(e){}
+        g.remove();
+      }
+    });
+  }
+}
+
+
 /* ══════════ sipariş formu ══════════ */
 
 var form = $('.oform');
@@ -609,9 +663,59 @@ if(form){
   });
   $('input', kvkk).addEventListener('change', function(){ kvkk.classList.remove('err'); });
 
+  /* Sipariş numarası: DY-YYMMDD-XXXX. Sunucu kendi numarasını döndürürse o kazanır;
+     dönmezse müşteri yine de elinde bir numarayla kalır. */
+  function siparisNo(){
+    var d = new Date(), i = function(n){ return (n<10?'0':'') + n; };
+    return 'DY-' + String(d.getFullYear()).slice(2) + i(d.getMonth()+1) + i(d.getDate())
+           + '-' + String(Math.floor(1000 + Math.random()*9000));
+  }
+
+  function siparisPaketi(no){
+    var al = function(n){ var g = form.querySelector('[name="' + n + '"]'); return g ? g.value.trim() : ''; };
+    var kalemler = sonKalemler.map(function(x){
+      return { kod:x.k, ad:x.ad, adet:x.adet, birim:URUNLER[x.k].fiyat, tutar:x.tutar };
+    });
+    var toplam = kalemler.reduce(function(a,x){ return a + x.tutar; }, 0);
+    return {
+      no: no, kalemler: kalemler, toplam: toplam, kargo: 0, odeme: 'Havale / EFT',
+      musteri: { ad: al('Ad Soyad'), telefon: al('Telefon'), eposta: al('E-posta'),
+                 il: al('İl / İlçe'), adres: al('Adres'), not: al('Not') },
+      tarih: new Date().toISOString(), kaynak: location.href
+    };
+  }
+
   form.addEventListener('submit', function(ev){
     if($('.of-tuzak', form).value){ ev.preventDefault(); return; }
     if(!dogrula()){ ev.preventDefault(); return; }
+
+    /* Sipariş SİTEDE tamamlanır: kendi uç noktamıza gönderilir, müşteri
+       onay ekranına düşer. Uç nokta tanımlı değilse eski WhatsApp yolu işler. */
+    if(UCNOKTA){
+      ev.preventDefault();
+      gonder.disabled = true;
+      durum.className = 'of-durum on';
+      durum.textContent = 'Siparişiniz oluşturuluyor…';
+      var paket = siparisPaketi(siparisNo());
+      fetch(UCNOKTA, { method:'POST', headers:{'Content-Type':'text/plain;charset=UTF-8'},
+                       body: JSON.stringify(paket) })
+        .then(function(y){ return y.ok ? y.json().catch(function(){ return {}; })
+                                       : Promise.reject(new Error('sunucu ' + y.status)); })
+        .then(function(c){
+          if(c && c.no) paket.no = c.no;
+          try{ sessionStorage.setItem('dy_son_siparis', JSON.stringify(paket)); }catch(e){}
+          try{ localStorage.removeItem(SEPET_ANAHTAR); }catch(e){}
+          location.href = '/siparis-alindi/?no=' + encodeURIComponent(paket.no);
+        })
+        .catch(function(){
+          gonder.disabled = false;
+          durum.className = 'of-durum on no';
+          durum.innerHTML = 'Sipariş gönderilemedi — bağlantı sorunu olabilir. '
+            + 'Lütfen tekrar deneyin ya da <a href="https://wa.me/' + WA_NO
+            + '">WhatsApp\u2019tan yazın</a>.';
+        });
+      return;
+    }
 
     if(uzak){
       gonder.disabled = true;

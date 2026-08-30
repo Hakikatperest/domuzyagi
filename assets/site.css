@@ -1074,3 +1074,51 @@ img,svg,video,iframe{max-width:100%;height:auto}
   .hero h1 .hh-em{color:var(--gold-2)}
   .chip-a,.chip-b,.hero-frame{transform:none!important}
 }
+
+/* ── sipariş alındı ekranı + form ödeme satırı ─────────────────────────── */
+.of-odeme{display:flex;align-items:flex-start;gap:11px;margin:16px 0 4px;padding:13px 15px;
+  background:var(--cream);border:1px solid var(--line);border-radius:var(--r-sm)}
+.of-odeme-b{display:inline-flex;align-items:center;gap:7px;font-family:var(--baslik);font-weight:700;
+  font-size:.86rem;color:var(--ink);white-space:nowrap}
+.of-odeme-b .ico{width:17px;height:17px;color:var(--gold-3)}
+.of-odeme-t{font-size:.84rem;color:var(--tx-2);line-height:1.5}
+@media(max-width:520px){.of-odeme{flex-direction:column;gap:6px}}
+
+.ok-kutu{text-align:center;background:var(--cream);border:1px solid var(--line);
+  border-radius:var(--r);padding:32px 24px;margin-bottom:24px}
+.ok-rozet{width:62px;height:62px;margin:0 auto 16px;border-radius:50%;background:var(--yesil);
+  display:flex;align-items:center;justify-content:center}
+.ok-rozet .ico{width:30px;height:30px;color:#fff;stroke-width:2.4}
+.ok-no{font-family:var(--baslik);font-size:1.24rem;font-weight:700;color:var(--ink);margin:0 0 8px}
+.ok-no b{color:var(--gold-3);font-variant-numeric:tabular-nums}
+.ok-alt{font-size:.93rem;color:var(--tx-2);margin:0}
+.ok-ozet,.ok-banka,.ok-adim{background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--r);padding:24px;margin-bottom:20px}
+.ok-ozet h2,.ok-banka h2,.ok-adim h2{font-family:var(--baslik);font-size:1.05rem;font-weight:700;
+  color:var(--ink);margin:0 0 14px;display:flex;align-items:center;gap:9px}
+.ok-banka h2 .ico{width:19px;height:19px;color:var(--gold-3)}
+.ok-satir{display:flex;justify-content:space-between;gap:16px;padding:9px 0;
+  border-bottom:1px solid var(--line-2);font-size:.92rem}
+.ok-satir i{font-style:normal;color:var(--tx-3)}
+.ok-satir b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.ok-tot{display:flex;justify-content:space-between;padding-top:13px;font-family:var(--baslik);
+  font-size:1.1rem;font-weight:700;color:var(--ink)}
+.ok-kargo{display:flex;align-items:center;gap:8px;margin:12px 0 0;font-size:.86rem;color:var(--yesil-3)}
+.ok-kargo .ico{width:16px;height:16px}
+.ok-iban{display:grid;grid-template-columns:auto 1fr;gap:9px 18px;margin:14px 0;font-size:.92rem}
+.ok-iban dt{color:var(--tx-3);font-weight:600}
+.ok-iban dd{margin:0;color:var(--ink);font-weight:600}
+.ok-iban-no{font-family:var(--baslik);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.ok-kopya{margin-left:10px;padding:4px 11px;font-size:.76rem;font-weight:600;font-family:var(--govde);
+  color:var(--ink);background:var(--cream);border:1px solid var(--line);border-radius:100px;cursor:pointer;
+  transition:.2s var(--ease)}
+.ok-kopya:hover{background:var(--gold-2);border-color:var(--gold)}
+.ok-kucuk{font-size:.83rem;color:var(--tx-3);margin:0}
+.ok-adim ol{margin:0;padding-left:20px;list-style:decimal}
+.ok-adim li{font-size:.92rem;color:var(--tx-2);margin-bottom:7px}
+.ok-yok{text-align:center;color:var(--tx-2)}
+@media(max-width:520px){
+  .ok-kutu{padding:26px 18px}
+  .ok-iban{grid-template-columns:1fr;gap:3px 0}
+  .ok-iban dd{margin-bottom:9px}
+}

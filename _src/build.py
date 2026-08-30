@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 35                                   # assets/site.css?v=N
+VER  = 37                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -259,6 +259,10 @@ def dy_cfg():
         "hepbedava": HEP_BEDAVA,
         "saat": [int(x) for x in re.findall(r'(\d{1,2}):', S['calisma_saati'])] or [0, 24],
         "urunler": {u['id']: {"ad": u['tam_ad'], "fiyat": u['fiyat']} for u in URUNLER},
+        # Sipariş kendi sunucumuzdaki uç noktaya POST edilir; müşteri siteden
+        # ayrılmadan sipariş numarasını görür (Google Merchant Center şartı).
+        # null olduğu sürece eski davranış (WhatsApp'a aktarma) sürer.
+        "ucnokta": S.get('siparis_ucu'),
     }
     return ('<script>window.DY_CFG='
             + json.dumps(cfg, ensure_ascii=False, separators=(',', ':')) + ';</script>')
@@ -417,13 +421,19 @@ def siparis_bolumu(kok='/', tekil=False, aktif=None):
       <div class="sum-row"><span>Kargo</span><b class="sum-kargo">{"Ücretsiz" if HEP_BEDAVA else (tl(KARGO) if KARGO is not None else "Alıcıya ait")}</b></div>
       <div class="sum-tot"><span>Toplam</span><b class="sum-toplam">0 ₺</b></div>
 
+      <div class="of-odeme">
+        <span class="of-odeme-b">{ikon("card")} Ödeme</span>
+        <span class="of-odeme-t"><b>Havale / EFT</b> — siparişi tamamladığınızda hesap
+          bilgileri ekranda görünür, ödemeyi sonra yaparsınız.</span>
+      </div>
+
       <label class="of-kvkk">
         <input type="checkbox" required>
         <span>Siparişimin oluşturulması ve teslimatı için ad, telefon ve adres bilgilerimin işlenmesine onay veriyorum. <a href="{kok}gizlilik-politikasi/">Gizlilik Politikası</a></span>
         <em class="of-hata"></em>
       </label>
 
-      <button type="submit" class="btn btn-gold btn-lg btn-block of-gonder">{ikon("box")} Siparişi Gönder</button>
+      <button type="submit" class="btn btn-gold btn-lg btn-block of-gonder">{ikon("box")} Siparişi Tamamla</button>
       <p class="of-durum" role="status"></p>
 
       <div class="cekout-alt">
@@ -751,7 +761,7 @@ def urun_sayfasi(u):
 
 
 # ─────────────────────────── bilgi sayfaları ───────────────────────────
-def bilgi_sayfasi(slug, baslik, ozet, govde):
+def bilgi_sayfasi(slug, baslik, ozet, govde, indeksle=True):
     semalar = {
         "@context": "https://schema.org",
         "@graph": [
@@ -770,7 +780,7 @@ def bilgi_sayfasi(slug, baslik, ozet, govde):
 <title>{t(baslik)} | {t(S['ad'])}</title>
 <meta name="description" content="{e(ozet)}">
 <link rel="canonical" href="{URL}/{slug}/">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="{'index, follow' if indeksle else 'noindex, follow'}">
 <meta name="theme-color" content="#132428">
 {IKON_HEAD}
 {SPEK}
@@ -819,6 +829,57 @@ def bilgi_sayfasi(slug, baslik, ozet, govde):
 </body>
 </html>
 '''
+
+
+def siparis_alindi_sayfasi():
+    """Sipariş sonrası onay ekranı. Google Merchant Center, satın almanın SİTEDE
+    tamamlanmasını istiyor; müşteri buraya düşüp sipariş numarasını görüyor.
+    İçerik JS ile sessionStorage'daki siparişten doldurulur; sayfa noindex."""
+    b = S.get('banka') or {}
+    banka_blok = f'''
+      <div class="ok-banka">
+        <h2>{ikon("card")} Ödeme bilgileri</h2>
+        <p>Tutarı aşağıdaki hesaba havale/EFT ile gönderin. Açıklama kısmına
+        <b>sipariş numaranızı</b> yazmanız yeterli.</p>
+        <dl class="ok-iban">
+          <dt>Hesap sahibi</dt><dd>{e(b.get("hesap_sahibi",""))}</dd>
+          <dt>Banka</dt><dd>{e(b.get("banka",""))}</dd>
+          <dt>IBAN</dt><dd><span class="ok-iban-no">{e(b.get("iban",""))}</span>
+            <button type="button" class="ok-kopya" data-iban="{e(b.get("iban","").replace(" ",""))}">Kopyala</button></dd>
+        </dl>
+        <p class="ok-kucuk">Ödemeyi aldığımızda siparişiniz kargoya verilir ve takip
+        numaranız telefonla iletilir. Ödeme yapmadan önce vazgeçerseniz bir şey ödemezsiniz.</p>
+      </div>''' if b.get('iban') else ''
+
+    govde = f'''<div class="ok-kutu">
+        <div class="ok-rozet">{ikon("check")}</div>
+        <h2 class="ok-no">Sipariş numaranız: <b data-ok-no>—</b></h2>
+        <p class="ok-alt">Siparişinizi aldık. Bir kopyası tarafımıza iletildi;
+        {S['calisma_saati']} saatleri arasında telefonla teyit ediyoruz.</p>
+      </div>
+
+      <div class="ok-ozet">
+        <h2>Sipariş özeti</h2>
+        <div data-ok-kalem class="ok-kalemler"></div>
+        <div class="ok-tot"><span>Toplam</span><b data-ok-toplam>—</b></div>
+        <p class="ok-kargo">{ikon("truck")} Kargo ücretsiz — {S['kargo_sure']} içinde teslim.</p>
+      </div>
+{banka_blok}
+      <div class="ok-adim">
+        <h2>Bundan sonra ne olacak?</h2>
+        <ol>
+          <li>Siparişinizi telefonla teyit ediyoruz.</li>
+          <li>Ödemeniz ulaştığında ürünler aynı gün kargoya veriliyor.</li>
+          <li>Takip numaranız telefon veya WhatsApp ile size iletiliyor.</li>
+        </ol>
+      </div>
+
+      <p data-ok-yok class="ok-yok" hidden>Görüntülenecek sipariş bulunamadı.
+      <a href="../#siparis">Sipariş formuna dönün</a>.</p>'''
+
+    return bilgi_sayfasi('siparis-alindi', 'Siparişiniz Alındı',
+                         'Sipariş numaranız, sipariş özetiniz ve ödeme bilgileri.',
+                         govde, indeksle=False)
 
 
 def bilgi_sayfalari():
@@ -1322,17 +1383,9 @@ def anasayfa():
 
     s = isaretci_degistir(s, 'SIPARIS', siparis_bolumu('/'))
 
-    cfg = {
-        "whatsapp": S['whatsapp'],
-        "esik": ESIK,
-        "hepbedava": HEP_BEDAVA,
-        "saat": [int(x) for x in re.findall(r'(\d{1,2}):', S['calisma_saati'])] or [0, 24],
-        "kargo": KARGO,
-        "urunler": {u['id']: {"ad": u['tam_ad'], "fiyat": u['fiyat']} for u in URUNLER},
-    }
-    s = isaretci_degistir(
-        s, 'URUN-JS',
-        '<script>window.DY_CFG=' + json.dumps(cfg, ensure_ascii=False, separators=(',', ':')) + ';</script>')
+    # ⚠ Buradaki yapılandırma dy_cfg()'nin İKİNCİ bir kopyasıydı; ucnokta gibi yeni
+    # alanlar anasayfaya geçmiyordu. Artık tek kaynak: dy_cfg().
+    s = isaretci_degistir(s, 'URUN-JS', dy_cfg())
 
     s = re.sub(r'(assets/site\.(?:css|js))\?v=\d+', rf'\1?v={VER}', s)
     open(p, 'w', encoding='utf-8').write(s)
@@ -1358,6 +1411,9 @@ def main():
 
     for slug, baslik, ozet, govde in bilgi_sayfalari():
         satirlar.append(yaz(os.path.join(KOK, slug, 'index.html'), bilgi_sayfasi(slug, baslik, ozet, govde)))
+
+    # sipariş onay ekranı — sitemap'e girmez, noindex
+    satirlar.append(yaz(os.path.join(KOK, 'siparis-alindi', 'index.html'), siparis_alindi_sayfasi()))
 
     satirlar.append(yaz(os.path.join(KOK, 'sitemap.xml'), sitemap()))
     satirlar.append(yaz(os.path.join(KOK, 'robots.txt'), robots()))
