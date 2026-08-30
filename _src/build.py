@@ -49,6 +49,10 @@ IKON_HEAD = """<link rel="icon" href="/favicon.ico" sizes="32x32">
 # Sayfalar arası geçiş: bağlantının üstüne gelindiğinde (moderate) hedef sayfa
 # arka planda indirilir, tıklanınca anında açılır. prerender DEĞİL prefetch —
 # prerender hedef sayfanın JS'ini de çalıştırır, Ads etiketi erken tetiklenirdi.
+# Google Search Console / Merchant Center alan adi dogrulamasi (2026-08-30).
+# Silinirse Merchant Center site sahipligi duser -> urunler listeden cikar.
+DOGRULAMA = '<meta name="google-site-verification" content="ZbkLmTkxEBunTYwxjdwCI4zDjGX5qxle7ubpUmiq5Eo">'
+
 SPEK = ('<script type="speculationrules">'
         '{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}'
         '</script>')
@@ -615,6 +619,7 @@ def urun_sayfasi(u):
 <link rel="canonical" href="{URL}/urun/{u['slug']}/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#132428">
+{DOGRULAMA}
 
 <meta property="og:type" content="product">
 <meta property="og:site_name" content="{e(S['ad'])}">
@@ -787,6 +792,7 @@ def bilgi_sayfasi(slug, baslik, ozet, govde, indeksle=True):
 <link rel="canonical" href="{URL}/{slug}/">
 <meta name="robots" content="{'index, follow' if indeksle else 'noindex, follow'}">
 <meta name="theme-color" content="#132428">
+{DOGRULAMA}
 {IKON_HEAD}
 {SPEK}
 <link rel="stylesheet" href="../assets/site.css?v={VER}">
@@ -1248,6 +1254,7 @@ def makale_sayfasi(slug):
 <link rel="canonical" href="{URL}/{slug}/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#132428">
+{DOGRULAMA}
 
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="{e(S['ad'])}">
