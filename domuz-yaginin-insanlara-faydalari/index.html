@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/site.css?v=16">
+<link rel="stylesheet" href="../assets/site.css?v=20">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17831951098"></script>
 <script>
@@ -111,7 +111,7 @@
 
 <div class="announce">
   <div class="container">
-    <span><svg class="ico nabiz-ic"><use href="#i-truck"></use></svg> <b class="nabiz">Tüm siparişlerde kargo ücretsiz</b></span>
+    <span><svg class="ico nabiz-ic"><use href="#i-truck"></use></svg> <b class="nabiz">TÜM SİPARİŞLERDE KARGO ÜCRETSİZ</b></span>
     <span class="sep">•</span>
     <span class="a-hide"><svg class="ico"><use href="#i-shield"></use></svg> Türkiye'nin her yerine gönderim</span>
     <span class="sep">•</span>
@@ -129,8 +129,8 @@
       </span>
     </a>
 
-    <nav class="nav" aria-label="Ana menü">
-      <button class="nav-x" aria-label="Menüyü kapat"><svg class="ico"><use href="#i-x"></use></svg></button>
+    <nav class="nav" id="ana-menu" aria-label="Ana menü">
+      <button class="nav-x" type="button" aria-label="Menüyü kapat"><svg class="ico"><use href="#i-x"></use></svg></button>
       <ul>
         <li><a href="../#urunler">Ürünler</a></li>
         <li class="has-drop">
@@ -157,7 +157,7 @@
     <div class="hdr-cta">
       <a href="tel:+905516412065" class="hdr-tel"><svg class="ico"><use href="#i-phone"></use></svg><span>0551 641 20 65</span></a>
       <a href="../#urunler" class="btn btn-gold btn-sm">Sipariş Ver</a>
-      <button class="burger" aria-label="Menüyü aç"><svg class="ico"><use href="#i-menu"></use></svg></button>
+      <button class="burger" type="button" aria-label="Menüyü aç" aria-controls="ana-menu" aria-expanded="false"><svg class="ico"><use href="#i-menu"></use></svg></button>
     </div>
   </div>
 </header>
@@ -224,10 +224,8 @@
 <p>Domuz yağı, cilt bakımında yüzyıllardır kullanılan geleneksel bir üründür. Bu sayfada aktarılanlar geleneksel kullanıma dayalı genel bilgilendirmedir; tıbbi etki iddiası taşımaz.</p>
 <p>Ancak unutulmamalıdır ki, domuz yağı kesinlikle gıda olarak tüketilmemelidir. Sadece harici kullanım için uygundur. Herhangi bir cilt probleminiz varsa hekiminize danışın; bu ürün tedavi amacıyla kullanılmaz.</p>
 <p>%100 saf ve doğal domuz yağı ürünlerimizi incelemek ve deneyimlerinizi paylaşmak için sitemizi ziyaret etmeye devam edin.</p>
-</div>
 <h2>Sık Sorulan Sorular</h2>
 <p>Domuz yağı hakkında en çok merak edilen sorular ve cevapları</p>
-</div>
 <div class="faq-w">
 <div class="faq"><h3 class="faq-h"><button type="button" class="faq-q" aria-expanded="false"><span>Domuz yağı gıda olarak tüketilebilir mi?</span><span class="faq-ic"><svg class="ico"><use href="#i-down"></use></svg></span></button></h3>
 <div class="faq-a"><div><p><strong>Hayır, kesinlikle gıda olarak tüketilmemelidir.</strong> Ürünlerimiz sadece harici kullanım (cilt üzerine uygulama) içindir. Ürünlerimiz kozmetik amaçlı, harici kullanım içindir.</p></div></div></div>
@@ -236,6 +234,7 @@
 <div class="faq"><h3 class="faq-h"><button type="button" class="faq-q" aria-expanded="false"><span>Domuz yağı alerjik reaksiyona neden olur mu?</span><span class="faq-ic"><svg class="ico"><use href="#i-down"></use></svg></span></button></h3>
 <div class="faq-a"><div><p>Ürünümüz %100 saf domuz yağıdır; katkı maddesi, parfüm veya koruyucu içermez. Yine de her ciltte farklı tepki oluşabilir. İlk kullanımda küçük bir alanda test edin; tahriş olursa kullanmayı bırakıp hekiminize danışın.</p>
 </div></div></div>
+</div>
     </div>
   </div>
 </section>
@@ -358,7 +357,7 @@
 </div>
 
 <div class="mbar">
-  <button type="button" class="mbar-sum" aria-expanded="false" aria-controls="mbar-sepet" hidden>
+  <button type="button" class="mbar-sum" aria-expanded="false" aria-controls="mbar-sepet">
     <span class="mbar-ic"><svg class="ico"><use href="#i-cart"></use></svg><b class="mbar-n">0</b></span>
     <span class="mbar-tx">
       <b class="mbar-ad">Sepetiniz</b>
@@ -393,6 +392,6 @@
 </div>
 
 <script>window.DY_CFG={"whatsapp":"905516412065","esik":0,"kargo":0,"hepbedava":true,"saat":[9,21],"urunler":{"DY-050":{"ad":"Domuz Yağı 50 gr","fiyat":450},"DY-115":{"ad":"Domuz Yağı 115 gr","fiyat":700},"DY-250":{"ad":"Domuz Yağı 250 gr","fiyat":1500},"DY-5LI":{"ad":"Domuz Yağı 5'li Paket (5 × 115 gr)","fiyat":2500},"DY-1KG":{"ad":"Domuz Yağı 1 kg","fiyat":5000}}};</script>
-<script src="../assets/site.js?v=16" defer></script>
+<script src="../assets/site.js?v=20" defer></script>
 </body>
 </html>

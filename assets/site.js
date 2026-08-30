@@ -48,17 +48,89 @@ yapiskanOlc();
 window.addEventListener('resize', yapiskanOlc, {passive:true});
 window.addEventListener('load', yapiskanOlc);
 
+/* ══════════ gövde kaydırma kilidi ══════════
+   Sayfa köküne overflow-x:hidden yazılı. Böyle bir durumda tarayıcı taşma
+   değerini KÖKTEN görüntü alanına yayar ve body'nin overflow'unu artık
+   dikkate almaz — eski kilit body'ye yazdığı için menü açıkken sayfa arkada
+   kaymaya devam ediyordu. Kilit artık kökte kuruluyor; iOS'ta tek başına kök
+   yetmediğinden panel dışındaki dokunma hareketi ayrıca iptal ediliyor.
+   Gövde SABİTLENMİYOR — sabitlenirse yapışkan başlık referansını kaybeder.
+   Menü ve galeri aynı kilidi paylaşır: biri kapanınca öteki hâlâ açıksa
+   kilit çözülmez.                                                          */
+var kilitler = {}, kilitY = 0;
+
+function kilitSayisi(){
+  var n = 0, a;
+  for(a in kilitler){ if(Object.prototype.hasOwnProperty.call(kilitler, a)) n++; }
+  return n;
+}
+/* Kökteki overflow:hidden iOS'ta bazen yetmiyor. Gövdeyi position:fixed
+   yapmak kesin çözüm ama yapışkan başlığın referansını bozuyor; onun yerine
+   panel dışındaki parmak hareketini doğrudan iptal ediyoruz. */
+function dokunmaEngeli(ev){
+  var panel = document.querySelector('.nav.on');
+  if(panel && panel.contains(ev.target)) return;   /* açık menü kendi içinde kaysın */
+  if(ev.cancelable) ev.preventDefault();
+}
+function kilidiKur(){
+  var k = document.documentElement, b = document.body;
+  kilitY = window.pageYOffset || k.scrollTop || 0;
+  var bosluk = window.innerWidth - k.clientWidth;   /* kaybolan kaydırma çubuğu */
+  if(bosluk > 0) b.style.paddingRight = bosluk + 'px';
+  k.classList.add('kilit');
+  document.addEventListener('touchmove', dokunmaEngeli, {passive:false});
+}
+function kilidiCoz(){
+  var k = document.documentElement, b = document.body;
+  document.removeEventListener('touchmove', dokunmaEngeli, {passive:false});
+  k.classList.remove('kilit');
+  b.style.paddingRight = '';
+  if(Math.abs((window.pageYOffset || 0) - kilitY) > 1){
+    var akis = k.style.scrollBehavior;
+    k.style.scrollBehavior = 'auto';   /* html{scroll-behavior:smooth} geri dönüşü animasyona çevirmesin */
+    window.scrollTo(0, kilitY);
+    k.style.scrollBehavior = akis;
+  }
+}
+function govdeKilit(ad, ac){
+  ac = !!ac;
+  if(ac === !!kilitler[ad]) return;
+  if(ac) kilitler[ad] = 1; else delete kilitler[ad];
+  var n = kilitSayisi();
+  if(ac && n === 1) kilidiKur();
+  else if(!ac && n === 0) kilidiCoz();
+}
+
+
+/* ══════════ mobil menü ══════════ */
 var nav = $('.nav'), burger = $('.burger'), navX = $('.nav-x'), scrim = $('.scrim');
+function menuAcik(){ return !!nav && nav.classList.contains('on'); }
 function menu(ac){
   if(!nav) return;
+  ac = !!ac;
+  if(ac === menuAcik()) return;                    /* durum değişmiyorsa kilide dokunma */
   nav.classList.toggle('on', ac);
   if(scrim) scrim.classList.toggle('on', ac);
-  document.body.style.overflow = ac ? 'hidden' : '';
+  if(burger) burger.setAttribute('aria-expanded', ac ? 'true' : 'false');
+  govdeKilit('menu', ac);
+  try{
+    if(ac){ if(navX) navX.focus({preventScroll:true}); }
+    else if(burger && nav.contains(document.activeElement)) burger.focus({preventScroll:true});
+  }catch(e){}
 }
-if(burger) burger.addEventListener('click', function(){ menu(!nav.classList.contains('on')); });
+if(burger){
+  burger.setAttribute('aria-expanded', 'false');
+  burger.addEventListener('click', function(){ menu(!menuAcik()); });
+}
 if(navX)   navX.addEventListener('click', function(){ menu(false); });
 if(scrim)  scrim.addEventListener('click', function(){ menu(false); });
 if(nav) $$('.nav a').forEach(function(a){ a.addEventListener('click', function(){ menu(false); }); });
+
+/* Esc kapatsın; masaüstü genişliğine geçilince menü açık kalmasın. */
+document.addEventListener('keydown', function(ev){ if(ev.key === 'Escape') menu(false); });
+window.addEventListener('resize', function(){
+  if(window.innerWidth > 1040) menu(false);
+}, {passive:true});
 
 function oz(v){
   return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;')
@@ -133,10 +205,10 @@ if(lb){
       lbImg.src = el.getAttribute('data-lb');
       lbCap.textContent = el.getAttribute('data-lb-cap') || '';
       lb.classList.add('on');
-      document.body.style.overflow = 'hidden';
+      govdeKilit('lb', true);
     });
   });
-  var kapat = function(){ lb.classList.remove('on'); document.body.style.overflow = ''; };
+  var kapat = function(){ lb.classList.remove('on'); govdeKilit('lb', false); };
   lb.addEventListener('click', kapat);
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') kapat(); });
 }
@@ -198,40 +270,47 @@ function ozetiCiz(satirlar, ara){
     var adet  = 0;
     kalem.forEach(function(x){ adet += x.adet; });
 
-    mSum.hidden = (adet === 0);
-    if(!adet){
-      mSum.setAttribute('aria-expanded', 'false');
-      if(mList) mList.hidden = true;
-    }
-
+    /* Şerit sepet boşken de durur; müşteri oku açıp listeden ürün ekleyebilsin. */
     var m;
-    if((m = $('.mbar-n')))  m.textContent = adet;
+    if((m = $('.mbar-n')))  { m.textContent = adet; m.hidden = (adet === 0); }
     if((m = $('.mbar-v')))  m.textContent = tl(ara);
-    if((m = $('.mbar-ad'))) m.textContent = kalem.length === 1 ? kalem[0].ad : adet + ' ürün seçildi';
+    if((m = $('.mbar-ad'))) m.textContent = !adet ? 'Sepetiniz boş'
+                                          : kalem.length === 1 ? kalem[0].ad
+                                          : adet + ' ürün seçildi';
     if((m = $('.mbar-alt'))){
-      m.textContent = kalem.length === 1
-        ? kalem[0].adet + ' adet · ' + tl(kalem[0].tutar)
+      m.textContent = !adet ? 'Ürün eklemek için dokunun'
+        : kalem.length === 1 ? kalem[0].adet + ' adet · ' + tl(kalem[0].tutar)
         : kalem.map(function(x){ return x.ad + ' ×' + x.adet; }).join('  ·  ');
     }
     if((m = $('.mbar-lbl'))) m.textContent = adet ? 'Siparişi Gönder' : 'WhatsApp';
 
     if(mList){
-      mList.innerHTML = kalem.map(function(x){
-        return '<div class="mrow">' +
-          '<span class="mrow-n">' + oz(x.ad) + '</span>' +
+      /* Liste TÜM ürünleri gösterir — sepette olmayanlar 0 adetle durur ki
+         müşteri şeridi açıp doğrudan buradan ekleyebilsin. Sepette olan satır
+         .dolu sınıfını alır: adı koyulaşır, tutarı vurgulanır, çöp kutusu çıkar. */
+      var secili = {};
+      kalem.forEach(function(x){ secili[x.k] = x; });
+
+      mList.innerHTML = Object.keys(URUNLER).map(function(k){
+        var u = URUNLER[k], x = secili[k], n = x ? x.adet : 0;
+        return '<div class="mrow' + (n ? ' dolu' : '') + '">' +
+          '<span class="mrow-n">' + oz(u.ad) + '</span>' +
           '<div class="qty-xs">' +
-            '<button type="button" data-mact="eksi" data-k="' + oz(x.k) + '" aria-label="Azalt">' +
+            '<button type="button" data-mact="eksi" data-k="' + oz(k) + '"' + (n ? '' : ' disabled') +
+              ' aria-label="' + oz(u.ad) + ' adedini azalt">' +
               '<svg class="ico"><use href="#i-minus"></use></svg></button>' +
-            '<b>' + x.adet + '</b>' +
-            '<button type="button" data-mact="arti" data-k="' + oz(x.k) + '" aria-label="Artır">' +
+            '<b>' + n + '</b>' +
+            '<button type="button" data-mact="arti" data-k="' + oz(k) + '"' +
+              ' aria-label="' + oz(u.ad) + ' adedini artır">' +
               '<svg class="ico"><use href="#i-plus"></use></svg></button>' +
           '</div>' +
-          '<span class="mrow-p">' + tl(x.tutar) + '</span>' +
-          '<button type="button" class="mrow-x" data-mrm="' + oz(x.k) + '" ' +
-            'aria-label="' + oz(x.ad) + ' ürününü sepetten çıkar">' +
-            '<svg class="ico"><use href="#i-trash"></use></svg></button>' +
+          '<span class="mrow-p">' + tl(n ? u.fiyat * n : u.fiyat) + '</span>' +
+          (n ? '<button type="button" class="mrow-x" data-mrm="' + oz(k) + '" ' +
+                 'aria-label="' + oz(u.ad) + ' ürününü sepetten çıkar">' +
+                 '<svg class="ico"><use href="#i-trash"></use></svg></button>'
+             : '<span class="mrow-bos" aria-hidden="true"></span>') +
         '</div>';
-      }).join('') + (kalem.length
+      }).join('') + (adet
         ? '<button type="button" class="mbar-bosalt">' +
           '<svg class="ico"><use href="#i-trash"></use></svg> Sepeti boşalt</button>'
         : '');

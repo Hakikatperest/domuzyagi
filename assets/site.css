@@ -8,6 +8,8 @@
   --tx:#17242a; --tx-2:#4d5c60; --tx-3:#8a9599;
   --line:#e9e1d3; --line-2:#f1ebe0;
   --wa:#25d366; --wa-2:#128c7e;
+  /* kampanya vurgusu — koyu zümrüt; neon yeşil bilinçli olarak kullanılmıyor */
+  --yesil:#0f8f68; --yesil-2:#4bd6a4; --yesil-3:#0a6b4e;
   --tel:#2f7fd4; --tel-2:#1b5fa8; --tel-3:#144982;
   --r:18px; --r-sm:12px; --r-lg:26px;
   --sh:0 1px 2px rgba(19,36,40,.04), 0 8px 28px rgba(19,36,40,.06);
@@ -18,9 +20,14 @@
   --ease:cubic-bezier(.22,.61,.36,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
+/* display veren sınıf kuralları [hidden]'ı yeniyordu; öznitelik her zaman kazansın */
+[hidden]{display:none!important}
 .hp-v,.hp-k-yeni,.hp-k-eski,.p-price .v,.pdp-price .v,.sum-ara,.sum-toplam,.sum-kargo,.mbar-v,.mrow-p,.buy-v,.rel-b i,.mini i,.p-sub,.cart-row .p{font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:var(--yapiskan-h,120px)}
-body{font-family:var(--govde);color:var(--tx);background:var(--paper);line-height:1.7;font-size:16px;overflow-x:hidden;font-weight:400}
+/* ⛔ body'ye overflow-x:hidden EKLEME: html'de de olduğu için body kaydırma kabına
+   dönüşür ve yapışkan duyuru şeridi + başlık yapışmayı bırakır. Yatay taşma
+   koruması aşağıda yalnızca html'de duruyor. */
+body{font-family:var(--govde);color:var(--tx);background:var(--paper);line-height:1.7;font-size:16px;font-weight:400}
 img{max-width:100%;display:block}
 a{text-decoration:none;color:inherit}
 ul{list-style:none}
@@ -35,7 +42,7 @@ ul{list-style:none}
 .announce span{display:inline-flex;align-items:center;gap:7px}
 .announce .ico{width:14px;height:14px;color:var(--gold-2)}
 .announce b{color:var(--gold-2);font-weight:600}
-.announce .nabiz{display:inline-block;font-weight:700;transform-origin:center;animation:duyuruNabiz 2.4s var(--ease) infinite}
+.announce .nabiz{display:inline-block;font-weight:700;letter-spacing:.045em;transform-origin:center;animation:duyuruNabiz 2.4s var(--ease) infinite}
 @keyframes duyuruNabiz{
   0%,68%,100%{transform:scale(1);color:var(--gold-2);text-shadow:0 0 0 rgba(224,194,129,0)}
   80%{transform:scale(1.07);color:#fbeecb;text-shadow:0 0 15px rgba(224,194,129,.65)}
@@ -170,8 +177,16 @@ ul{list-style:none}
 .prod:hover{transform:translateY(-6px);box-shadow:var(--sh-lg);border-color:rgba(201,162,74,.45)}
 .prod.hot{border-color:var(--gold);box-shadow:0 2px 6px rgba(201,162,74,.12),0 22px 54px rgba(201,162,74,.18)}
 .prod.hot::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold-3),var(--gold-2),var(--gold-3));z-index:3}
-.p-badge{position:absolute;top:16px;right:16px;z-index:4;background:linear-gradient(135deg,var(--gold-3),var(--gold));color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:7px 13px;border-radius:100px;box-shadow:0 4px 14px rgba(201,162,74,.36)}
-.p-badge.teal{background:linear-gradient(135deg,var(--ink),var(--ink-3));box-shadow:0 4px 14px rgba(19,36,40,.3)}
+/* Kampanya rozeti kartın sağ üst köşesinden ÇAPRAZ geçer.
+   .prod'da overflow:hidden olduğu için şeridin uçları köşede kesilir. */
+.p-badge{
+  position:absolute;top:24px;right:-58px;width:210px;z-index:4;
+  transform:rotate(45deg);transform-origin:center;
+  text-align:center;padding:7px 0;
+  background:linear-gradient(135deg,var(--yesil-2) 0%,var(--yesil) 55%,var(--yesil-3) 100%);
+  color:#04291d;font-size:.66rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  pointer-events:none;
+}
 .p-img{position:relative;background:linear-gradient(165deg,var(--cream) 0%,var(--paper-2) 100%);height:290px;display:block;overflow:hidden}
 .p-img img{width:100%;height:100%;object-fit:cover;transition:.5s var(--ease)}
 .prod:hover .p-img img{transform:scale(1.05)}
@@ -223,19 +238,26 @@ ul{list-style:none}
 .pick-i.is-secili{border-color:var(--gold);background:var(--paper);box-shadow:0 2px 10px rgba(201,162,74,.16)}
 .pick-g{width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--cream);display:block}
 .pick-g img{width:100%;height:100%;object-fit:cover}
-.pick-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pick-t{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .pick-t b{font-family:var(--baslik);font-size:0.978rem;font-weight:700;color:var(--ink);line-height:1.25}
 .pick-t b a:hover{color:var(--gold-3)}
 .pick-t>span{font-size:.82rem;font-weight:700;color:var(--gold-3)}
-.pick-t>span i{font-style:normal;font-weight:500;color:var(--tx-3)}
-.pick-b{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gold-3);background:var(--cream);border:1px solid var(--gold-2);border-radius:100px;padding:2px 8px;margin-left:6px;vertical-align:middle}
+.pick-b{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;color:var(--yesil-3);background:rgba(75,214,164,.14);border:1px solid rgba(15,143,104,.45);border-radius:100px;padding:2px 8px;margin-left:6px;vertical-align:middle}
 .qty-sm{flex-shrink:0}
 .qty-sm button{width:32px;height:36px}
 .qty-sm input{width:36px;height:36px;font-size:.9rem}
+/* Dar ekranda esnek sarma kullanılıyordu; uzun ürün adı (5'li paket) görseli
+   kendi satırına itip kartı diğerlerinden farklı gösteriyordu. Izgara ile
+   yerleşim ada bağlı olmaktan çıktı: görsel + metin üstte, adet altta. */
 @media(max-width:460px){
-  .pick-i{flex-wrap:wrap;gap:10px}
-  .pick-t{flex:1 1 auto}
-  .qty-sm{margin-left:auto}
+  .pick-i{
+    display:grid;grid-template-columns:52px minmax(0,1fr);
+    grid-template-areas:'gorsel metin' 'adet adet';
+    align-items:center;gap:10px 13px;
+  }
+  .pick-g{grid-area:gorsel}
+  .pick-t{grid-area:metin;min-width:0}
+  .qty-sm{grid-area:adet;justify-self:end;margin-left:0}
 }
 .cekout-alt{margin-top:18px;padding-top:18px;border-top:1px solid var(--line);text-align:center}
 .cekout-alt>span{display:block;font-size:.78rem;color:var(--tx-3);margin-bottom:10px}
@@ -397,8 +419,13 @@ ul{list-style:none}
 .mbar-sum[aria-expanded="true"] .mbar-ok{transform:rotate(0deg)}
 
 /* açılır sepet listesi */
-.mbar-list{max-height:min(44vh,290px);overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--paper-2);border-bottom:1px solid var(--line-2)}
+.mbar-list{max-height:min(44vh,290px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--paper-2);border-bottom:1px solid var(--line-2)}
 .mrow{display:flex;align-items:center;gap:9px;padding:9px 14px;border-bottom:1px solid var(--line-2)}
+/* sepette olmayan ürün de listede durur — sönük görünür, artı ile eklenir */
+.mrow:not(.dolu) .mrow-n{color:var(--tx-2);font-weight:500}
+.mrow:not(.dolu) .mrow-p{color:var(--tx-3);font-weight:600}
+.mrow.dolu{background:var(--paper)}
+.mrow-bos{width:30px;flex-shrink:0}   /* çöp kutusu yokken sütun hizası kaymasın */
 .mrow-n{flex:1;min-width:0;font-size:.82rem;font-weight:600;color:var(--ink);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mrow-p{font-size:.81rem;font-weight:700;color:var(--gold-3);white-space:nowrap;min-width:58px;text-align:right}
 .mrow-x{width:30px;height:30px;flex-shrink:0;border-radius:9px;background:none;border:1px solid var(--line);color:var(--tx-3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s}
@@ -461,16 +488,20 @@ ul{list-style:none}
      başlık artık duyuru şeridinin altında durduğu için panel o kadar aşağı kayar.
      .bf sınıfı yalnızca destek varken eklenir, telafi de yalnızca o zaman uygulanır. */
   .bf .nav{top:calc(-1 * var(--duyuru-h,38px))}
-  .nav{position:fixed;top:0;right:-100%;width:min(320px,86vw);height:100vh;background:#fff;box-shadow:-14px 0 46px rgba(19,36,40,.28);border-left:1px solid var(--line);padding:88px 22px 30px;overflow-y:auto;transition:right .34s var(--ease);z-index:950}
-  .nav.on{right:0}
+  /* 100vh mobilde adres çubuğunun altına taşıyor → dvh varsa o kullanılır.
+     overscroll-behavior: panelin sonuna gelince kaydırma arkadaki sayfaya
+     zincirlenmesin. visibility: kapalı panel sekme sırasına girmesin.     */
+  .nav{position:fixed;top:0;right:-100%;width:min(320px,86vw);height:100vh;height:100dvh;background:#fff;box-shadow:-14px 0 46px rgba(19,36,40,.28);border-left:1px solid var(--line);padding:88px 22px calc(30px + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;visibility:hidden;transition:right .34s var(--ease),visibility .34s;z-index:950}
+  .nav.on{right:0;visibility:visible}
   .nav>ul{flex-direction:column;align-items:stretch;gap:3px}
   .nav a{padding:13px 15px;font-size:.96rem}
-  .drop{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:none;border-left:2px solid var(--line);border-radius:0;margin:2px 0 6px 15px;padding:0 0 0 6px;min-width:0}
+  .drop{position:static;opacity:1;visibility:inherit;transform:none;box-shadow:none;border:none;border-left:2px solid var(--line);border-radius:0;margin:2px 0 6px 15px;padding:0 0 0 6px;min-width:0}
   .drop a{font-size:.86rem;padding:9px 10px}
   .nav-x{position:absolute;top:22px;right:22px;background:none;border:1px solid var(--line);border-radius:10px;padding:9px;cursor:pointer;color:var(--ink);display:flex}
   .nav-x .ico{width:19px;height:19px}
-  /* perde: sayfayı karartmadan yalnızca dokunarak kapatma alanı sağlar */
-  .scrim{position:fixed;inset:0;background:rgba(19,36,40,.10);z-index:890;opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility .3s}
+  /* perde: menünün açık olduğunu belli eder, dokunarak kapatma alanı sağlar.
+     touch-action:none → perde üzerindeki parmak hareketi sayfayı kaydırmaz. */
+  .scrim{position:fixed;inset:0;background:rgba(19,36,40,.34);z-index:890;opacity:0;visibility:hidden;touch-action:none;transition:opacity .3s var(--ease),visibility .3s}
   .scrim.on{opacity:1;visibility:visible}
 }
 @media(min-width:1041px){.nav-x,.scrim{display:none}}
@@ -543,11 +574,10 @@ ul{list-style:none}
 .pdp-img img{width:100%;height:auto;object-fit:cover;transition:.5s var(--ease)}
 .pdp-img:hover img{transform:scale(1.03)}
 .pdp-img .p-zoom{opacity:1;bottom:16px;right:16px}
-.pdp-badge{display:inline-block;background:linear-gradient(135deg,var(--gold-3),var(--gold));color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:100px;margin-bottom:16px}
+.pdp-badge{display:inline-block;background:linear-gradient(135deg,var(--yesil-2),var(--yesil));color:#04291d;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:100px;margin-bottom:16px}
 
 .pdp-price{display:flex;align-items:baseline;gap:14px;padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid var(--line)}
 .pdp-price .v{font-family:var(--baslik);font-size:2.32rem;font-weight:700;color:var(--ink);line-height:1}
-.pdp-price .u{font-size:.86rem;color:var(--tx-3)}
 .pdp-desc{color:var(--tx-2);margin-bottom:20px}
 .pdp-info .p-feat{margin-bottom:20px}
 .pdp-stok{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:.87rem;color:var(--tx-2);background:var(--cream);border:1px solid var(--line);border-radius:var(--r-sm);padding:13px 17px;margin-bottom:22px}
@@ -663,6 +693,15 @@ ul{list-style:none}
 html{overflow-x:hidden;max-width:100%}
 body{max-width:100%}
 
+/* 1b) Menü veya galeri açıkken sayfa arkada kaymasın.
+   ÖNEMLİ: kök elemanda overflow-x:hidden olduğu için tarayıcı taşma
+   değerini KÖKTEN alır; body'ye overflow:hidden yazmak hiçbir işe
+   yaramaz — kilit bu yüzden html'e kurulur.
+   Gövde SABİTLENMİYOR (position:fixed): sabitlenirse yapışkan başlık
+   referansını kaybeder. iOS için JS ayrıca panel dışındaki touchmove'u
+   iptal ediyor (site.js → dokunmaEngeli). */
+html.kilit{overflow:hidden;overscroll-behavior:none}
+
 /* 2) Uzun kelime/URL satır kırsın */
 body{overflow-wrap:break-word;word-break:normal}
 .pg-body a:not(.btn),.ftr-c a,.ct a{overflow-wrap:anywhere}
@@ -738,26 +777,35 @@ img,svg,video,iframe{max-width:100%;height:auto}
    ══════════════════════════════════════════════ */
 /* kampanya kendi kartında: ne aldığın, normal fiyatı ve kazancın açıkça yazar */
 .hp-kmp{
+  position:relative;isolation:isolate;
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
   gap:10px 18px;margin:9px 0 18px;padding:13px 17px;border-radius:16px;
-  background:linear-gradient(150deg,rgba(201,162,74,.21) 0%,rgba(163,127,47,.06) 100%);
-  border:1px solid rgba(201,162,74,.40);
-  box-shadow:0 1px 0 rgba(255,255,255,.13) inset,0 8px 26px rgba(120,92,26,.20);
+  background:linear-gradient(150deg,rgba(15,143,104,.30) 0%,rgba(10,107,78,.08) 100%);
+  border:1px solid rgba(75,214,164,.46);
+  box-shadow:0 1px 0 rgba(255,255,255,.15) inset,0 10px 30px rgba(6,74,54,.34);
 }
+/* göz kartı bulsun diye yavaşça nefes alan yeşil hâle — yalnız opacity oynar */
+.hp-kmp::before{
+  content:'';position:absolute;inset:-1px;border-radius:inherit;z-index:-1;pointer-events:none;
+  box-shadow:0 0 0 1px rgba(75,214,164,.55),0 0 26px rgba(35,180,130,.45);
+  animation:kmpNefes 3.8s var(--ease) infinite;
+}
+@keyframes kmpNefes{0%,100%{opacity:.26}50%{opacity:.9}}
+@media(prefers-reduced-motion:reduce){.hp-kmp::before{animation:none;opacity:.5}}
 .hp-k-u{display:flex;flex-direction:column;gap:6px;min-width:0}
 .hp-k-rz{
   align-self:flex-start;font-size:.57rem;font-weight:800;letter-spacing:.12em;
-  text-transform:uppercase;color:#2c1f05;padding:3px 10px;border-radius:100px;white-space:nowrap;
-  background:linear-gradient(150deg,var(--gold-2) 0%,var(--gold) 100%);
+  text-transform:uppercase;color:#04291d;padding:3px 10px;border-radius:100px;white-space:nowrap;
+  background:linear-gradient(150deg,var(--yesil-2) 0%,var(--yesil) 100%);
   box-shadow:0 1px 0 rgba(255,255,255,.5) inset;
 }
 .hp-k-ad{font-size:.83rem;font-weight:600;color:rgba(255,255,255,.85);line-height:1.35}
 .hp-k-a{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
-.hp-k-yeni{font-family:var(--baslik);font-size:clamp(1.35rem,3.91vw,1.53rem);font-weight:700;color:#f6e6bd;line-height:1}
+.hp-k-yeni{font-family:var(--baslik);font-size:clamp(1.35rem,3.91vw,1.53rem);font-weight:700;color:#c8f7e3;line-height:1}
 .hp-k-eski{font-size:.86rem;color:rgba(255,255,255,.4)}
 .hp-k-kar{
-  font-size:.71rem;font-weight:700;white-space:nowrap;color:rgba(255,255,255,.92);
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.19);
+  font-size:.71rem;font-weight:700;white-space:nowrap;color:#dcfcef;
+  background:rgba(75,214,164,.18);border:1px solid rgba(75,214,164,.38);
   padding:3px 9px;border-radius:100px;
 }
 .hero-kargo{
@@ -849,7 +897,7 @@ img,svg,video,iframe{max-width:100%;height:auto}
 .tr-ic{box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 4px 10px rgba(19,36,40,.08)}
 .step-n,.adim-n{box-shadow:0 2px 5px rgba(19,36,40,.2),0 8px 18px rgba(19,36,40,.18)}
 .ct-ic{box-shadow:0 1px 0 rgba(255,255,255,.1) inset,0 8px 20px rgba(0,0,0,.24)}
-.p-badge{box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 4px 14px rgba(201,162,74,.4),0 10px 22px rgba(19,36,40,.16)}
+.p-badge{box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 3px 12px rgba(6,74,54,.34)}
 .fab a{box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 6px 14px rgba(0,0,0,.22),0 14px 30px rgba(0,0,0,.2)}
 .fab a:active{transform:scale(.96)}
 .cekout{box-shadow:0 2px 4px rgba(19,36,40,.05),0 18px 36px rgba(19,36,40,.1),0 44px 80px rgba(19,36,40,.12)}
@@ -869,9 +917,20 @@ img,svg,video,iframe{max-width:100%;height:auto}
   from{opacity:0;transform:translateY(14px) scale(.9)}
   to  {opacity:1;transform:translateY(0) scale(1)}
 }
-@keyframes heroParla{
-  from{background-position:-160% 0}
-  to  {background-position:260% 0}
+/* Başlık perdesi: her satır kendi maskesinin arkasından yukarı yürür.
+   Yalnız transform oynatılır — GPU'da kalır, mobilde kare atlamaz. */
+@keyframes heroSatir{
+  from{transform:translateY(140%)}
+  to  {transform:translateY(0)}
+}
+@keyframes heroCizgi{
+  from{transform:scaleX(0)}
+  to  {transform:scaleX(1)}
+}
+/* çizginin üzerinde gezinen ışık: boyanan alan 3-4 piksellik bir şerit */
+@keyframes heroIsik{
+  0%      {background-position:-70% 0}
+  58%,100%{background-position:170% 0}
 }
 
 .hero-tx>*,.hero-buy>*{animation:heroYukari .85s var(--ease) backwards}
@@ -888,18 +947,33 @@ img,svg,video,iframe{max-width:100%;height:auto}
 .chip-a{animation-delay:.85s}
 .chip-b{animation-delay:.98s}
 
-/* başlıkta bir kez geçen altın parıltı — desteklenmezse düz altın kalır */
-@supports ((-webkit-background-clip:text) or (background-clip:text)){
-  .hero h1 em{
-    background:linear-gradient(100deg,
-      var(--gold-2) 0%,var(--gold-2) 38%,
-      #fff8e6 47%,#fff8e6 53%,
-      var(--gold-2) 62%,var(--gold-2) 100%);
-    background-size:260% 100%;
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;
-    animation:heroParla 2.2s var(--ease) 1.1s 1 both;
-  }
+/* ── başlık: perde açılışı + altın çizginin çizilmesi ──
+   Eski etki metnin kendisini background-clip:text ile boyayıp her karede
+   yeniden boyuyordu; büyük punto + mobil = takılma. Yeni etkide metin sabit
+   boyalı kalır, hareket eden tek şey transform olduğu için akıcı çalışır.  */
+.hero h1{animation:none}                     /* giriş artık satır satır */
+.hero h1 .hh-l{
+  display:block;overflow:hidden;             /* perde */
+  padding-bottom:.22em;margin-bottom:-.22em; /* alt uzantı ve çizgi kırpılmasın */
+}
+.hero h1 .hh-w{
+  display:block;
+  animation:heroSatir .95s cubic-bezier(.22,.8,.24,1) both;
+}
+.hero h1 .hh-l:nth-child(1) .hh-w{animation-delay:.08s}
+.hero h1 .hh-l:nth-child(2) .hh-w{animation-delay:.26s}
+
+.hero h1 .hh-em{position:relative;display:inline-block;font-style:normal;color:var(--gold-2)}
+.hero h1 .hh-em::after{
+  content:'';position:absolute;left:0;right:0;bottom:-.09em;
+  height:.07em;min-height:3px;border-radius:100px;
+  transform-origin:left center;
+  background:linear-gradient(90deg,
+    var(--gold-3) 0%,var(--gold) 24%,#fff4d4 46%,var(--gold) 68%,var(--gold-3) 100%);
+  background-size:230% 100%;background-position:-70% 0;   /* ışık ilk turda zıplamasın */
+  box-shadow:0 0 16px rgba(201,162,74,.5);
+  animation:heroCizgi .75s cubic-bezier(.22,.8,.24,1) 1s both,
+            heroIsik 5s linear 1.85s infinite;
 }
 
 /* dar ekranda blur'suz giriş — düşük donanımda takılmasın */
@@ -912,7 +986,10 @@ img,svg,video,iframe{max-width:100%;height:auto}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .hero-tx>*,.hero-buy>*,.hero-frame,.hero-chip,.hero h1 em{animation:none!important}
-  .hero h1 em{-webkit-text-fill-color:var(--gold-2);color:var(--gold-2)}
+  /* animasyonlar kapanınca hiçbir öğe gizli kalmaz: başlangıç durumları
+     yalnızca kare zincirlerinde tanımlı, kural gövdelerinde değil. */
+  .hero-tx>*,.hero-buy>*,.hero-frame,.hero-chip,
+  .hero h1 .hh-w,.hero h1 .hh-em::after{animation:none!important}
+  .hero h1 .hh-em{color:var(--gold-2)}
   .chip-a,.chip-b,.hero-frame{transform:none!important}
 }

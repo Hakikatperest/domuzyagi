@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 16                                   # assets/site.css?v=N
+VER  = 20                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -109,9 +109,6 @@ def tl2(n):
     """250 → '250,00'  (feed ve tablo için)"""
     return f"{n:,.2f}".replace(',', '\x00').replace('.', ',').replace('\x00', '.')
 
-def birim(u):
-    return f"{u['fiyat']/u['gram']:.2f}".replace('.', ',') + ' ₺ / gram'
-
 def e(x):
     """öznitelik içi (tırnak dahil kaçılır)"""
     return html.escape(str(x), quote=True)
@@ -130,7 +127,7 @@ def ikon(ad, sinif='ico'):
 
 # ─────────────────────────── ortak parçalar ───────────────────────────
 def duyuru():
-    kargo_msj = ('<b class="nabiz">Tüm siparişlerde kargo ücretsiz</b>' if HEP_BEDAVA
+    kargo_msj = ('<b class="nabiz">TÜM SİPARİŞLERDE KARGO ÜCRETSİZ</b>' if HEP_BEDAVA
                  else f'<b class="nabiz">{tl(ESIK)}</b> ve üzeri siparişlerde kargo bizden')
     return f'''<div class="announce">
   <div class="container">
@@ -155,8 +152,8 @@ def header(kok='/'):
       </span>
     </a>
 
-    <nav class="nav" aria-label="Ana menü">
-      <button class="nav-x" aria-label="Menüyü kapat">{ikon("x")}</button>
+    <nav class="nav" id="ana-menu" aria-label="Ana menü">
+      <button class="nav-x" type="button" aria-label="Menüyü kapat">{ikon("x")}</button>
       <ul>
         <li><a href="{capa}#urunler">Ürünler</a></li>
         <li class="has-drop">
@@ -183,7 +180,7 @@ def header(kok='/'):
     <div class="hdr-cta">
       <a href="tel:{S['telefon']}" class="hdr-tel">{ikon("phone")}<span>{S['telefon_gosterim']}</span></a>
       <a href="{capa}#urunler" class="btn btn-gold btn-sm">Sipariş Ver</a>
-      <button class="burger" aria-label="Menüyü aç">{ikon("menu")}</button>
+      <button class="burger" type="button" aria-label="Menüyü aç" aria-controls="ana-menu" aria-expanded="false">{ikon("menu")}</button>
     </div>
   </div>
 </header>
@@ -255,7 +252,7 @@ def sabitler():
 </div>
 
 <div class="mbar">
-  <button type="button" class="mbar-sum" aria-expanded="false" aria-controls="mbar-sepet" hidden>
+  <button type="button" class="mbar-sum" aria-expanded="false" aria-controls="mbar-sepet">
     <span class="mbar-ic">{ikon("cart")}<b class="mbar-n">0</b></span>
     <span class="mbar-tx">
       <b class="mbar-ad">Sepetiniz</b>
@@ -304,8 +301,8 @@ def urun_secici(kok='/', aktif=None):
             <img src="{kok}images/{u['gorsel']}" alt="" width="{en}" height="{boy}" loading="lazy">
           </a>
           <div class="pick-t">
-            <b><a href="{kok}urun/{u['slug']}/">{t(u['tam_ad'])}</a></b>{rozet}
-            <span>{tl(u['fiyat'])} <i>· {birim(u)}</i></span>
+            <b><a href="{kok}urun/{u['slug']}/">{t(u['tam_ad'])}</a>{rozet}</b>
+            <span>{tl(u['fiyat'])}</span>
           </div>
           <div class="qty qty-sm" data-p="{u['id']}">
             <button type="button" data-act="eksi" aria-label="{e(u['tam_ad'])} adedini azalt">{ikon("minus")}</button>
@@ -623,7 +620,6 @@ def urun_sayfasi(u):
         <h1>{t(u['tam_ad'])}</h1>
         <div class="pdp-price">
           <span class="v">{tl(u['fiyat'])}</span>
-          <span class="u">{birim(u)}</span>
         </div>
         <p class="pdp-desc">{t(u['feed_aciklama'])}</p>
         <ul class="p-feat">
@@ -671,7 +667,6 @@ def urun_sayfasi(u):
           <tr><th>Ürün kodu</th><td>{u['id']}</td></tr>
           <tr><th>Net miktar</th><td>{u['gram']} gram{f" ({u['adet']} × {u['gram']//u['adet']} gr)" if u['adet'] > 1 else ""}</td></tr>
           <tr><th>Fiyat</th><td>{tl2(u['fiyat'])} ₺</td></tr>
-          <tr><th>Gram başına</th><td>{birim(u)}</td></tr>
           <tr><th>İçerik</th><td>%100 domuz yağı — katkı maddesi, parfüm ve koruyucu içermez</td></tr>
           <tr><th>Ambalaj</th><td>Isıya dayanıklı ambalaj</td></tr>
           <tr><th>Kullanım</th><td>Harici kullanım içindir; gıda olarak tüketilmez</td></tr>
@@ -917,13 +912,12 @@ def fiyat_tablosu():
 <td>{t(u['tam_ad'])}</td>
 <td>{t(u['gramaj_etiket'])}</td>
 <td>{tl(u['fiyat'])}</td>
-<td>{birim(u)}</td>
 <td>{"<strong>Ücretsiz</strong>" if (HEP_BEDAVA or u['kargo_bedava']) else "Alıcıya ait"}</td>
 <td><a href="{wa(u['tam_ad'] + ' sipariş etmek istiyorum.')}" target="_blank" rel="noopener">Sipariş</a></td>
 </tr>''' for u in URUNLER)
     return f'''<div class="tbl-wrap"><table>
 <thead>
-<tr><th>Ürün</th><th>Gramaj</th><th>Fiyat</th><th>Gram başına</th><th>Kargo</th><th>İşlem</th></tr>
+<tr><th>Ürün</th><th>Gramaj</th><th>Fiyat</th><th>Kargo</th><th>İşlem</th></tr>
 </thead>
 <tbody>{satir}
 </tbody>
@@ -1190,7 +1184,7 @@ def anasayfa():
     kampanya = next((u for u in URUNLER if u['one_cikan']), None)
 
     ogeler = [f'<div class="hp-item">'
-              f'<span class="hp-g">{t(u["gramaj_etiket"].split(" —")[0])}</span>'
+              f'<span class="hp-g">{t(u["gramaj_etiket"].split(" —")[0])} Domuz Yağı</span>'
               f'<span class="hp-v">{tl(u["fiyat"])}</span></div>' for u in normal]
 
     kmp_kart = ''

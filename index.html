@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=16">
+<link rel="stylesheet" href="assets/site.css?v=20">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17831951098"></script>
 <script>
@@ -385,7 +385,7 @@
 <!-- DUYURU:BAŞ -->
 <div class="announce">
   <div class="container">
-    <span><svg class="ico nabiz-ic"><use href="#i-truck"></use></svg> <b class="nabiz">Tüm siparişlerde kargo ücretsiz</b></span>
+    <span><svg class="ico nabiz-ic"><use href="#i-truck"></use></svg> <b class="nabiz">TÜM SİPARİŞLERDE KARGO ÜCRETSİZ</b></span>
     <span class="sep">•</span>
     <span class="a-hide"><svg class="ico"><use href="#i-shield"></use></svg> Türkiye'nin her yerine gönderim</span>
     <span class="sep">•</span>
@@ -406,8 +406,8 @@
       </span>
     </a>
 
-    <nav class="nav" aria-label="Ana menü">
-      <button class="nav-x" aria-label="Menüyü kapat"><svg class="ico"><use href="#i-x"></use></svg></button>
+    <nav class="nav" id="ana-menu" aria-label="Ana menü">
+      <button class="nav-x" type="button" aria-label="Menüyü kapat"><svg class="ico"><use href="#i-x"></use></svg></button>
       <ul>
         <li><a href="#urunler">Ürünler</a></li>
         <li class="has-drop">
@@ -434,7 +434,7 @@
     <div class="hdr-cta">
       <a href="tel:+905516412065" class="hdr-tel"><svg class="ico"><use href="#i-phone"></use></svg><span>0551 641 20 65</span></a>
       <a href="#urunler" class="btn btn-gold btn-sm">Sipariş Ver</a>
-      <button class="burger" aria-label="Menüyü aç"><svg class="ico"><use href="#i-menu"></use></svg></button>
+      <button class="burger" type="button" aria-label="Menüyü aç" aria-controls="ana-menu" aria-expanded="false"><svg class="ico"><use href="#i-menu"></use></svg></button>
     </div>
   </div>
 </header>
@@ -445,7 +445,7 @@
 <section class="hero">
   <div class="container hero-in">
     <div class="hero-tx">
-      <h1>%100 Saf ve Doğal<br><em>Domuz Yağı Satın Al</em></h1>
+      <h1><span class="hh-l"><span class="hh-w">%100 Saf ve Doğal</span></span><span class="hh-l"><span class="hh-w"><em class="hh-em">Domuz Yağı Satın Al</em></span></span></h1>
       <p class="hero-lead">Geleneksel yöntemle eritilmiş, katkısız domuz yağı. Cilt bakımında ve masaj uygulamalarında harici olarak kullanılır — doğrudan doğadan kapınıza.</p>
       <p class="hero-sub">Kuru ve yıpranmış ciltler, iz görünümünün bakımı ve masaj uygulamaları için tercih edilir.</p>
     </div>
@@ -466,10 +466,10 @@
     <div class="hero-buy">
       <!-- HERO-FIYAT:BAŞ -->
       <div class="hero-price">
-        <div class="hp-item"><span class="hp-g">50 gram</span><span class="hp-v">450 ₺</span></div>
-        <div class="hp-item"><span class="hp-g">115 gram</span><span class="hp-v">700 ₺</span></div>
-        <div class="hp-item"><span class="hp-g">250 gram</span><span class="hp-v">1.500 ₺</span></div>
-        <div class="hp-item"><span class="hp-g">1 kilogram</span><span class="hp-v">5.000 ₺</span></div>
+        <div class="hp-item"><span class="hp-g">50 gram Domuz Yağı</span><span class="hp-v">450 ₺</span></div>
+        <div class="hp-item"><span class="hp-g">115 gram Domuz Yağı</span><span class="hp-v">700 ₺</span></div>
+        <div class="hp-item"><span class="hp-g">250 gram Domuz Yağı</span><span class="hp-v">1.500 ₺</span></div>
+        <div class="hp-item"><span class="hp-g">1 kilogram Domuz Yağı</span><span class="hp-v">5.000 ₺</span></div>
       </div>
       <div class="hp-kmp">
         <div class="hp-k-u">
@@ -486,7 +486,7 @@
 
       <div class="hero-cta">
         <a href="#urunler" class="btn btn-gold btn-lg"><svg class="ico"><use href="#i-box"></use></svg> Hemen Sipariş Ver</a>
-        <a href="tel:+905516412065" class="btn btn-ghost btn-lg"><svg class="ico"><use href="#i-phone"></use></svg> Hemen Ara</a>
+        <a href="tel:+905516412065" class="btn btn-ghost btn-lg"><svg class="ico"><use href="#i-phone"></use></svg> 0551 641 20 65</a>
       </div>
     </div>
 
@@ -545,7 +545,7 @@
         </div>
       </article>
       <article class="prod fx">
-        <span class="p-badge teal">En Çok Satan</span>
+        
         <a class="p-img" href="urun/domuz-yagi-115-gr/" aria-label="Domuz Yağı 115 gram ürün sayfası">
           <img src="images/urun-115gr.webp" alt="Domuz Yağı 115 gram" width="1000" height="1000" loading="lazy">
           <span class="p-zoom"><svg class="ico"><use href="#i-right"></use></svg></span>
@@ -632,7 +632,7 @@
         </div>
       </article>
       <article class="prod fx">
-        <span class="p-badge teal">En Büyük Boy</span>
+        
         <a class="p-img" href="urun/domuz-yagi-1-kg/" aria-label="Domuz Yağı 1 kilogram ürün sayfası">
           <img src="images/urun-1kg.webp" alt="Domuz Yağı 1 kilogram" width="1000" height="1000" loading="lazy">
           <span class="p-zoom"><svg class="ico"><use href="#i-right"></use></svg></span>
@@ -685,7 +685,7 @@
           </a>
           <div class="pick-t">
             <b><a href="/urun/domuz-yagi-50-gr/">Domuz Yağı 50 gr</a></b>
-            <span>450 ₺ <i>· 9,00 ₺ / gram</i></span>
+            <span>450 ₺</span>
           </div>
           <div class="qty qty-sm" data-p="DY-050">
             <button type="button" data-act="eksi" aria-label="Domuz Yağı 50 gr adedini azalt"><svg class="ico"><use href="#i-minus"></use></svg></button>
@@ -698,8 +698,8 @@
             <img src="/images/urun-115gr.webp" alt="" width="1000" height="1000" loading="lazy">
           </a>
           <div class="pick-t">
-            <b><a href="/urun/domuz-yagi-115-gr/">Domuz Yağı 115 gr</a></b><span class="pick-b">En Çok Satan</span>
-            <span>700 ₺ <i>· 6,09 ₺ / gram</i></span>
+            <b><a href="/urun/domuz-yagi-115-gr/">Domuz Yağı 115 gr</a></b>
+            <span>700 ₺</span>
           </div>
           <div class="qty qty-sm" data-p="DY-115">
             <button type="button" data-act="eksi" aria-label="Domuz Yağı 115 gr adedini azalt"><svg class="ico"><use href="#i-minus"></use></svg></button>
@@ -713,7 +713,7 @@
           </a>
           <div class="pick-t">
             <b><a href="/urun/domuz-yagi-250-gr/">Domuz Yağı 250 gr</a></b>
-            <span>1.500 ₺ <i>· 6,00 ₺ / gram</i></span>
+            <span>1.500 ₺</span>
           </div>
           <div class="qty qty-sm" data-p="DY-250">
             <button type="button" data-act="eksi" aria-label="Domuz Yağı 250 gr adedini azalt"><svg class="ico"><use href="#i-minus"></use></svg></button>
@@ -726,8 +726,8 @@
             <img src="/images/urun-5li.webp" alt="" width="1000" height="1000" loading="lazy">
           </a>
           <div class="pick-t">
-            <b><a href="/urun/domuz-yagi-5li-paket/">Domuz Yağı 5'li Paket (5 × 115 gr)</a></b><span class="pick-b">Kampanya</span>
-            <span>2.500 ₺ <i>· 4,35 ₺ / gram</i></span>
+            <b><a href="/urun/domuz-yagi-5li-paket/">Domuz Yağı 5'li Paket (5 × 115 gr)</a><span class="pick-b">Kampanya</span></b>
+            <span>2.500 ₺</span>
           </div>
           <div class="qty qty-sm" data-p="DY-5LI">
             <button type="button" data-act="eksi" aria-label="Domuz Yağı 5&#x27;li Paket (5 × 115 gr) adedini azalt"><svg class="ico"><use href="#i-minus"></use></svg></button>
@@ -740,8 +740,8 @@
             <img src="/images/urun-1kg.webp" alt="" width="1000" height="1000" loading="lazy">
           </a>
           <div class="pick-t">
-            <b><a href="/urun/domuz-yagi-1-kg/">Domuz Yağı 1 kg</a></b><span class="pick-b">En Büyük Boy</span>
-            <span>5.000 ₺ <i>· 5,00 ₺ / gram</i></span>
+            <b><a href="/urun/domuz-yagi-1-kg/">Domuz Yağı 1 kg</a></b>
+            <span>5.000 ₺</span>
           </div>
           <div class="qty qty-sm" data-p="DY-1KG">
             <button type="button" data-act="eksi" aria-label="Domuz Yağı 1 kg adedini azalt"><svg class="ico"><use href="#i-minus"></use></svg></button>
@@ -1061,7 +1061,7 @@
 </div>
 
 <div class="mbar">
-  <button type="button" class="mbar-sum" aria-expanded="false" aria-controls="mbar-sepet" hidden>
+  <button type="button" class="mbar-sum" aria-expanded="false" aria-controls="mbar-sepet">
     <span class="mbar-ic"><svg class="ico"><use href="#i-cart"></use></svg><b class="mbar-n">0</b></span>
     <span class="mbar-tx">
       <b class="mbar-ad">Sepetiniz</b>
@@ -1098,6 +1098,6 @@
 <!-- URUN-JS:BAŞ -->
 <script>window.DY_CFG={"whatsapp":"905516412065","esik":0,"hepbedava":true,"saat":[9,21],"kargo":0,"urunler":{"DY-050":{"ad":"Domuz Yağı 50 gr","fiyat":450},"DY-115":{"ad":"Domuz Yağı 115 gr","fiyat":700},"DY-250":{"ad":"Domuz Yağı 250 gr","fiyat":1500},"DY-5LI":{"ad":"Domuz Yağı 5'li Paket (5 × 115 gr)","fiyat":2500},"DY-1KG":{"ad":"Domuz Yağı 1 kg","fiyat":5000}}};</script>
       <!-- URUN-JS:SON -->
-<script src="assets/site.js?v=16" defer></script>
+<script src="assets/site.js?v=20" defer></script>
 </body>
 </html>

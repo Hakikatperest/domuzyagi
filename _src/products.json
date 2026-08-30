@@ -76,7 +76,7 @@
         "En çok tercih edilen boy",
         "Isıya dayanıklı ambalaj"
       ],
-      "rozet": "En Çok Satan",
+      "rozet": null,
       "one_cikan": false,
       "kargo_bedava": true
     },
@@ -157,7 +157,7 @@
         "Tek kavanozda 1 kilogram",
         "Isıya dayanıklı ambalaj"
       ],
-      "rozet": "En Büyük Boy",
+      "rozet": null,
       "one_cikan": false,
       "kargo_bedava": true
     }
