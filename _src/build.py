@@ -786,6 +786,10 @@ def anasayfa():
     p = os.path.join(KOK, 'index.html')
     s = open(p, encoding='utf-8').read()
 
+    s = isaretci_degistir(s, 'DUYURU', duyuru())
+    s = isaretci_degistir(s, 'HEADER', header('/'))
+    s = isaretci_degistir(s, 'FOOTER', footer('/'))
+
     s = isaretci_degistir(s, 'URUNLER', "\n".join(urun_karti(u) for u in URUNLER))
 
     serit = "\n        ".join(
