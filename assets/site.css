@@ -156,7 +156,9 @@ ul{list-style:none}
 .hp-v{font-family:var(--baslik);font-size:clamp(1.064rem,1.7vw,1.278rem);font-weight:700;color:var(--gold-2);line-height:1.1;white-space:nowrap}
 .hero-cta{display:flex;align-items:stretch;gap:13px;flex-wrap:wrap;margin-bottom:38px}
 .hero-art{position:relative}
-.hero-frame{position:relative;border-radius:var(--r-lg);overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.42);border:1px solid rgba(201,162,74,.24)}
+/* Köşe yarıçapı afişe göre küçültüldü: --r-lg (26px) sağ üstteki 'Aynı Gün'
+   rozetinin köşesini kesiyordu. 12px yalnız düz zemin köşesini yuvarlıyor. */
+.hero-frame{position:relative;border-radius:12px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.42);border:1px solid rgba(201,162,74,.24)}
 /* Hero görseli 2026-08-30'dan beri fotoğraf değil, üstünde yazı olan bir AFİŞ.
    object-fit:cover ile kırpılınca üstteki başlık ve alttaki telefon bandı
    kesiliyordu → tam en boy oranıyla, kırpmasız gösteriliyor. */

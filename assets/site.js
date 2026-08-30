@@ -326,7 +326,11 @@ function ozetiCiz(satirlar, ara){
    sayfasına geçtiğinde seçimini baştan yapmak zorunda kalmaz.              */
 
 var SEPET_ANAHTAR = 'dy_sepet_v1';
-var SEPET_OMUR    = 3 * 24 * 3600 * 1000;      /* 3 gün */
+/* Sepet ömrü 1 saat: 3 gündü, ertesi gün siteyi açan müşteri hero kutularını
+   seçili görüp "butonlar kendiliğinden tıklanmış" sanıyordu. Damga her yazmada
+   tazelendiği için aynı ziyaret boyunca (sayfa gezintisi, yenileme) sepet durur;
+   ara verilip geri dönülünce temiz açılır. */
+var SEPET_OMUR    = 3600 * 1000;               /* 1 saat */
 
 function sepetOku(){
   try{
