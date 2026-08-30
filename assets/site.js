@@ -4,13 +4,12 @@
 (function(){
 'use strict';
 
-var WA_NO   = '905516412065';
-var ESIK    = 2500;                       /* ücretsiz kargo eşiği */
-var URUNLER = {
-  p50 : { ad:'Domuz Yağı 50 gr',            fiyat:250  },
-  p115: { ad:'Domuz Yağı 115 gr',           fiyat:500  },
-  p5li: { ad:'5’li Paket (5 × 115 gr)',     fiyat:2500 }
-};
+/* Yapılandırma sayfadan gelir (_src/build.py yazar). Yedek değerler
+   yalnızca DY_CFG hiç basılmamışsa devreye girer. */
+var CFG     = window.DY_CFG || {};
+var WA_NO   = CFG.whatsapp || '905516412065';
+var ESIK    = CFG.esik     || 2500;        /* ücretsiz kargo eşiği */
+var URUNLER = CFG.urunler  || {};
 
 function tl(n){ return n.toLocaleString('tr-TR') + ' ₺'; }
 function $(s,c){ return (c||document).querySelector(s); }
@@ -221,5 +220,56 @@ if(cartList){
   });
 
   ciz();
+}
+
+/* ── tekil ürün sipariş kutusu (ürün detay sayfası) ── */
+var buy = $('.buy');
+if(buy){
+  var bAd     = buy.getAttribute('data-ad');
+  var bFiyat  = parseFloat(buy.getAttribute('data-fiyat')) || 0;
+  var bBedava = buy.getAttribute('data-bedava') === '1';
+  var bQty    = $('.qty', buy);
+  var bInp    = $('input', bQty);
+  var bEksi   = $('[data-act="eksi"]', bQty);
+  var bArti   = $('[data-act="arti"]', bQty);
+
+  var bCiz = function(){
+    var ad = parseInt(bInp.value, 10);
+    if(!ad || ad < 1) ad = 1;
+    if(ad > 99) ad = 99;
+    bInp.value = ad;
+
+    var tutar  = bFiyat * ad;
+    var bedava = bBedava || tutar >= ESIK;
+
+    $('.buy-v').textContent = tl(tutar);
+    bEksi.disabled = (ad === 1);
+
+    var kEl = $('.buy-kargo');
+    kEl.textContent = bedava ? 'Bu siparişte kargo ücretsiz.'
+                             : 'Ücretsiz kargoya ' + tl(ESIK - tutar) + ' kaldı.';
+    kEl.classList.toggle('done', bedava);
+
+    var mesaj = 'Merhaba, sipariş vermek istiyorum:\n• ' + bAd + ' × ' + ad + ' = ' + tl(tutar) +
+                '\n\nToplam: ' + tl(tutar) +
+                '\nKargo: ' + (bedava ? 'Ücretsiz' : 'Alıcıya ait');
+    $$('.wa-order').forEach(function(b){
+      b.href = 'https://wa.me/' + WA_NO + '?text=' + encodeURIComponent(mesaj);
+    });
+
+    var mt = $('.mbar-tot');
+    if(mt){
+      mt.style.display = 'flex';
+      $('.mbar-tot b').textContent = tl(tutar);
+      var ml = $('.mbar-lbl');
+      if(ml) ml.textContent = 'Siparişi Gönder';
+    }
+  };
+
+  bEksi.addEventListener('click', function(){ bInp.value = (parseInt(bInp.value,10)||1) - 1; bCiz(); });
+  bArti.addEventListener('click', function(){ bInp.value = (parseInt(bInp.value,10)||1) + 1; bCiz(); });
+  bInp.addEventListener('input', bCiz);
+  bInp.addEventListener('blur',  bCiz);
+  bCiz();
 }
 })();

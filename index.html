@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=2">
+<link rel="stylesheet" href="assets/site.css?v=3">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17831951098"></script>
 <script>
@@ -45,14 +45,21 @@
       "url": "https://www.domuzyagi.com/",
       "logo": "https://www.domuzyagi.com/images/logo.webp",
       "email": "info@domuzyagi.com",
-      "address": { "@type": "PostalAddress", "addressLocality": "Osmangazi", "addressRegion": "Bursa", "addressCountry": "TR" },
-      "contactPoint": [{
-        "@type": "ContactPoint",
-        "telephone": "+90-551-641-20-65",
-        "contactType": "sales",
-        "areaServed": "TR",
-        "availableLanguage": "Turkish"
-      }]
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Osmangazi",
+        "addressRegion": "Bursa",
+        "addressCountry": "TR"
+      },
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+90-551-641-20-65",
+          "contactType": "sales",
+          "areaServed": "TR",
+          "availableLanguage": "Turkish"
+        }
+      ]
     },
     {
       "@type": "WebSite",
@@ -60,78 +67,163 @@
       "url": "https://www.domuzyagi.com/",
       "name": "Doğal Domuz Yağı",
       "inLanguage": "tr-TR",
-      "publisher": { "@id": "https://www.domuzyagi.com/#org" }
-    },
-    {
-      "@type": "Product",
-      "name": "Domuz Yağı 50 gr",
-      "image": "https://www.domuzyagi.com/images/urun-50gr.webp",
-      "description": "%100 saf ve doğal domuz yağı, 50 gramlık cam kavanoz. Yalnızca harici kullanım içindir.",
-      "brand": { "@type": "Brand", "name": "Doğal Domuz Yağı" },
-      "offers": {
-        "@type": "Offer",
-        "url": "https://www.domuzyagi.com/#urunler",
-        "price": "250",
-        "priceCurrency": "TRY",
-        "availability": "https://schema.org/InStock",
-        "seller": { "@id": "https://www.domuzyagi.com/#org" }
-      }
-    },
-    {
-      "@type": "Product",
-      "name": "Domuz Yağı 115 gr",
-      "image": "https://www.domuzyagi.com/images/urun-115gr.webp",
-      "description": "%100 saf ve doğal domuz yağı, 115 gramlık cam kavanoz. En çok tercih edilen boy. Yalnızca harici kullanım içindir.",
-      "brand": { "@type": "Brand", "name": "Doğal Domuz Yağı" },
-      "offers": {
-        "@type": "Offer",
-        "url": "https://www.domuzyagi.com/#urunler",
-        "price": "500",
-        "priceCurrency": "TRY",
-        "availability": "https://schema.org/InStock",
-        "seller": { "@id": "https://www.domuzyagi.com/#org" }
-      }
-    },
-    {
-      "@type": "Product",
-      "name": "Domuz Yağı 5'li Paket (5 × 115 gr)",
-      "image": "https://www.domuzyagi.com/images/urun-5li.webp",
-      "description": "5 adet 115 gramlık domuz yağı, toplam 575 gram. Kargo ücretsiz. Yalnızca harici kullanım içindir.",
-      "brand": { "@type": "Brand", "name": "Doğal Domuz Yağı" },
-      "offers": {
-        "@type": "Offer",
-        "url": "https://www.domuzyagi.com/#urunler",
-        "price": "2500",
-        "priceCurrency": "TRY",
-        "availability": "https://schema.org/InStock",
-        "seller": { "@id": "https://www.domuzyagi.com/#org" },
-        "shippingDetails": {
-          "@type": "OfferShippingDetails",
-          "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "TRY" },
-          "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "TR" }
-        }
+      "publisher": {
+        "@id": "https://www.domuzyagi.com/#org"
       }
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Kargo ücreti ne kadar?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Kargo ücreti alıcıya aittir. 2.500 ₺ ve üzeri siparişlerde kargo ücretini biz karşılıyoruz. 5'li paket (2.500 ₺) bu kapsamdadır." } },
-        { "@type": "Question", "name": "Nasıl sipariş verebilirim?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Sitedeki ürünlerden istediğiniz adedi seçip WhatsApp ile siparişinizi gönderebilir ya da 0551 641 20 65 numaralı telefondan doğrudan arayarak sipariş verebilirsiniz." } },
-        { "@type": "Question", "name": "Domuz yağı gıda olarak tüketilebilir mi?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Hayır, kesinlikle gıda olarak tüketilmemelidir. Ürünlerimiz yalnızca harici kullanım (cilt üzerine uygulama) içindir. Domuz yağı kremi olarak bilinen ürünlerimiz tamamen cilt bakımı ve tedavi amaçlıdır." } },
-        { "@type": "Question", "name": "Domuz yağı ne kadar sürede etki gösterir?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Etki süresi kullanım amacına ve kişiden kişiye değişiklik gösterir. Yanık ve yara tedavisinde genellikle 3–7 gün içinde gözle görülür iyileşme başlar. Cilt kırışıklıkları ve izler için düzenli kullanımda 2–4 hafta sonra etkiler fark edilebilir." } },
-        { "@type": "Question", "name": "Domuz yağı alerjik reaksiyona neden olur mu?",
-          "acceptedAnswer": { "@type": "Answer", "text": "%100 saf domuz yağı katkı maddesi, parfüm veya koruyucu içermediğinden genellikle alerjik reaksiyona neden olmaz. Ancak çok nadiren hassas ciltlerde reaksiyon görülebilir. İlk kullanımda küçük bir alanda test etmenizi öneririz." } },
-        { "@type": "Question", "name": "Domuz yağı nasıl saklanmalıdır?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Serin ve kuru bir yerde, direkt güneş ışığından uzakta saklanmalıdır. Açıldıktan sonra buzdolabında muhafaza edilmesi önerilir. Uygun koşullarda saklandığında 1 yıl boyunca etkinliğini korur." } }
+        {
+          "@type": "Question",
+          "name": "Kargo ücreti ne kadar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kargo ücreti alıcıya aittir. 2.500 ₺ ve üzeri siparişlerde kargo ücretini biz karşılıyoruz. 5'li paket (2.500 ₺) bu kapsamdadır."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Nasıl sipariş verebilirim?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sitedeki ürünlerden istediğiniz adedi seçip WhatsApp ile siparişinizi gönderebilir ya da 0551 641 20 65 numaralı telefondan doğrudan arayarak sipariş verebilirsiniz."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Domuz yağı gıda olarak tüketilebilir mi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Hayır, kesinlikle gıda olarak tüketilmemelidir. Ürünlerimiz yalnızca harici kullanım (cilt üzerine uygulama) içindir. Domuz yağı kremi olarak bilinen ürünlerimiz tamamen cilt bakımı ve tedavi amaçlıdır."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Domuz yağı ne kadar sürede etki gösterir?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Etki süresi kullanım amacına ve kişiden kişiye değişiklik gösterir. Yanık ve yara tedavisinde genellikle 3–7 gün içinde gözle görülür iyileşme başlar. Cilt kırışıklıkları ve izler için düzenli kullanımda 2–4 hafta sonra etkiler fark edilebilir."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Domuz yağı alerjik reaksiyona neden olur mu?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "%100 saf domuz yağı katkı maddesi, parfüm veya koruyucu içermediğinden genellikle alerjik reaksiyona neden olmaz. Ancak çok nadiren hassas ciltlerde reaksiyon görülebilir. İlk kullanımda küçük bir alanda test etmenizi öneririz."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Domuz yağı nasıl saklanmalıdır?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Serin ve kuru bir yerde, direkt güneş ışığından uzakta saklanmalıdır. Açıldıktan sonra buzdolabında muhafaza edilmesi önerilir. Uygun koşullarda saklandığında 1 yıl boyunca etkinliğini korur."
+          }
+        }
       ]
     }
   ]
 }
 </script>
+
+<!-- URUN-SEMA:BAŞ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Product",
+      "name": "Domuz Yağı 50 gr",
+      "sku": "DY-050",
+      "mpn": "DY-050",
+      "image": "https://www.domuzyagi.com/images/urun-50gr.webp",
+      "description": "Doğal yöntemle eritilmiş %100 saf domuz yağı. 50 gram, ısıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Harici kullanım için üretilmiştir.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Doğal Domuz Yağı"
+      },
+      "category": "Health & Beauty > Personal Care > Cosmetics > Skin Care > Body Oil",
+      "weight": {
+        "@type": "QuantitativeValue",
+        "value": 50,
+        "unitCode": "GRM"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://www.domuzyagi.com/urun/domuz-yagi-50-gr/",
+        "price": "250",
+        "priceCurrency": "TRY",
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "seller": {
+          "@id": "https://www.domuzyagi.com/#org"
+        }
+      }
+    },
+    {
+      "@type": "Product",
+      "name": "Domuz Yağı 115 gr",
+      "sku": "DY-115",
+      "mpn": "DY-115",
+      "image": "https://www.domuzyagi.com/images/urun-115gr.webp",
+      "description": "Doğal yöntemle eritilmiş %100 saf domuz yağı. 115 gram, ısıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Harici kullanım için üretilmiştir.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Doğal Domuz Yağı"
+      },
+      "category": "Health & Beauty > Personal Care > Cosmetics > Skin Care > Body Oil",
+      "weight": {
+        "@type": "QuantitativeValue",
+        "value": 115,
+        "unitCode": "GRM"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://www.domuzyagi.com/urun/domuz-yagi-115-gr/",
+        "price": "500",
+        "priceCurrency": "TRY",
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "seller": {
+          "@id": "https://www.domuzyagi.com/#org"
+        }
+      }
+    },
+    {
+      "@type": "Product",
+      "name": "Domuz Yağı 5'li Paket (5 × 115 gr)",
+      "sku": "DY-5LI",
+      "mpn": "DY-5LI",
+      "image": "https://www.domuzyagi.com/images/urun-5li.webp",
+      "description": "Doğal yöntemle eritilmiş %100 saf domuz yağı. 5 adet 115 gramlık paket, toplam 575 gram. Isıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Kargo ücretsiz. Harici kullanım için üretilmiştir.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Doğal Domuz Yağı"
+      },
+      "category": "Health & Beauty > Personal Care > Cosmetics > Skin Care > Body Oil",
+      "weight": {
+        "@type": "QuantitativeValue",
+        "value": 575,
+        "unitCode": "GRM"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://www.domuzyagi.com/urun/domuz-yagi-5li-paket/",
+        "price": "2500",
+        "priceCurrency": "TRY",
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "seller": {
+          "@id": "https://www.domuzyagi.com/#org"
+        }
+      }
+    }
+  ]
+}
+</script>
+      <!-- URUN-SEMA:SON -->
 </head>
 <body>
 
@@ -222,11 +314,13 @@
       <p class="hero-sub">Yanık izleri, lazer sonrası tahrişler, sivilce izleri, hemoroid, ameliyat dikiş izleri, diz kireçlenmesi ve daha fazlası için.</p>
 
       <div class="hero-price">
-        <div class="hp-item"><span class="hp-g">50 gr</span><span class="hp-v">250 ₺</span></div>
+        <!-- HERO-FIYAT:BAŞ -->
+        <div class="hp-item"><span class="hp-g">50 gram</span><span class="hp-v">250 ₺</span></div>
         <div class="hp-div"></div>
-        <div class="hp-item"><span class="hp-g">115 gr</span><span class="hp-v">500 ₺</span></div>
+        <div class="hp-item"><span class="hp-g">115 gram</span><span class="hp-v">500 ₺</span></div>
         <div class="hp-div"></div>
-        <div class="hp-item"><span class="hp-g">5'li Paket</span><span class="hp-v">2.500 ₺</span></div>
+        <div class="hp-item"><span class="hp-g">5 × 115 gram</span><span class="hp-v">2.500 ₺</span></div>
+      <!-- HERO-FIYAT:SON -->
       </div>
 
       <div class="hero-cta">
@@ -278,15 +372,15 @@
     </div>
 
     <div class="prod-g">
-
-      <!-- 50 gr -->
+      <!-- URUNLER:BAŞ -->
       <article class="prod fx">
-        <div class="p-img" data-lb="images/urun-50gr.webp" data-lb-cap="Domuz Yağı 50 gr">
-          <img src="images/urun-50gr.webp" alt="Domuz Yağı 50 gr cam kavanoz" width="720" height="1091" loading="lazy">
-          <span class="p-zoom"><svg class="ico"><use href="#i-zoom"></use></svg></span>
-        </div>
+        
+        <a class="p-img" href="urun/domuz-yagi-50-gr/" aria-label="Domuz Yağı 50 gram ürün sayfası">
+          <img src="images/urun-50gr.webp" alt="Domuz Yağı 50 gram" width="720" height="1091" loading="lazy">
+          <span class="p-zoom"><svg class="ico"><use href="#i-right"></use></svg></span>
+        </a>
         <div class="p-body">
-          <h3>Domuz Yağı</h3>
+          <h3><a href="urun/domuz-yagi-50-gr/">Domuz Yağı</a></h3>
           <div class="p-gram">50 gram</div>
           <div class="p-price"><span class="v">250 ₺</span><span class="u">5,00 ₺ / gram</span></div>
           <p class="p-desc">Küçük boy deneme paketi. Cilt bakımı ve küçük alanlar için ideal.</p>
@@ -296,29 +390,27 @@
             <li><svg class="ico"><use href="#i-check"></use></svg> Isıya dayanıklı ambalaj</li>
           </ul>
           <div class="p-qty">
-            <div class="qty" data-p="p50">
+            <div class="qty" data-p="DY-050">
               <button type="button" data-act="eksi" aria-label="Azalt"><svg class="ico"><use href="#i-minus"></use></svg></button>
-              <input type="number" value="0" min="0" max="99" aria-label="Domuz Yağı 50 gr adedi">
+              <input type="number" value="0" min="0" max="99" aria-label="Domuz Yağı 50 gram adedi">
               <button type="button" data-act="arti" aria-label="Artır"><svg class="ico"><use href="#i-plus"></use></svg></button>
             </div>
-            <span class="p-sub" data-sub="p50"></span>
+            <span class="p-sub" data-sub="DY-050"></span>
           </div>
           <div class="p-btns">
-            <a href="#siparis" class="btn btn-ink btn-sm" data-ekle="p50"><svg class="ico"><use href="#i-box"></use></svg> Sipariş Ver</a>
-            <a href="tel:+905516412065" class="btn btn-line btn-sm" aria-label="Telefonla sipariş"><svg class="ico"><use href="#i-phone"></use></svg></a>
+            <a href="#siparis" class="btn btn-ink btn-sm" data-ekle="DY-050"><svg class="ico"><use href="#i-box"></use></svg> Sipariş Ver</a>
+            <a href="urun/domuz-yagi-50-gr/" class="btn btn-line btn-sm" aria-label="Ürün detayı"><svg class="ico"><use href="#i-right"></use></svg></a>
           </div>
         </div>
       </article>
-
-      <!-- 115 gr -->
       <article class="prod hot fx">
         <span class="p-badge">★ En Çok Satan</span>
-        <div class="p-img" data-lb="images/urun-115gr.webp" data-lb-cap="Domuz Yağı 115 gr">
-          <img src="images/urun-115gr.webp" alt="Domuz Yağı 115 gr cam kavanoz" width="720" height="1073" loading="lazy">
-          <span class="p-zoom"><svg class="ico"><use href="#i-zoom"></use></svg></span>
-        </div>
+        <a class="p-img" href="urun/domuz-yagi-115-gr/" aria-label="Domuz Yağı 115 gram ürün sayfası">
+          <img src="images/urun-115gr.webp" alt="Domuz Yağı 115 gram" width="720" height="1073" loading="lazy">
+          <span class="p-zoom"><svg class="ico"><use href="#i-right"></use></svg></span>
+        </a>
         <div class="p-body">
-          <h3>Domuz Yağı</h3>
+          <h3><a href="urun/domuz-yagi-115-gr/">Domuz Yağı</a></h3>
           <div class="p-gram">115 gram</div>
           <div class="p-price"><span class="v">500 ₺</span><span class="u">4,35 ₺ / gram</span></div>
           <p class="p-desc">Orta boy, en çok tercih edilen paket. Düzenli kullanım için uygun.</p>
@@ -328,29 +420,27 @@
             <li><svg class="ico"><use href="#i-check"></use></svg> Isıya dayanıklı ambalaj</li>
           </ul>
           <div class="p-qty">
-            <div class="qty" data-p="p115">
+            <div class="qty" data-p="DY-115">
               <button type="button" data-act="eksi" aria-label="Azalt"><svg class="ico"><use href="#i-minus"></use></svg></button>
-              <input type="number" value="0" min="0" max="99" aria-label="Domuz Yağı 115 gr adedi">
+              <input type="number" value="0" min="0" max="99" aria-label="Domuz Yağı 115 gram adedi">
               <button type="button" data-act="arti" aria-label="Artır"><svg class="ico"><use href="#i-plus"></use></svg></button>
             </div>
-            <span class="p-sub" data-sub="p115"></span>
+            <span class="p-sub" data-sub="DY-115"></span>
           </div>
           <div class="p-btns">
-            <a href="#siparis" class="btn btn-gold btn-sm" data-ekle="p115"><svg class="ico"><use href="#i-box"></use></svg> Sipariş Ver</a>
-            <a href="tel:+905516412065" class="btn btn-line btn-sm" aria-label="Telefonla sipariş"><svg class="ico"><use href="#i-phone"></use></svg></a>
+            <a href="#siparis" class="btn btn-gold btn-sm" data-ekle="DY-115"><svg class="ico"><use href="#i-box"></use></svg> Sipariş Ver</a>
+            <a href="urun/domuz-yagi-115-gr/" class="btn btn-line btn-sm" aria-label="Ürün detayı"><svg class="ico"><use href="#i-right"></use></svg></a>
           </div>
         </div>
       </article>
-
-      <!-- 5'li paket -->
       <article class="prod fx">
         <span class="p-badge teal">Kargo Bizden</span>
-        <div class="p-img" data-lb="images/urun-5li.webp" data-lb-cap="5'li Paket — 5 × 115 gr">
-          <img src="images/urun-5li.webp" alt="Domuz Yağı 5'li paket, 5 adet 115 gr" width="720" height="576" loading="lazy">
-          <span class="p-zoom"><svg class="ico"><use href="#i-zoom"></use></svg></span>
-        </div>
+        <a class="p-img" href="urun/domuz-yagi-5li-paket/" aria-label="5&#x27;li Paket 5 × 115 gram — toplam 575 gr ürün sayfası">
+          <img src="images/urun-5li.webp" alt="5&#x27;li Paket 5 × 115 gram — toplam 575 gr" width="720" height="576" loading="lazy">
+          <span class="p-zoom"><svg class="ico"><use href="#i-right"></use></svg></span>
+        </a>
         <div class="p-body">
-          <h3>5'li Paket</h3>
+          <h3><a href="urun/domuz-yagi-5li-paket/">5'li Paket</a></h3>
           <div class="p-gram">5 × 115 gram — toplam 575 gr</div>
           <div class="p-price"><span class="v">2.500 ₺</span><span class="u">4,35 ₺ / gram</span></div>
           <p class="p-desc">Aile boyu paket. Uzun süreli kullanım için ekonomik seçenek — kargo ücretini biz karşılıyoruz.</p>
@@ -360,20 +450,20 @@
             <li><svg class="ico"><use href="#i-check"></use></svg> Uzun süreli kullanım</li>
           </ul>
           <div class="p-qty">
-            <div class="qty" data-p="p5li">
+            <div class="qty" data-p="DY-5LI">
               <button type="button" data-act="eksi" aria-label="Azalt"><svg class="ico"><use href="#i-minus"></use></svg></button>
-              <input type="number" value="0" min="0" max="99" aria-label="5'li paket adedi">
+              <input type="number" value="0" min="0" max="99" aria-label="5&#x27;li Paket 5 × 115 gram — toplam 575 gr adedi">
               <button type="button" data-act="arti" aria-label="Artır"><svg class="ico"><use href="#i-plus"></use></svg></button>
             </div>
-            <span class="p-sub" data-sub="p5li"></span>
+            <span class="p-sub" data-sub="DY-5LI"></span>
           </div>
           <div class="p-btns">
-            <a href="#siparis" class="btn btn-ink btn-sm" data-ekle="p5li"><svg class="ico"><use href="#i-box"></use></svg> Sipariş Ver</a>
-            <a href="tel:+905516412065" class="btn btn-line btn-sm" aria-label="Telefonla sipariş"><svg class="ico"><use href="#i-phone"></use></svg></a>
+            <a href="#siparis" class="btn btn-ink btn-sm" data-ekle="DY-5LI"><svg class="ico"><use href="#i-box"></use></svg> Sipariş Ver</a>
+            <a href="urun/domuz-yagi-5li-paket/" class="btn btn-line btn-sm" aria-label="Ürün detayı"><svg class="ico"><use href="#i-right"></use></svg></a>
           </div>
         </div>
       </article>
-
+      <!-- URUNLER:SON -->
     </div>
 
     <!-- ── SİPARİŞ ÖZETİ ── -->
@@ -704,6 +794,9 @@
   <div class="lb-cap"></div>
 </div>
 
-<script src="assets/site.js?v=2" defer></script>
+<!-- URUN-JS:BAŞ -->
+<script>window.DY_CFG={"whatsapp":"905516412065","esik":2500,"urunler":{"DY-050":{"ad":"Domuz Yağı 50 gr","fiyat":250},"DY-115":{"ad":"Domuz Yağı 115 gr","fiyat":500},"DY-5LI":{"ad":"Domuz Yağı 5'li Paket (5 × 115 gr)","fiyat":2500}}};</script>
+      <!-- URUN-JS:SON -->
+<script src="assets/site.js?v=3" defer></script>
 </body>
 </html>
