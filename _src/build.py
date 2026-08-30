@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 41                                   # assets/site.css?v=N
+VER  = 42                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -489,6 +489,26 @@ def kart_basligi(u):
     return f"{g} {u['ad']}"
 
 
+def paket_kazanci(u):
+    """Çok'lu paketin tek tek alınmasına göre kazancı. Örn. 5 × 115 gr:
+    5 adet 115 gramlık ürün 5 × 700 = 3.500 ₺ tutar, paket 2.500 ₺ → 1.000 ₺ kazanç.
+    ⚠ Bu bir "eski fiyat" DEĞİL, aynı malın tek tek alınmasının tutarı. Metinlerde
+      "indirimden önceki fiyat" gibi sunulmamalı — Ticari Reklam Yönetmeliği'nde
+      geçmiş fiyat iddiası 30 günlük uygulama şartına bağlı.
+    Kat sayısı ya da eşleşen tekil ürün yoksa None döner; arayan yerler sessizce atlar."""
+    if not u.get('multipack'):
+        return None
+    tek_gram = u['gram'] / u['multipack']
+    birim = next((x for x in URUNLER if x is not u and x['gram'] == tek_gram), None)
+    if not birim:
+        return None
+    liste = birim['fiyat'] * u['multipack']
+    if liste <= u['fiyat']:
+        return None
+    return {'liste': liste, 'kazanc': liste - u['fiyat'],
+            'yuzde': round((liste - u['fiyat']) / liste * 100)}
+
+
 def urun_karti(u):
     sinif  = 'prod hot fx' if u['one_cikan'] else 'prod fx'
     rozet  = ''
@@ -496,6 +516,9 @@ def urun_karti(u):
         ek = '' if u['one_cikan'] else ' teal'
         rozet = f'<span class="p-badge{ek}">{e(u["rozet"])}</span>'
     ozel   = "\n            ".join(f'<li>{ikon("check")} {t(o)}</li>' for o in u['ozellikler'])
+    kz = paket_kazanci(u)
+    kar_rozeti = (f'<span class="p-kar"><s>{tl(kz["liste"])}</s>'
+                  f'<b>{tl(kz["kazanc"])} kazanç</b></span>') if kz else ''
     btn    = 'btn-gold' if u['one_cikan'] else 'btn-ink'
     return f'''      <article class="{sinif}">
         {rozet}
@@ -505,7 +528,7 @@ def urun_karti(u):
         </a>
         <div class="p-body">
           <h3><a href="urun/{u['slug']}/">{t(kart_basligi(u))}</a></h3>
-          <div class="p-price"><span class="v">{tl(u['fiyat'])}</span></div>
+          <div class="p-price"><span class="v">{tl(u['fiyat'])}</span>{kar_rozeti}</div>
           <p class="p-desc">{t(u['ozet'])}</p>
           <ul class="p-feat">
             {ozel}
@@ -600,6 +623,16 @@ def urun_sayfasi(u):
         </a>''' for x in digerleri)
 
     ozel = "\n          ".join(f'<li>{ikon("check")} {t(o)}</li>' for o in u['ozellikler'])
+
+    kz = paket_kazanci(u)
+    if u['rozet']:
+        ic = f'{ikon("award")}{t(u["rozet"])}<i>%{kz["yuzde"]} avantaj</i>' if kz else t(u['rozet'])
+        pdp_rozet = f'<span class="pdp-badge{" kmp" if kz else ""}">{ic}</span>'
+    else:
+        pdp_rozet = ''
+    pdp_kazanc = (f'<p class="pdp-kar">{ikon("check")} {u["multipack"]} kavanozu tek tek '
+                  f'alsanız <s>{tl(kz["liste"])}</s> tutardı — '
+                  f'<b>{tl(kz["kazanc"])} kazanıyorsunuz.</b></p>') if kz else ''
 
     kargo_satir = ('Bu üründe kargo ücretsiz.' if u['kargo_bedava']
                    else f"Kargo ücreti alıcıya aittir. {tl(ESIK)} ve üzeri siparişlerde kargo bize aittir.")
@@ -698,11 +731,12 @@ def urun_sayfasi(u):
       </div>
 
       <div class="pdp-info">
-        {f'<span class="pdp-badge">{t(u["rozet"])}</span>' if u['rozet'] else ''}
+        {pdp_rozet}
         <h1>{t(u['tam_ad'])}</h1>
         <div class="pdp-price">
           <span class="v">{tl(u['fiyat'])}</span>
         </div>
+        {pdp_kazanc}
         <p class="pdp-desc">{t(u['feed_aciklama'])}</p>
         <ul class="p-feat">
           {ozel}

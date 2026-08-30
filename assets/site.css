@@ -234,6 +234,33 @@ ul{list-style:none}
   color:#04291d;font-size:.66rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
   pointer-events:none;
 }
+/* Kampanya ürününün şeridi "çok basit" duruyordu (kullanıcı geri bildirimi).
+   Yalnız öne çıkan kartta: daha kalın yazı, derin gölge ve yavaş bir parıltı.
+   Parıltı ::after ile geçer; şerit overflow:hidden olmalı yoksa kartın dışına taşar. */
+.prod.hot .p-badge{
+  padding:9px 0;font-size:.75rem;letter-spacing:.17em;color:#f2fffa;
+  background:linear-gradient(135deg,#0c6d4c 0%,#15c98d 50%,#0c6d4c 100%);
+  box-shadow:0 7px 20px rgba(8,58,42,.42);
+  overflow:hidden;
+}
+.prod.hot .p-badge::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(100deg,transparent 34%,rgba(255,255,255,.6) 50%,transparent 66%);
+  transform:translateX(-130%);
+  animation:kmpParilti 4.6s var(--ease) infinite;
+}
+@keyframes kmpParilti{0%,64%{transform:translateX(-130%)}90%,100%{transform:translateX(130%)}}
+@media(prefers-reduced-motion:reduce){.prod.hot .p-badge::after{animation:none;opacity:0}}
+
+/* Asıl dikkat çeken unsur kazanç tutarı: "tek tek alsanız şu kadar" karşılaştırması.
+   ⚠ Bu bir indirim/eski fiyat iddiası DEĞİL — aynı malın tek tek alınma tutarı. */
+.p-kar{
+  display:inline-flex;align-items:baseline;gap:7px;white-space:nowrap;
+  font-size:.76rem;font-weight:700;color:#0a6349;
+  background:rgba(21,201,141,.13);border:1px solid rgba(21,201,141,.36);
+  border-radius:100px;padding:4px 11px;
+}
+.p-kar s{font-weight:600;color:var(--tx-3);opacity:.85}
 .p-img{position:relative;background:linear-gradient(165deg,var(--cream) 0%,var(--paper-2) 100%);height:290px;display:block;overflow:hidden}
 .p-img img{width:100%;height:100%;object-fit:cover;transition:.5s var(--ease)}
 .prod:hover .p-img img{transform:scale(1.05)}
@@ -242,7 +269,7 @@ ul{list-style:none}
 .prod:hover .p-zoom{opacity:1}
 .p-body{padding:26px 24px 24px;display:flex;flex-direction:column;flex-grow:1}
 .p-body h3{font-family:var(--baslik);font-size:1.377rem;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:10px;letter-spacing:-.005em}
-.p-price{display:flex;align-items:baseline;gap:11px;margin-bottom:15px;padding-bottom:16px;border-bottom:1px solid var(--line-2)}
+.p-price{display:flex;align-items:baseline;gap:11px 10px;flex-wrap:wrap;margin-bottom:15px;padding-bottom:16px;border-bottom:1px solid var(--line-2)}
 .p-price .v{font-family:var(--baslik);font-size:2.08rem;font-weight:700;color:var(--gold-3);line-height:1;letter-spacing:-.01em}
 .p-desc{font-size:.88rem;color:var(--tx-2);margin-bottom:16px;flex-grow:1}
 .p-feat{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
@@ -627,7 +654,26 @@ ul{list-style:none}
 .pdp-img img{width:100%;height:auto;object-fit:cover;transition:.5s var(--ease)}
 .pdp-img:hover img{transform:scale(1.03)}
 .pdp-img .p-zoom{opacity:1;bottom:16px;right:16px}
-.pdp-badge{display:inline-block;background:linear-gradient(135deg,var(--yesil-2),var(--yesil));color:#04291d;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:100px;margin-bottom:16px}
+.pdp-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--yesil-2),var(--yesil));color:#04291d;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:100px;margin-bottom:16px}
+/* kampanyalı ürün: koyu zemin + altın "%N avantaj" eki, düz haptan ayrışsın */
+.pdp-badge.kmp{
+  background:linear-gradient(135deg,#0c6d4c 0%,#15c98d 52%,#0c6d4c 100%);
+  color:#f2fffa;font-size:.72rem;padding:8px 8px 8px 15px;letter-spacing:.14em;
+  box-shadow:0 7px 20px rgba(8,58,42,.3);
+}
+.pdp-badge.kmp .ico{width:15px;height:15px;flex:none}
+.pdp-badge.kmp i{
+  font-style:normal;letter-spacing:.04em;font-size:.72rem;
+  background:var(--gold-2);color:#2c1e05;border-radius:100px;padding:3px 10px;
+}
+.pdp-kar{
+  display:flex;align-items:flex-start;gap:9px;
+  margin:-8px 0 20px;padding:11px 14px;font-size:.88rem;color:var(--tx-2);
+  background:rgba(21,201,141,.09);border:1px solid rgba(21,201,141,.3);border-radius:12px;
+}
+.pdp-kar .ico{width:15px;height:15px;color:var(--yesil-3);margin-top:3px;flex:none}
+.pdp-kar s{color:var(--tx-3)}
+.pdp-kar b{color:#0a6349}
 
 .pdp-price{display:flex;align-items:baseline;gap:14px;padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid var(--line)}
 .pdp-price .v{font-family:var(--baslik);font-size:2.32rem;font-weight:700;color:var(--ink);line-height:1}
