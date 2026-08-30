@@ -298,6 +298,41 @@ if(qtyKutulari.length){
 }
 
 
+/* ══════════ çevrimiçi bildirim balonu ══════════
+   Sayfanın yarısı geçilince açılır. Kapatılırsa o oturumda bir daha çıkmaz.
+   Çalışma saati dışında hiç gösterilmez — "çevrimiçiyiz" yanlış olmasın.   */
+
+var onl = $('.onl');
+if(onl){
+  var saat    = CFG.saat || [0, 24];
+  var simdi   = new Date().getHours();
+  var acikmi  = saat.length === 2 ? (simdi >= saat[0] && simdi < saat[1]) : true;
+  var kapandi = false;
+  try{ kapandi = sessionStorage.getItem('dy_onl_kapali') === '1'; }catch(e){}
+
+  var onlKapat = function(){
+    onl.classList.remove('on');
+    setTimeout(function(){ onl.hidden = true; }, 400);
+    try{ sessionStorage.setItem('dy_onl_kapali', '1'); }catch(e){}
+  };
+  $('.onl-x', onl).addEventListener('click', onlKapat);
+
+  if(acikmi && !kapandi){
+    var onlBak = function(){
+      var yol = document.documentElement.scrollHeight - window.innerHeight;
+      if(yol <= 0 || (window.scrollY / yol) < 0.5) return;
+      window.removeEventListener('scroll', onlBak);
+      onl.hidden = false;
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){ onl.classList.add('on'); });
+      });
+    };
+    window.addEventListener('scroll', onlBak, {passive:true});
+    onlBak();
+  }
+}
+
+
 /* ══════════ sipariş formu ══════════ */
 
 var form = $('.oform');

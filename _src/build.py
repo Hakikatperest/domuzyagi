@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 9                                    # assets/site.css?v=N
+VER  = 10                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -233,6 +233,21 @@ def footer(kok='/'):
 </footer>'''
 
 
+def dy_cfg():
+    """window.DY_CFG — sepet motorunun ürün/fiyat/kargo kaynağı.
+    HER sayfada bulunmalı; yoksa ürün ve makale sayfalarında sepet boş kalır."""
+    cfg = {
+        "whatsapp": S['whatsapp'],
+        "esik": ESIK,
+        "kargo": KARGO,
+        "hepbedava": HEP_BEDAVA,
+        "saat": [int(x) for x in re.findall(r'(\d{1,2}):', S['calisma_saati'])] or [0, 24],
+        "urunler": {u['id']: {"ad": u['tam_ad'], "fiyat": u['fiyat']} for u in URUNLER},
+    }
+    return ('<script>window.DY_CFG='
+            + json.dumps(cfg, ensure_ascii=False, separators=(',', ':')) + ';</script>')
+
+
 def sabitler():
     return f'''<div class="fab">
   <a href="https://wa.me/{S['whatsapp']}" class="fab-wa" target="_blank" rel="noopener" aria-label="WhatsApp ile yazın">{ikon("wa","ico ico-f")}</a>
@@ -243,6 +258,16 @@ def sabitler():
   <div class="mbar-tot"><span>Toplam</span><b>0 ₺</b></div>
   <a href="tel:{S['telefon']}" class="btn btn-tel btn-sm">{ikon("phone")} Ara</a>
   <a href="https://wa.me/{S['whatsapp']}" class="btn btn-wa btn-sm wa-order" target="_blank" rel="noopener">{ikon("wa","ico ico-f")} <span class="mbar-lbl">WhatsApp</span></a>
+</div>
+
+<div class="onl" hidden>
+  <button class="onl-x" type="button" aria-label="Bildirimi kapat">{ikon("x")}</button>
+  <span class="onl-dot" aria-hidden="true"></span>
+  <div class="onl-t">
+    <b>Şu an çevrimiçiyiz</b>
+    <span>Arayın, detayları konuşalım.</span>
+    <a href="tel:{S['telefon']}" class="onl-no">{ikon("phone")} {S['telefon_gosterim']}</a>
+  </div>
 </div>
 
 <div class="lb">
@@ -664,6 +689,7 @@ def urun_sayfasi(u):
 
 {sabitler()}
 
+{dy_cfg()}
 <script src="../../assets/site.js?v={VER}" defer></script>
 </body>
 </html>
@@ -736,6 +762,7 @@ def bilgi_sayfasi(slug, baslik, ozet, govde):
 
 {sabitler()}
 
+{dy_cfg()}
 <script src="../assets/site.js?v={VER}" defer></script>
 </body>
 </html>
@@ -1035,6 +1062,7 @@ def makale_sayfasi(slug):
 
 {sabitler()}
 
+{dy_cfg()}
 <script src="../assets/site.js?v={VER}" defer></script>
 </body>
 </html>
@@ -1184,6 +1212,7 @@ def anasayfa():
         "whatsapp": S['whatsapp'],
         "esik": ESIK,
         "hepbedava": HEP_BEDAVA,
+        "saat": [int(x) for x in re.findall(r'(\d{1,2}):', S['calisma_saati'])] or [0, 24],
         "kargo": KARGO,
         "urunler": {u['id']: {"ad": u['tam_ad'], "fiyat": u['fiyat']} for u in URUNLER},
     }

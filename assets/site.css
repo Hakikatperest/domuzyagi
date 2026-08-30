@@ -392,6 +392,28 @@ ul{list-style:none}
   body{padding-bottom:74px}
 }
 
+/* ── çevrimiçi bildirim balonu ── */
+.onl{position:fixed;left:22px;bottom:26px;z-index:820;width:min(322px,calc(100vw - 44px));display:flex;align-items:flex-start;gap:13px;padding:16px 42px 16px 17px;background:linear-gradient(158deg,#1a3035 0%,#0c1c1f 100%);border:1px solid rgba(255,255,255,.11);border-radius:18px;box-shadow:0 2px 6px rgba(0,0,0,.18),0 18px 48px rgba(12,28,31,.42);color:#fff;opacity:0;visibility:hidden;transform:translateY(16px) scale(.96);transition:opacity .38s var(--ease),transform .38s var(--ease),visibility .38s}
+.onl.on{opacity:1;visibility:visible;transform:none}
+.onl::before{content:'';position:absolute;inset:0;border-radius:18px;background:radial-gradient(circle 15vw at 12% 0%,rgba(37,211,102,.16) 0%,rgba(37,211,102,0) 62%);pointer-events:none}
+.onl-dot{position:relative;width:11px;height:11px;margin-top:7px;flex-shrink:0;border-radius:50%;background:var(--wa);box-shadow:0 0 12px rgba(37,211,102,.85)}
+.onl-dot::before,.onl-dot::after{content:'';position:absolute;inset:0;border-radius:50%;background:var(--wa);animation:onlNabiz 2.2s var(--ease) infinite}
+.onl-dot::after{animation-delay:1.1s}
+@keyframes onlNabiz{0%{transform:scale(1);opacity:.62}70%{opacity:.12}100%{transform:scale(3.6);opacity:0}}
+.onl-t{position:relative;display:flex;flex-direction:column;gap:3px;min-width:0}
+.onl-t b{font-family:var(--serif);font-size:1.1rem;font-weight:600;letter-spacing:.01em}
+.onl-t>span{font-size:.83rem;color:rgba(255,255,255,.66);line-height:1.5}
+.onl-no{display:inline-flex;align-items:center;gap:8px;margin-top:9px;padding:9px 15px;border-radius:11px;background:linear-gradient(135deg,var(--wa) 0%,var(--wa-2) 100%);color:#fff;font-size:1rem;font-weight:700;letter-spacing:.01em;box-shadow:0 4px 16px rgba(37,211,102,.3);transition:.22s var(--ease);align-self:flex-start}
+.onl-no:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.42);color:#fff}
+.onl-no .ico{width:15px;height:15px}
+.onl-x{position:absolute;top:11px;right:11px;width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;z-index:1}
+.onl-x:hover{background:rgba(255,255,255,.16);color:#fff}
+.onl-x .ico{width:14px;height:14px}
+@media(max-width:1040px){
+  .onl{left:14px;right:14px;width:auto;bottom:calc(74px + 14px + env(safe-area-inset-bottom))}
+}
+@media(prefers-reduced-motion:reduce){.onl-dot::before,.onl-dot::after{animation:none}}
+
 /* ── lightbox ── */
 .lb{position:fixed;inset:0;z-index:1000;background:rgba(10,20,22,.94);display:none;align-items:center;justify-content:center;padding:30px;cursor:zoom-out;backdrop-filter:blur(6px)}
 .lb.on{display:flex}
