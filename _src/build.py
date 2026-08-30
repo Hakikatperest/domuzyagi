@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 6                                    # assets/site.css?v=N
+VER  = 7                                    # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -505,6 +505,12 @@ def urun_sayfasi(u):
 
 <section class="sec sec-cream">
   <div class="container">
+    {siparis_bolumu('../../', tekil=True)}
+  </div>
+</section>
+
+<section class="sec">
+  <div class="container">
     <div class="pg-body">
       <h2>Ürün Bilgileri</h2>
       <div class="tbl-wrap">
@@ -533,12 +539,6 @@ def urun_sayfasi(u):
 </section>
 
 <section class="sec sec-cream">
-  <div class="container">
-    {siparis_bolumu('../../', tekil=True)}
-  </div>
-</section>
-
-<section class="sec">
   <div class="container">
     <div class="sec-h">
       <span class="tag">Diğer Ürünler</span>

@@ -95,7 +95,11 @@ ul{list-style:none}
 .hero{position:relative;background:linear-gradient(160deg,var(--ink) 0%,#0d1e21 62%,#0a1719 100%);color:#fff;overflow:hidden;padding:76px 0 86px}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 78% 40%,rgba(201,162,74,.14) 0%,transparent 62%)}
 .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5}
-.hero-in{position:relative;z-index:2;display:grid;grid-template-columns:1.06fr .94fr;gap:64px;align-items:center}
+.hero-in{position:relative;z-index:2;display:grid;grid-template-columns:1.06fr .94fr;
+  grid-template-areas:'tx art' 'buy art';gap:0 64px;align-items:center}
+.hero-tx{grid-area:tx;align-self:end}
+.hero-art{grid-area:art}
+.hero-buy{grid-area:buy;align-self:start}
 .hero-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(201,162,74,.14);border:1px solid rgba(201,162,74,.34);color:var(--gold-2);padding:8px 17px;border-radius:100px;font-size:.76rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;margin-bottom:26px}
 .hero-badge .ico{width:14px;height:14px}
 .hero h1{font-family:var(--serif);font-size:clamp(2.5rem,5.6vw,4rem);font-weight:600;line-height:1.06;letter-spacing:-.018em;margin-bottom:22px}
@@ -123,8 +127,10 @@ ul{list-style:none}
 .chip-a{top:22px;left:-24px}
 .chip-b{bottom:24px;right:-22px}
 @media(max-width:960px){
-  .hero-in{grid-template-columns:1fr;gap:44px}
-  .hero-art{order:-1;max-width:420px;margin:0 auto}
+  /* mobilde sıra: metin → görsel → fiyat/CTA */
+  .hero-in{grid-template-columns:1fr;grid-template-areas:'tx' 'art' 'buy';gap:34px}
+  .hero-tx,.hero-buy{align-self:auto}
+  .hero-art{max-width:420px;margin:0 auto;width:100%}
   .hero-frame img{height:340px}
   .chip-a{left:-12px}.chip-b{right:-10px}
 }
@@ -358,7 +364,7 @@ ul{list-style:none}
 @media(max-width:1040px){
   .burger{display:flex}
   .hdr-tel span{display:none}
-  .nav{position:fixed;top:0;right:-100%;width:min(320px,86vw);height:100vh;background:#fff;box-shadow:-8px 0 40px rgba(19,36,40,.16);padding:88px 22px 30px;overflow-y:auto;transition:right .34s var(--ease);z-index:950}
+  .nav{position:fixed;top:0;right:-100%;width:min(320px,86vw);height:100vh;background:#fff;box-shadow:-14px 0 46px rgba(19,36,40,.28);border-left:1px solid var(--line);padding:88px 22px 30px;overflow-y:auto;transition:right .34s var(--ease);z-index:950}
   .nav.on{right:0}
   .nav>ul{flex-direction:column;align-items:stretch;gap:3px}
   .nav a{padding:13px 15px;font-size:.96rem}
@@ -366,7 +372,8 @@ ul{list-style:none}
   .drop a{font-size:.86rem;padding:9px 10px}
   .nav-x{position:absolute;top:22px;right:22px;background:none;border:1px solid var(--line);border-radius:10px;padding:9px;cursor:pointer;color:var(--ink);display:flex}
   .nav-x .ico{width:19px;height:19px}
-  .scrim{position:fixed;inset:0;background:rgba(10,20,22,.42);z-index:940;opacity:0;visibility:hidden;transition:.3s}
+  /* perde: sayfayı karartmadan yalnızca dokunarak kapatma alanı sağlar */
+  .scrim{position:fixed;inset:0;background:rgba(19,36,40,.10);z-index:940;opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility .3s}
   .scrim.on{opacity:1;visibility:visible}
 }
 @media(min-width:1041px){.nav-x,.scrim{display:none}}
