@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 7                                    # assets/site.css?v=N
+VER  = 8                                    # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -987,12 +987,18 @@ def anasayfa():
 
     s = isaretci_degistir(s, 'URUNLER', "\n".join(urun_karti(u) for u in URUNLER))
 
-    serit = "\n        ".join(
-        (f'<div class="hp-div"></div>\n        ' if i else '') +
-        f'<div class="hp-item"><span class="hp-g">{e(u["gramaj_etiket"].split(" —")[0])}</span>'
-        f'<span class="hp-v">{tl(u["fiyat"])}</span></div>'
-        for i, u in enumerate(URUNLER))
-    s = isaretci_degistir(s, 'HERO-FIYAT', '        ' + serit)
+    ogeler = []
+    for i, u in enumerate(URUNLER):
+        if i: ogeler.append('<div class="hp-div"></div>')
+        rozet = '<span class="hp-free">Ücretsiz Kargo</span>' if u['kargo_bedava'] else ''
+        sinif = ' hp-item--free' if u['kargo_bedava'] else ''
+        ogeler.append(
+            f'<div class="hp-item{sinif}">{rozet}'
+            f'<span class="hp-g">{t(u["gramaj_etiket"].split(" —")[0])}</span>'
+            f'<span class="hp-v">{tl(u["fiyat"])}</span></div>')
+    serit = ('<div class="hero-price">\n        ' + "\n        ".join(ogeler) + '\n      </div>\n'
+             f'      <p class="hero-kargo"><span>🙂</span> <b>{tl(ESIK)} ve üzeri</b> alışverişlerde kargo bizden!</p>')
+    s = isaretci_degistir(s, 'HERO-FIYAT', '      ' + serit)
 
     semalar = [urun_semasi(u) for u in URUNLER]
     s = isaretci_degistir(
