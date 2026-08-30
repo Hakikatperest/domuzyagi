@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 21                                   # assets/site.css?v=N
+VER  = 22                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -37,7 +37,7 @@ HEP_BEDAVA = KARGO == 0 or ESIK == 0
 # Sayfa ikonu / arama sonucu logosu.
 # ⚠ Google favicon olarak WebP KABUL ETMEZ (ico, png, jpg, gif, svg, bmp) ve
 # ikonun KARE + 48'in katı olmasını ister — bu yüzden ikonlar png/ico olarak
-# images/domuzyagi-logo.png ustasından üretilir (bkz. _src/ikon_uret.py).
+# _src/ustalar/ikon.png ustasından üretilir (bkz. _src/ikon_uret.py).
 # Yollar köke göre mutlak: sayfa derinliği ne olursa olsun aynı blok kullanılır.
 IKON_HEAD = """<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48.png">
@@ -1180,7 +1180,7 @@ def manifest():
         "theme_color": "#132428",
         "icons": [
             {"src": "/images/favicon-192.png", "sizes": "192x192", "type": "image/png"},
-            {"src": "/images/logo-512.png",    "sizes": "512x512", "type": "image/png"},
+            {"src": "/images/favicon-512.png", "sizes": "512x512", "type": "image/png"},
         ],
     }, ensure_ascii=False, indent=2) + "\n"
 
