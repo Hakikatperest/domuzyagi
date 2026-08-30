@@ -24,14 +24,22 @@
     "ga_id": "AW-17831951098",
     "form_endpoint": null,
     "_form_notu": "KARAR (2026-08-30): form_endpoint BOŞ KALACAK. İşletme e-posta kullanmıyor; sipariş formu bilgileri yapılandırılmış WhatsApp mesajına yazar. Buraya mail tabanlı form servisi (FormSubmit vb.) BAĞLANMAYACAK.",
-    "siparis_ucu": null,
+    "siparis_ucu": "https://siparis.domuzyagi.com/siparis.php",
     "_siparis_notu": "KARAR (2026-08-30): Merchant Center sitede sipariş tamamlanmasını şart koşuyor. Sipariş formu artık kendi sunucumuzdaki uç noktaya POST ediyor, müşteri /siparis-alindi/ ekranını görüyor. Uç nokta hazır olana kadar siparis_ucu null → WhatsApp'a düşer.",
     "odeme_yontemi": "havale",
     "banka": {
       "hesap_sahibi": "Murat Akdemir",
       "iban": "TR34 0001 0019 6763 8800 4050 01",
       "banka": "Ziraat Bankası"
-    }
+    },
+    "satici": {
+      "unvan": "Murat Akdemir",
+      "adres": "",
+      "vergi_dairesi": "",
+      "vergi_no": "",
+      "mersis": ""
+    },
+    "_satici_notu": "Mesafeli Satış Sözleşmesi ve Ön Bilgilendirme Formu bu alandan doldurulur. Boş bırakılan satırlar sayfada GÖRÜNMEZ; açık adres ve vergi bilgisi girilene kadar sözleşme mevzuat açısından eksiktir."
   },
   "urunler": [
     {

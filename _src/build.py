@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 38                                   # assets/site.css?v=N
+VER  = 39                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -238,6 +238,8 @@ def footer(kok='/'):
       <a href="{kok}gizlilik-politikasi/">Gizlilik Politikası</a>
       <a href="{kok}iade-ve-cayma-hakki/">İade ve Cayma Hakkı</a>
       <a href="{kok}teslimat-ve-odeme/">Teslimat ve Ödeme</a>
+      <a href="{kok}on-bilgilendirme-formu/">Ön Bilgilendirme Formu</a>
+      <a href="{kok}mesafeli-satis-sozlesmesi/">Mesafeli Satış Sözleşmesi</a>
     </div>
     <div class="ftr-uyari">
       <p><b>Sağlık uyarısı:</b> Ürünlerimiz kozmetik amaçlı, harici kullanım içindir. Gıda veya ilaç değildir; hastalıkların teşhis, tedavi veya önlenmesinde kullanılmaz. Sağlık sorunlarınız için hekiminize başvurun.</p>
@@ -429,7 +431,10 @@ def siparis_bolumu(kok='/', tekil=False, aktif=None):
 
       <label class="of-kvkk">
         <input type="checkbox" required>
-        <span>Siparişimin oluşturulması ve teslimatı için ad, telefon ve adres bilgilerimin işlenmesine onay veriyorum. <a href="{kok}gizlilik-politikasi/">Gizlilik Politikası</a></span>
+        <span><a href="{kok}on-bilgilendirme-formu/">Ön Bilgilendirme Formu</a>'nu ve
+          <a href="{kok}mesafeli-satis-sozlesmesi/">Mesafeli Satış Sözleşmesi</a>'ni okudum, onaylıyorum.
+          Ad, telefon ve adres bilgilerimin siparişin oluşturulması ve teslimi için işlenmesine
+          onay veriyorum (<a href="{kok}gizlilik-politikasi/">Gizlilik Politikası</a>).</span>
         <em class="of-hata"></em>
       </label>
 
@@ -969,11 +974,11 @@ def bilgi_sayfalari():
       <p>Ürünler ısıya dayanıklı özel ambalajla gönderilir; bu sayede kargo sırasında bozulma riski en aza indirilir.</p>
       <img src="/images/domuz-yagi22.webp" class="foto-dik" alt="Kargoya hazırlanan domuz yağı kavanozu" loading="lazy" width="724" height="900">
 
-      <h2>Ödeme yöntemleri</h2>
-      <ul>
-        <li><strong>Havale / EFT</strong> — sipariş teyidinden sonra hesap bilgileri paylaşılır.</li>
-        <li><strong>Kapıda nakit ödeme</strong> — ürünü teslim alırken kargo görevlisine ödersiniz.</li>
-      </ul>
+      <h2>Ödeme yöntemi</h2>
+      <p>Ödeme <strong>havale / EFT</strong> ile yapılır. Siparişinizi tamamladığınızda hesap
+      bilgileri ekranda görünür; açıklama kısmına sipariş numaranızı yazmanız yeterlidir.
+      Ödemeniz ulaştığında sipariş kargoya verilir.</p>
+      <p>Kapıda ödeme ve kapıda kredi kartı seçeneği <strong>bulunmamaktadır</strong>.</p>
       <p>Sitemizde online kart ödemesi alınmaz; kredi kartı bilgisi talep etmeyiz. Bu bilgileri isteyen mesajlara itibar etmeyin.</p>
 
       <h2>Sipariş nasıl verilir?</h2>
@@ -982,6 +987,165 @@ def bilgi_sayfalari():
       <h2>Sipariş takibi</h2>
       <p>Kargoya verildiğinde takip numaranız telefonla veya WhatsApp üzerinden size iletilir.</p>'''),
     ]
+
+def satici_satirlari():
+    """Satıcı kimlik bilgisi tablosu. products.json → site.satici'dan gelir;
+    boş bırakılan alan sayfada GÖRÜNMEZ (uydurma bilgi yazılmaz)."""
+    sa = S.get('satici') or {}
+    b = S.get('banka') or {}
+    satirlar = [
+        ('Satıcı', sa.get('unvan') or S['ad']),
+        ('Adres', sa.get('adres') or f"{S['ilce']} / {S['sehir']}"),
+        ('Telefon', S['telefon_gosterim']),
+        ('E-posta', S['eposta']),
+        ('Web sitesi', URL.replace('https://', '')),
+        ('Vergi dairesi', sa.get('vergi_dairesi')),
+        ('Vergi numarası', sa.get('vergi_no')),
+        ('MERSİS numarası', sa.get('mersis')),
+        ('Banka hesabı', f"{b.get('hesap_sahibi','')} — {b.get('banka','')} — {b.get('iban','')}"
+                          if b.get('iban') else None),
+    ]
+    return "".join(f'<tr><td data-l="{t(k)}"><strong>{t(k)}</strong></td><td data-l="Bilgi">{t(v)}</td></tr>'
+                   for k, v in satirlar if v)
+
+
+def hukuk_sayfalari():
+    """Mesafeli Satış Sözleşmesi ve Ön Bilgilendirme Formu.
+    6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler
+    Yönetmeliği'nin istediği başlıklar; ödeme yöntemi tek: havale/EFT."""
+    sat = satici_satirlari()
+    urun_satir = "".join(
+        f'<tr><td data-l="Ürün">{t(u["tam_ad"])}</td><td data-l="Gramaj">{t(u["gramaj_etiket"])}</td>'
+        f'<td data-l="Fiyat">{tl(u["fiyat"])}</td></tr>' for u in URUNLER)
+    cayma = f'''<h2>Cayma hakkı</h2>
+      <p>Tüketici, sözleşmenin kurulduğu veya malın teslim alındığı tarihten itibaren
+      <strong>14 gün</strong> içinde hiçbir gerekçe göstermeden ve cezai şart ödemeden
+      sözleşmeden cayma hakkına sahiptir. Cayma bildirimi
+      <a href="mailto:{S['eposta']}">{S['eposta']}</a> adresine yazılarak veya
+      <a href="tel:{S['telefon']}">{S['telefon_gosterim']}</a> numarası aranarak yapılabilir.</p>
+      <div class="note">
+        <p><strong>Cayma hakkının istisnası:</strong> Ürünlerimiz cilde uygulanan kozmetik
+        ürünlerdir. Mesafeli Sözleşmeler Yönetmeliği'nin 15/1-(ğ) maddesi uyarınca,
+        tesliminden sonra <strong>ambalajı açılmış</strong> olan ve sağlık ile hijyen açısından
+        iadesi uygun olmayan ürünlerde cayma hakkı kullanılamaz. Ambalajı açılmamış,
+        kullanılmamış ve yeniden satılabilir durumdaki ürünler 14 gün içinde iade edilebilir.</p>
+      </div>
+      <p>Cayma hakkının kullanılması hâlinde ödenen bedel, ürünün satıcıya ulaşmasından
+      itibaren <strong>14 gün içinde</strong> tüketicinin bildireceği IBAN'a iade edilir.
+      Ayrıntı: <a href="../iade-ve-cayma-hakki/">İade ve Cayma Hakkı</a>.</p>'''
+
+    sikayet = '''<h2>Uyuşmazlık ve şikâyet</h2>
+      <p>Sözleşmeden doğan uyuşmazlıklarda, Ticaret Bakanlığı'nca her yıl belirlenen parasal
+      sınırlar dâhilinde tüketicinin yerleşim yerindeki veya işlemin yapıldığı yerdeki
+      <strong>Tüketici Hakem Heyetleri</strong>, bu sınırın üzerindeki uyuşmazlıklarda
+      <strong>Tüketici Mahkemeleri</strong> yetkilidir.</p>'''
+
+    ortak_teslim = f'''<h2>Teslimat</h2>
+      <p>Siparişiniz, ödemenin hesabımıza geçmesinin ardından hazırlanır ve
+      {S['kargo_servis'].lower()} ile gönderilir. Teslim süresi bulunduğunuz ile göre
+      değişmekle birlikte genellikle <strong>{S['kargo_sure']}</strong> içindedir; yasal azami
+      süre 30 gündür. <strong>Kargo ücreti alınmaz.</strong> Ürünler ısıya dayanıklı özel
+      ambalajla gönderilir. Ayrıntı: <a href="../teslimat-ve-odeme/">Teslimat ve Ödeme</a>.</p>'''
+
+    odeme = '''<h2>Ödeme</h2>
+      <p>Ödeme yöntemi <strong>havale / EFT</strong>'dir. Sipariş tamamlandığında hesap
+      bilgileri ekranda gösterilir; açıklama kısmına sipariş numarası yazılır. Sitede
+      online kart ödemesi alınmaz, kart bilgisi talep edilmez. Kapıda ödeme seçeneği yoktur.</p>'''
+
+    onbilgi = f'''<p>Bu form, Mesafeli Sözleşmeler Yönetmeliği'nin 5. maddesi uyarınca,
+      siparişinizi vermeden önce sizi bilgilendirmek amacıyla hazırlanmıştır. Sipariş formunu
+      onaylayarak bu formu okuduğunuzu ve bilgilendirildiğinizi kabul etmiş olursunuz.</p>
+
+      <h2>Satıcı bilgileri</h2>
+      <div class="tbl-wrap"><table>{sat}</table></div>
+
+      <h2>Sözleşme konusu ürünler ve fiyatlar</h2>
+      <p>Aşağıdaki fiyatlar KDV dâhildir. Kargo ücreti alınmaz; ödeyeceğiniz tutar
+      sepetteki ürün toplamıdır.</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Ürün</th><th>Gramaj</th><th>Satış fiyatı (KDV dâhil)</th></tr></thead>
+        <tbody>{urun_satir}</tbody>
+      </table></div>
+      <p>Siparişinizin toplam tutarı, sipariş ekranında ve size iletilen sipariş özetinde
+      açıkça gösterilir.</p>
+
+      {odeme}
+
+      {ortak_teslim}
+
+      {cayma}
+
+      <h2>Ürünlerin niteliği</h2>
+      <p>Ürünlerimiz <strong>kozmetik amaçlı, harici kullanım</strong> içindir; gıda veya ilaç
+      değildir. Hastalıkların teşhis, tedavi veya önlenmesinde kullanılmaz. Sağlık
+      sorunlarınız için hekiminize başvurun.</p>
+
+      {sikayet}'''
+
+    sozlesme = f'''<h2>1. Taraflar</h2>
+      <p><strong>Satıcı</strong></p>
+      <div class="tbl-wrap"><table>{sat}</table></div>
+      <p><strong>Alıcı:</strong> Sipariş formunda ad, telefon ve teslimat adresi bilgilerini
+      bildiren tüketici. Bu bilgiler siparişle birlikte kaydedilir ve sözleşmenin ayrılmaz
+      parçası sayılır.</p>
+
+      <h2>2. Sözleşmenin konusu</h2>
+      <p>İşbu sözleşmenin konusu, alıcının {URL.replace("https://", "")} adresinden elektronik
+      ortamda siparişini verdiği, nitelikleri ve satış fiyatı aşağıda belirtilen ürünlerin
+      satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve
+      Mesafeli Sözleşmeler Yönetmeliği hükümleri gereğince tarafların hak ve yükümlülüklerinin
+      belirlenmesidir.</p>
+
+      <h2>3. Sözleşme konusu ürün ve ödeme</h2>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Ürün</th><th>Gramaj</th><th>Satış fiyatı (KDV dâhil)</th></tr></thead>
+        <tbody>{urun_satir}</tbody>
+      </table></div>
+      <p>Siparişe konu ürünler, adetleri ve toplam tutar, alıcının onayladığı sipariş özetinde
+      yer alır. <strong>Kargo ücreti alınmaz.</strong></p>
+      {odeme}
+
+      <h2>4. Genel hükümler</h2>
+      <p>4.1. Alıcı, ürünlerin temel nitelikleri, satış fiyatı, ödeme şekli ve teslimata ilişkin
+      ön bilgileri okuyup bilgi sahibi olduğunu ve elektronik ortamda gerekli teyidi verdiğini
+      kabul eder.</p>
+      <p>4.2. Ürünler, yasal 30 günlük süreyi aşmamak kaydıyla, alıcının bildirdiği adrese
+      teslim edilir.</p>
+      <p>4.3. Ürünün tesliminden sonra alıcıya ait kredi kartı, banka hesabı gibi ödeme
+      araçlarının yetkisiz kişilerce kullanılması nedeniyle satıcıya bedelin ödenmemesi
+      hâlinde, alıcı ürünü 3 gün içinde satıcıya iade etmekle yükümlüdür.</p>
+      <p>4.4. Satıcı, mücbir sebepler veya olağanüstü durumlar nedeniyle sözleşme konusu ürünü
+      süresi içinde teslim edemezse, durumu alıcıya bildirir. Bu hâlde alıcı siparişi iptal
+      edebilir; iptal hâlinde ödediği tutar 14 gün içinde kendisine iade edilir.</p>
+      <p>4.5. Ambalajı hasarlı teslim edilen ürünler teslim alınmamalı, kargo görevlisine
+      tutanak tutturulmalıdır. Tutanaklı bildirimde ürün ücretsiz değiştirilir veya bedeli
+      iade edilir; iade kargo ücreti satıcıya aittir.</p>
+
+      {cayma}
+
+      <h2>5. Kişisel verilerin korunması</h2>
+      <p>Ad, telefon ve adres bilgileri yalnızca siparişin oluşturulması, teslimi ve yasal
+      saklama yükümlülükleri için işlenir; pazarlama amacıyla kullanılmaz ve üçüncü kişilerle
+      paylaşılmaz (kargo firması hariç). Ayrıntı:
+      <a href="../gizlilik-politikasi/">Gizlilik Politikası</a>.</p>
+
+      {sikayet}
+
+      <h2>6. Yürürlük</h2>
+      <p>Alıcı, sipariş formundaki onay kutusunu işaretleyerek işbu sözleşmenin tüm
+      koşullarını kabul etmiş sayılır. Sözleşme, siparişin satıcıya ulaşması ile kurulur ve
+      elektronik ortamda saklanır.</p>'''
+
+    return [
+        ('on-bilgilendirme-formu', 'Ön Bilgilendirme Formu',
+         'Satıcı bilgileri, ürün fiyatları, ödeme ve teslimat koşulları ile cayma hakkı.',
+         onbilgi),
+        ('mesafeli-satis-sozlesmesi', 'Mesafeli Satış Sözleşmesi',
+         'Taraflar, sözleşme konusu ürünler, ödeme ve teslimat şartları, cayma hakkı ve '
+         'uyuşmazlık çözümü.',
+         sozlesme),
+    ]
+
 
 # ─────────────────────────── makale sayfaları ───────────────────────────
 MAKALE_META = json.load(open(os.path.join(SRC, 'makaleler', 'meta.json'), encoding='utf-8'))
@@ -1250,6 +1414,7 @@ def sitemap():
         'domuz-yaginin-insanlara-faydalari', 'domuz-yaginin-hayvanlara-faydalari',
         'domuz-yagi-nasil-kullanilir']]
     sayfalar += [(f'{URL}/{s}/', '0.3', 'yearly') for s, *_ in bilgi_sayfalari()]
+    sayfalar += [(f'{URL}/{s}/', '0.3', 'yearly') for s, *_ in hukuk_sayfalari()]
     g = "\n".join(f'  <url><loc>{u}</loc><lastmod>{bugun}</lastmod>'
                   f'<changefreq>{c}</changefreq><priority>{p}</priority></url>'
                   for u, p, c in sayfalar)
@@ -1410,6 +1575,9 @@ def main():
         satirlar.append(yaz(os.path.join(KOK, slug, 'index.html'), makale_sayfasi(slug)))
 
     for slug, baslik, ozet, govde in bilgi_sayfalari():
+        satirlar.append(yaz(os.path.join(KOK, slug, 'index.html'), bilgi_sayfasi(slug, baslik, ozet, govde)))
+
+    for slug, baslik, ozet, govde in hukuk_sayfalari():
         satirlar.append(yaz(os.path.join(KOK, slug, 'index.html'), bilgi_sayfasi(slug, baslik, ozet, govde)))
 
     # sipariş onay ekranı — sitemap'e girmez, noindex
