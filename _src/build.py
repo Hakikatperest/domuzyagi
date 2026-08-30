@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 25                                   # assets/site.css?v=N
+VER  = 27                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -470,7 +470,7 @@ def urun_karti(u):
             <span class="p-sub" data-sub="{u['id']}"></span>
           </div>
           <div class="p-btns">
-            <a href="#siparis" class="btn {btn} btn-sm" data-ekle="{u['id']}">{ikon("box")} Sipariş Ver</a>
+            <a href="#siparis" class="btn {btn} btn-sm" data-ekle="{u['id']}">{ikon("box")} Sepete Ekle</a>
             <a href="urun/{u['slug']}/" class="btn btn-line btn-sm" aria-label="Ürün detayı">{ikon("right")}</a>
           </div>
         </div>
@@ -920,13 +920,15 @@ MAKALE_KART = {
 def fiyat_tablosu():
     """Makale gövdesindeki <!-- FIYAT-TABLOSU --> yerine geçer.
     Fiyatlar products.json'dan gelir; tablo elle güncellenmez."""
+    # data-l: dar ekranda tablo satır satır karta dönüşüyor, hücre başlığı
+    # CSS'te ::before ile bu öznitelikten basılıyor (bkz. .tbl-wrap @media 560).
     satir = "".join(f'''
 <tr>
-<td>{t(u['tam_ad'])}</td>
-<td>{t(u['gramaj_etiket'])}</td>
-<td>{tl(u['fiyat'])}</td>
-<td>{"<strong>Ücretsiz</strong>" if (HEP_BEDAVA or u['kargo_bedava']) else "Alıcıya ait"}</td>
-<td><a href="{wa(u['tam_ad'] + ' sipariş etmek istiyorum.')}" target="_blank" rel="noopener">Sipariş</a></td>
+<td data-l="Ürün">{t(u['tam_ad'])}</td>
+<td data-l="Gramaj">{t(u['gramaj_etiket'])}</td>
+<td data-l="Fiyat">{tl(u['fiyat'])}</td>
+<td data-l="Kargo">{"<strong>Ücretsiz</strong>" if (HEP_BEDAVA or u['kargo_bedava']) else "Alıcıya ait"}</td>
+<td data-l="İşlem"><a href="{wa(u['tam_ad'] + ' sipariş etmek istiyorum.')}" target="_blank" rel="noopener">Sipariş</a></td>
 </tr>''' for u in URUNLER)
     return f'''<div class="tbl-wrap"><table>
 <thead>
@@ -1212,9 +1214,13 @@ def anasayfa():
     normal  = [u for u in URUNLER if not u['one_cikan']]
     kampanya = next((u for u in URUNLER if u['one_cikan']), None)
 
-    ogeler = [f'<div class="hp-item">'
+    # Kutular tıklanabilir: bir dokunuşta sepete 1 adet ekler, seçili görünür.
+    # <button> olmaları şart — klavye ve ekran okuyucu için div yetmez.
+    ogeler = [f'<button type="button" class="hp-item" data-hp="{u["id"]}" aria-pressed="false" '
+              f'aria-label="{e(u["tam_ad"])} sepete ekle">'
               f'<span class="hp-g">{t(u["gramaj_etiket"].split(" —")[0])} Domuz Yağı</span>'
-              f'<span class="hp-v">{tl(u["fiyat"])}</span></div>' for u in normal]
+              f'<span class="hp-v">{tl(u["fiyat"])}</span>'
+              f'<span class="hp-ad" data-hp-ad="{u["id"]}"></span></button>' for u in normal]
 
     kmp_kart = ''
     if kampanya:

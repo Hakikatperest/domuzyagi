@@ -363,6 +363,19 @@ if(Object.keys(URUNLER).length){
   /* ürün sayfasına sepet boşken girildiyse o ürün 1 adet önseçili gelsin */
   if(buyId && !Object.keys(sepet).length) sepet[buyId] = 1;
 
+  /* Hero fiyat şeridindeki kutular: sepette adedi olan altın çerçeveli görünür,
+     sağ üstte adet rozeti çıkar. Kutular <button>, ekleme aşağıda bağlanıyor. */
+  var hpKutulari = $$('.hp-item[data-hp]');
+  function hpEsitle(){
+    hpKutulari.forEach(function(b){
+      var k = b.getAttribute('data-hp'), v = sepet[k] || 0;
+      b.classList.toggle('is-secili', v > 0);
+      b.setAttribute('aria-pressed', v > 0 ? 'true' : 'false');
+      var rz = $('[data-hp-ad="' + k + '"]', b);
+      if(rz) rz.textContent = v ? String(v) : '';
+    });
+  }
+
   function kutulariEsitle(){
     qtyKutulari.forEach(function(q){
       var k = q.getAttribute('data-p'), v = sepet[k] || 0;
@@ -418,6 +431,7 @@ if(Object.keys(URUNLER).length){
     }
 
     kutulariEsitle();
+    hpEsitle();
     sepetYaz(sepet);
     ozetiCiz({ metin: metin, kalem: kalemler }, ara);
   }
@@ -443,7 +457,15 @@ if(Object.keys(URUNLER).length){
     });
   }
 
-  /* kart üzerindeki "Sipariş Ver" → yoksa 1 adet ekle + forma in */
+  /* Hero fiyat kutusu: her dokunuş sepete 1 adet ekler. Sayfa kaydırılmaz —
+     kutu seçili hâle geçer ve alt şeritteki sepet özeti kendiliğinden güncellenir. */
+  hpKutulari.forEach(function(b){
+    b.addEventListener('click', function(){
+      uygula(b.getAttribute('data-hp'), (sepet[b.getAttribute('data-hp')] || 0) + 1);
+    });
+  });
+
+  /* kart üzerindeki "Sepete Ekle" → yoksa 1 adet ekle + forma in */
   $$('[data-ekle]').forEach(function(b){
     b.addEventListener('click', function(ev){
       ev.preventDefault();

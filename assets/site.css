@@ -135,9 +135,19 @@ ul{list-style:none}
 .hero-lead{font-size:1.09rem;color:rgba(255,255,255,.78);max-width:560px;margin-bottom:14px}
 .hero-sub{font-size:.94rem;color:rgba(255,255,255,.55);max-width:560px;margin-bottom:30px}
 .hero-price{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:10px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.10);border-radius:16px;margin-bottom:22px;width:100%}
-.hp-item{display:flex;flex-direction:column;justify-content:flex-end;gap:3px;padding:13px 12px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);transition:.25s var(--ease)}
-.hp-item:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.13)}
-.hp-g{font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600;line-height:1.3}
+.hp-item{display:flex;flex-direction:column;justify-content:flex-end;gap:3px;padding:13px 12px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);transition:.25s var(--ease);position:relative;width:100%;text-align:left;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hp-item:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
+/* Seçili kutu: sepette adedi olan ürün. Altın çerçeve + sağ üstte adet rozeti. */
+.hp-item.is-secili{background:rgba(201,162,74,.16);border-color:rgba(201,162,74,.62);box-shadow:0 0 0 1px rgba(201,162,74,.28) inset}
+.hp-item.is-secili .hp-g{color:rgba(255,255,255,.72)}
+/* Adet rozeti sayı-only: 'N adet' yazısı dar kutuda gramaj satırının üstüne
+   biniyordu. Yer daima ayrılır (.hp-g padding), seçince satır kaymaz. */
+.hp-ad{position:absolute;top:8px;right:8px;display:none;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;background:var(--gold);color:#17100a;font-family:var(--baslik);font-size:.68rem;font-weight:800;border-radius:100px;line-height:1}
+.hp-item.is-secili .hp-ad{display:inline-flex}
+.hp-item:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2);transform:translateY(-2px)}
+.hp-item:active{transform:translateY(0)}
+.hp-item.is-secili:hover{background:rgba(201,162,74,.22);border-color:rgba(201,162,74,.75)}
+.hp-g{padding-right:22px;font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600;line-height:1.3}
 .hp-v{font-family:var(--baslik);font-size:clamp(1.064rem,1.7vw,1.278rem);font-weight:700;color:var(--gold-2);line-height:1.1;white-space:nowrap}
 .hero-cta{display:flex;align-items:stretch;gap:13px;flex-wrap:wrap;margin-bottom:38px}
 .hero-art{position:relative}
@@ -722,7 +732,10 @@ html.kilit{overflow:hidden;overscroll-behavior:none}
 
 /* 2) Uzun kelime/URL satır kırsın */
 body{overflow-wrap:break-word;word-break:normal}
+/* anywhere uzun URL'ler için; tabloda sütunu daraltıp "Sipariş"i "Sipari/iş"
+   diye ortadan bölüyordu — hücre içindeki bağlantılar normal kelime kuralına döner. */
 .pg-body a:not(.btn),.ftr-c a,.ct a{overflow-wrap:anywhere}
+.tbl-wrap a{overflow-wrap:break-word;white-space:nowrap}
 
 /* 3) Esnek/ızgara çocukları daralabilsin (min-width:auto varsayılanı taşırır) */
 .hdr-in>*,.hero-in>*,.info-g>*,.cekout-g>*,.pdp>*,.trust-g>*,.of-g>*,
@@ -741,9 +754,29 @@ body{overflow-wrap:break-word;word-break:normal}
 .pg-body table{max-width:100%}
 .tbl-wrap{max-width:100%}
 @media(max-width:560px){
-  .tbl-wrap table{min-width:380px;font-size:.84rem}
   .tbl-wrap th,.tbl-wrap td{padding:10px 12px}
   .pg-body .tbl-wrap th{width:auto}
+  /* 5 sütunlu fiyat tablosu 390 px'e sığmıyordu: yatay kaydırma yerine her
+     satır kendi kartına dönüşür, hücre başlıkları td[data-l]'den basılır.
+     display:block SADECE bu sorgunun içinde; masaüstünde normal tablo kalır. */
+  .tbl-wrap{overflow-x:visible;border:none;border-radius:0}
+  .tbl-wrap table{min-width:0;display:block;font-size:.88rem}
+  .tbl-wrap thead{display:none}
+  .tbl-wrap tbody{display:block}
+  .tbl-wrap tr{display:block;border:1px solid var(--line);border-radius:var(--r-sm);
+    background:var(--paper);margin-bottom:10px;overflow:hidden}
+  .tbl-wrap tr:nth-child(even) td{background:transparent}
+  .tbl-wrap td{display:flex;align-items:center;justify-content:space-between;gap:16px;
+    border-top:1px solid var(--line-2);padding:9px 14px;text-align:right}
+  .tbl-wrap tr>td:first-child{border-top:none;background:var(--cream);
+    font-family:var(--baslik);font-weight:700;color:var(--ink);justify-content:flex-start}
+  .tbl-wrap td::before{content:attr(data-l);font-weight:600;color:var(--tx-3);
+    font-size:.78rem;letter-spacing:.02em;text-align:left;flex:0 0 auto}
+  .tbl-wrap tr>td:first-child::before{content:none}
+  /* iki sütunlu teknik tablolarda satır başlığı th'dir, data-l yok */
+  .tbl-wrap tbody th{display:block;padding:9px 14px 0;text-align:left;background:none;
+    color:var(--tx-3);font-size:.78rem}
+  .tbl-wrap tbody th+td{border-top:none;justify-content:flex-start;text-align:left}
 }
 
 /* 6) Görseller hiçbir yerde kutusunu aşmasın */
