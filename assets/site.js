@@ -614,6 +614,16 @@ if(form){
   var uzak   = form.getAttribute('action');
   var alanlar = $$('.of-f', form);
 
+  /* Türkiye cep/sabit numarası: 5321234567 (10) · 05321234567 (11) · 905321234567 (12).
+     Eskiden yalnız "en az 10 rakam" aranıyordu; 050002505663 gibi 12 haneli hatalı
+     numaralar süzgeçten geçip siparişe yazılıyordu — ulaşılamayan müşteri demek. */
+  function telGecerli(ham){
+    var r = String(ham).replace(/\D/g, '');
+    if(r.length === 12 && r.slice(0,2) === '90') r = r.slice(2);
+    else if(r.length === 11 && r.charAt(0) === '0') r = r.slice(1);
+    return r.length === 10 && r.charAt(0) !== '0';
+  }
+
   var dogrula = function(){
     var ilk = null;
     alanlar.forEach(function(f){
@@ -623,14 +633,14 @@ if(form){
 
       var bos    = g.required && !g.value.trim();
       var eposta = g.type === 'email' && g.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(g.value.trim());
-      var tel    = g.type === 'tel'   && g.value.replace(/\D/g,'').length < 10;
+      var tel    = g.type === 'tel'   && g.value.trim() && !telGecerli(g.value);
       var kotu   = bos || eposta || tel;
 
       f.classList.toggle('err', kotu);
       if(kotu){
         var h = $('.of-hata', f);
         if(h) h.textContent = bos ? 'Bu alan zorunlu.'
-              : (eposta ? 'Geçerli bir e-posta yazın.' : 'Telefon numarası eksik görünüyor.');
+              : (eposta ? 'Geçerli bir e-posta yazın.' : 'Telefon numarası hatalı görünüyor. Örnek: 0532 123 45 67');
         if(!ilk) ilk = g;
       }
     });

@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 40                                   # assets/site.css?v=N
+VER  = 41                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -403,8 +403,8 @@ def siparis_bolumu(kok='/', tekil=False, aktif=None):
           <em class="of-hata"></em>
         </label>
         <label class="of-f">
-          <span>E-posta</span>
-          <input type="email" name="E-posta" autocomplete="email" placeholder="isteğe bağlı">
+          <span>E-posta <i>*</i></span>
+          <input type="email" name="E-posta" autocomplete="email" placeholder="ornek@eposta.com" required>
           <em class="of-hata"></em>
         </label>
         <label class="of-f of-tam">
@@ -850,8 +850,9 @@ def gcr_blok():
     ardından göstermeyi şart koşuyor. Değerler sessionStorage'daki gerçek siparişten
     okunur; Google'ın verdiği örnek kod ORDER_ID/CUSTOMER_EMAIL gibi yer tutucular
     içerir ve olduğu gibi konursa çalışmaz.
-    ⚠ E-posta zorunlu alan değil; müşteri boş bıraktıysa modül hiç açılmaz
-      (Google e-posta olmadan anket gönderemiyor). Bu bilinçli sessiz çıkış.
+    E-posta 2026-08-30'dan beri ZORUNLU (Google anket için şart). Yine de eski
+      siparişler veya elle gelen kayıtlar için boş olabilir; o durumda modül sessizce
+      açılmaz — bu bilinçli bir çıkış, hata değil.
     ⚠ GTIN yok (identifier_exists:no) -> "products" alanı bilinçli olarak verilmiyor.
     Kapatmak için products.json'da site.merchant_id -> null yeterli."""
     mid = S.get('merchant_id')
@@ -955,7 +956,7 @@ def bilgi_sayfalari():
         <li><strong>Ad soyad</strong> — kargo gönderisinin alıcısı olarak</li>
         <li><strong>Telefon numarası</strong> — siparişi teyit etmek ve kargo bilgisi vermek için</li>
         <li><strong>Adres, il ve ilçe</strong> — gönderinin teslimi için</li>
-        <li><strong>E-posta adresi</strong> — isterseniz; sipariş bilgilendirmesi için</li>
+        <li><strong>E-posta adresi</strong> — sipariş onayını iletmek ve teslimat sonrası memnuniyet anketi için</li>
       </ul>
       <p>Bu bilgileri sipariş formu, WhatsApp veya telefon yoluyla siz bize iletirsiniz. Kredi kartı bilgisi <strong>toplamıyoruz</strong>; sitemizde online ödeme alınmaz.</p>
 
