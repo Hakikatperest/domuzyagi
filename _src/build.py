@@ -8,7 +8,7 @@ Tek gerçek kaynak: _src/products.json
 Ürettikleri:
   urun/<slug>/index.html   — Merchant Center açılış sayfaları
   urunler.xml              — Merchant Center feed (RSS 2.0 + g:)
-  sitemap.xml, robots.txt
+  sitemap.xml, robots.txt, site.webmanifest
   index.html               — ürün kartları, hero fiyat şeridi ve ürün şeması
                              (işaretçiler arası bölüm yeniden yazılır)
 
@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 20                                   # assets/site.css?v=N
+VER  = 21                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -33,6 +33,18 @@ KARGO = S['kargo_ucreti']
 # Eşik 0 (veya kargo 0) → site 'her siparişte ücretsiz' diline geçer; eşik/ilerleme
 # çubuğu dili tamamen devre dışı kalır. products.json'a tutar yazılınca geri gelir.
 HEP_BEDAVA = KARGO == 0 or ESIK == 0
+
+# Sayfa ikonu / arama sonucu logosu.
+# ⚠ Google favicon olarak WebP KABUL ETMEZ (ico, png, jpg, gif, svg, bmp) ve
+# ikonun KARE + 48'in katı olmasını ister — bu yüzden ikonlar png/ico olarak
+# images/domuzyagi-logo.png ustasından üretilir (bkz. _src/ikon_uret.py).
+# Yollar köke göre mutlak: sayfa derinliği ne olursa olsun aynı blok kullanılır.
+IKON_HEAD = """<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">"""
 
 
 # ─────────────────────────── yardımcılar ───────────────────────────
@@ -540,7 +552,7 @@ def urun_sayfasi(u):
                 "@id": f"{URL}/#org",
                 "name": S['ad'],
                 "url": f"{URL}/",
-                "logo": f"{URL}/images/logo.webp",
+                "logo": f"{URL}/images/logo-512.png",
                 "email": S['eposta'],
                 "address": {"@type": "PostalAddress", "addressLocality": S['ilce'],
                             "addressRegion": S['sehir'], "addressCountry": "TR"},
@@ -571,7 +583,7 @@ def urun_sayfasi(u):
 <meta property="product:price:currency" content="{S['para_birimi']}">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" href="../../images/logo.webp" type="image/webp">
+{IKON_HEAD}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -733,7 +745,7 @@ def bilgi_sayfasi(slug, baslik, ozet, govde):
 <link rel="canonical" href="{URL}/{slug}/">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#132428">
-<link rel="icon" href="../images/logo.webp" type="image/webp">
+{IKON_HEAD}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -869,6 +881,7 @@ def bilgi_sayfalari():
       <h2>Teslim süresi</h2>
       <p>Siparişiniz teyit edildikten sonra <strong>aynı gün</strong> kargoya verilir. Teslim süresi bulunduğunuz ile göre değişmekle birlikte genellikle <strong>{S['kargo_sure']}</strong> içindedir. Türkiye'nin her yerine gönderim yapılır.</p>
       <p>Ürünler ısıya dayanıklı özel ambalajla gönderilir; bu sayede kargo sırasında bozulma riski en aza indirilir.</p>
+      <img src="/images/domuz-yagi22.webp" class="foto-dik" alt="Kargoya hazırlanan domuz yağı kavanozu" loading="lazy" width="724" height="900">
 
       <h2>Ödeme yöntemleri</h2>
       <ul>
@@ -968,7 +981,7 @@ def makale_sayfasi(slug):
                 {"@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": f"{URL}/"},
                 {"@type": "ListItem", "position": 2, "name": m['h1']}]},
             {"@type": "Organization", "@id": f"{URL}/#org", "name": S['ad'],
-             "url": f"{URL}/", "logo": f"{URL}/images/logo.webp", "email": S['eposta']},
+             "url": f"{URL}/", "logo": f"{URL}/images/logo-512.png", "email": S['eposta']},
         ],
     }
 
@@ -993,7 +1006,7 @@ def makale_sayfasi(slug):
 <meta property="og:image" content="{URL}/images/{MAKALE_KART[slug][1]}">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" href="../images/logo.webp" type="image/webp">
+{IKON_HEAD}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -1156,6 +1169,22 @@ Sitemap: {URL}/sitemap.xml
 '''
 
 
+def manifest():
+    """Android'de ana ekrana eklenince kullanılan ikon ve renkler."""
+    return json.dumps({
+        "name": S['ad'],
+        "short_name": "Domuz Yağı",      # ana ekran etiketi kısa olmalı
+        "start_url": "/",
+        "display": "standalone",
+        "background_color": "#faf7f1",
+        "theme_color": "#132428",
+        "icons": [
+            {"src": "/images/favicon-192.png", "sizes": "192x192", "type": "image/png"},
+            {"src": "/images/logo-512.png",    "sizes": "512x512", "type": "image/png"},
+        ],
+    }, ensure_ascii=False, indent=2) + "\n"
+
+
 # ─────────────────────────── anasayfa güncelleme ───────────────────────────
 def isaretci_degistir(metin, ad, yeni):
     bas, son = f'<!-- {ad}:BAŞ -->', f'<!-- {ad}:SON -->'
@@ -1288,6 +1317,7 @@ def main():
 
     satirlar.append(yaz(os.path.join(KOK, 'sitemap.xml'), sitemap()))
     satirlar.append(yaz(os.path.join(KOK, 'robots.txt'), robots()))
+    satirlar.append(yaz(os.path.join(KOK, 'site.webmanifest'), manifest()))
 
     f = feed()
     if f is None:

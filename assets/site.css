@@ -550,6 +550,8 @@ ul{list-style:none}
 .pg-body ol li::before{content:counter(n);position:absolute;left:0;top:2px;width:23px;height:23px;border-radius:7px;background:var(--cream);border:1px solid var(--line);color:var(--gold-3);font-size:.76rem;font-weight:700;display:flex;align-items:center;justify-content:center}
 .pg-body strong{color:var(--ink);font-weight:600}
 .pg-body img{border-radius:var(--r);margin:22px 0;box-shadow:var(--sh)}
+/* Dikey çekilmiş gerçek fotoğraf: 860 px'lik gövdeyi baştan aşağı kaplamasın */
+.pg-body img.foto-dik{max-width:min(100%,420px);margin-left:auto;margin-right:auto}
 .pg-body a:not(.btn){color:var(--gold-3);font-weight:500;border-bottom:1px solid rgba(201,162,74,.35);transition:.2s}
 .pg-body a:not(.btn):hover{color:var(--ink);border-color:var(--ink)}
 .note{background:var(--cream);border-left:3px solid var(--gold);border-radius:0 var(--r-sm) var(--r-sm) 0;padding:22px 26px;margin:26px 0}
