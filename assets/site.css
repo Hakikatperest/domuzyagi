@@ -161,6 +161,16 @@ ul{list-style:none}
 }
 
 /* ── güven şeridi ── */
+/* ═══ tanıtım şeridi — hero'nun altı, tıklanınca telefon açar ═══
+   Görsel doğal boyutunun (1717 px) üstüne BÜYÜTÜLMEZ; daha geniş ekranda
+   yanlarda kalan boşluk hero ile aynı koyu zemin olur, dikiş görünmez. */
+.hero-band{background:var(--ink);line-height:0}
+.hb-l{position:relative;display:block;max-width:1717px;margin:0 auto}
+.hb-l img{width:100%;height:auto;aspect-ratio:1717/916}
+.hb-call{position:absolute;top:16px;right:16px;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.94);color:var(--ink);font-family:var(--baslik);font-size:.86rem;font-weight:700;line-height:1;padding:10px 15px;border-radius:100px;box-shadow:0 8px 24px rgba(10,23,25,.3);transition:.25s var(--ease)}
+.hb-call .ico{width:15px;height:15px;color:var(--gold-3)}
+.hb-l:hover .hb-call{background:#fff;transform:translateY(-2px);box-shadow:0 12px 30px rgba(10,23,25,.38)}
+@media(max-width:640px){.hb-call{top:9px;right:9px;font-size:.74rem;padding:7px 11px;gap:6px}.hb-call .ico{width:13px;height:13px}}
 .trust{background:var(--paper);border-bottom:1px solid var(--line-2);padding:30px 0}
 .trust-g{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .tr-i{display:flex;align-items:center;gap:14px}
