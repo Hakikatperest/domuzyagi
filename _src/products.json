@@ -23,7 +23,7 @@
     "google_kategori": "Health & Beauty > Personal Care > Cosmetics > Skin Care > Body Oil",
     "ga_id": "AW-17831951098",
     "form_endpoint": null,
-    "_form_notu": "null ise form WhatsApp mesajı olarak gönderilir. FormSubmit aktive edilince: https://formsubmit.co/<hash>"
+    "_form_notu": "KARAR (2026-08-30): form_endpoint BOŞ KALACAK. İşletme e-posta kullanmıyor; sipariş formu bilgileri yapılandırılmış WhatsApp mesajına yazar. Buraya mail tabanlı form servisi (FormSubmit vb.) BAĞLANMAYACAK."
   },
   "urunler": [
     {
