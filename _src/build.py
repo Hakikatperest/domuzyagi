@@ -53,6 +53,27 @@ IKON_HEAD = """<link rel="icon" href="/favicon.ico" sizes="32x32">
 # Silinirse Merchant Center site sahipligi duser -> urunler listeden cikar.
 DOGRULAMA = '<meta name="google-site-verification" content="ZbkLmTkxEBunTYwxjdwCI4zDjGX5qxle7ubpUmiq5Eo">'
 
+def rozet_blok():
+    """Google satıcı puanı rozeti (Merchant Review Widget) — TÜM sayfalarda.
+    ⚠ Sol alta konumlandırıldı: sağ altta `.fab` (WhatsApp + telefon) KALICI olarak
+      duruyor, sol alttaki `.onl` balonu ise geçici ve kapatılabilir. Sağa alınırsa
+      arama/WhatsApp düğmelerinin üstüne biner.
+    ⚠ Google'ın örnek kodundaki `region` alanı BİLİNÇLİ verilmedi — isteğe bağlı ve
+      kabul ettiği değerler doğrulanamadı; yanlış değer widget'i sessizce bozar.
+    Rozet, yeterli yorum birikene kadar hiçbir şey göstermez; bu normaldir.
+    Kapatmak için products.json'da site.merchant_id -> null."""
+    mid = S.get('merchant_id')
+    if not mid:
+        return ''
+    return f"""
+<script id="merchantWidgetScript" src="https://www.gstatic.com/shopping/merchant/merchantwidget.js" defer></script>
+<script>
+merchantWidgetScript.addEventListener('load', function () {{
+  merchantwidget.start({{ merchant_id: {int(mid)}, position: 'LEFT' }});
+}});
+</script>"""
+
+
 TESLIM_GUN = 4   # Google Müşteri Yorumları anketi için tahmini teslim (0-1 hazırlık + 1-3 yol)
 
 SPEK = ('<script type="speculationrules">'
@@ -766,7 +787,7 @@ def urun_sayfasi(u):
 {sabitler()}
 
 {dy_cfg()}
-<script src="../../assets/site.js?v={VER}" defer></script>
+<script src="../../assets/site.js?v={VER}" defer></script>{rozet_blok()}
 </body>
 </html>
 '''
@@ -838,7 +859,7 @@ def bilgi_sayfasi(slug, baslik, ozet, govde, indeksle=True):
 {sabitler()}
 
 {dy_cfg()}
-<script src="../assets/site.js?v={VER}" defer></script>
+<script src="../assets/site.js?v={VER}" defer></script>{rozet_blok()}
 </body>
 </html>
 '''
@@ -1390,7 +1411,7 @@ def makale_sayfasi(slug):
 {sabitler()}
 
 {dy_cfg()}
-<script src="../assets/site.js?v={VER}" defer></script>
+<script src="../assets/site.js?v={VER}" defer></script>{rozet_blok()}
 </body>
 </html>
 '''
