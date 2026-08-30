@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 5                                    # assets/site.css?v=N
+VER  = 6                                    # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -727,6 +727,171 @@ def bilgi_sayfalari():
       <p>Kargoya verildiğinde takip numaranız telefonla veya WhatsApp üzerinden size iletilir.</p>'''),
     ]
 
+# ─────────────────────────── makale sayfaları ───────────────────────────
+MAKALE_META = json.load(open(os.path.join(SRC, 'makaleler', 'meta.json'), encoding='utf-8'))
+
+MAKALE_SIRA = [
+    'domuz-yaginin-faydalari',
+    'domuz-yaginin-insanlara-faydalari',
+    'domuz-yaginin-hayvanlara-faydalari',
+    'domuz-yagi-nasil-kullanilir',
+    'domuz-yagi-fiyatlari',
+]
+
+MAKALE_KART = {
+    'domuz-yaginin-faydalari':            ('Domuz Yağının Faydaları', 'makale-faydalari.webp'),
+    'domuz-yaginin-insanlara-faydalari':  ('İnsanlara Faydaları',      'makale-insan.webp'),
+    'domuz-yaginin-hayvanlara-faydalari': ('Hayvanlara Faydaları',     'makale-hayvan.webp'),
+    'domuz-yagi-nasil-kullanilir':        ('Nasıl Kullanılır?',        'makale-kullanim.webp'),
+    'domuz-yagi-fiyatlari':               ('Domuz Yağı Fiyatları',     'urun-115gr.webp'),
+}
+
+
+def makale_sayfasi(slug):
+    m = MAKALE_META[slug]
+    govde = open(os.path.join(SRC, 'makaleler', slug + '.html'), encoding='utf-8').read()
+
+    digerleri = [x for x in MAKALE_SIRA if x != slug]
+    ilgili = "".join(f'''
+        <a class="art" href="../{x}/">
+          <div class="art-i"><img src="../images/{MAKALE_KART[x][1]}" alt="{e(MAKALE_KART[x][0])}" loading="lazy"></div>
+          <div class="art-b"><h3>{t(MAKALE_KART[x][0])}</h3>
+          <span class="art-l">Devamını Oku {ikon("right")}</span></div>
+        </a>''' for x in digerleri)
+
+    urun_serit = "".join(f'''
+        <a class="mini" href="../urun/{u['slug']}/">
+          <img src="../images/{u['gorsel']}" alt="{e(u['tam_ad'])}" loading="lazy">
+          <span><b>{t(u['tam_ad'])}</b><i>{tl(u['fiyat'])}</i></span>
+        </a>''' for u in URUNLER)
+
+    semalar = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "Article",
+             "headline": m['h1'],
+             "description": m['desc'],
+             "inLanguage": "tr-TR",
+             "mainEntityOfPage": {"@type": "WebPage", "@id": f"{URL}/{slug}/"},
+             "publisher": {"@id": f"{URL}/#org"},
+             "author": {"@type": "Organization", "name": S['ad']}},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": f"{URL}/"},
+                {"@type": "ListItem", "position": 2, "name": m['h1']}]},
+            {"@type": "Organization", "@id": f"{URL}/#org", "name": S['ad'],
+             "url": f"{URL}/", "logo": f"{URL}/images/logo.webp", "email": S['eposta']},
+        ],
+    }
+
+    return f'''<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{t(m['title'])}</title>
+<meta name="description" content="{e(m['desc'])}">
+{f'<meta name="keywords" content="{e(m["keywords"])}">' if m.get('keywords') else ''}
+<link rel="canonical" href="{URL}/{slug}/">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="theme-color" content="#132428">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{e(S['ad'])}">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="{e(m['h1'])}">
+<meta property="og:description" content="{e(m['desc'])}">
+<meta property="og:url" content="{URL}/{slug}/">
+<meta property="og:image" content="{URL}/images/{MAKALE_KART[slug][1]}">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="../images/logo.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v={VER}">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id={S['ga_id']}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', '{S['ga_id']}');
+</script>
+
+<script type="application/ld+json">
+{json.dumps(semalar, ensure_ascii=False, indent=2)}
+</script>
+</head>
+<body>
+
+{IKONLAR}
+
+{duyuru()}
+
+{header('../')}
+
+<section class="pg-hero">
+  <div class="container">
+    <nav class="crumb" aria-label="Site haritası">
+      <a href="../">Ana Sayfa</a>{ikon("right")}
+      <span>{t(m['h1'])}</span>
+    </nav>
+    <h1>{t(m['h1'])}</h1>
+    {f'<p>{t(m["lead"])}</p>' if m.get('lead') else ''}
+  </div>
+</section>
+
+<section class="sec">
+  <div class="container">
+    <div class="pg-body">
+{govde}
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-cream">
+  <div class="container">
+    <div class="sec-h">
+      <span class="tag">Satın Al</span>
+      <h2>Domuz Yağı Fiyatları</h2>
+      <p>%100 saf ve doğal. {tl(ESIK)} ve üzeri siparişlerde kargo bizden.</p>
+      <div class="rule"></div>
+    </div>
+    <div class="mini-g">{urun_serit}
+    </div>
+    <div class="cta-strip">
+      <h3>Sipariş vermek için</h3>
+      <p>Formu doldurun, WhatsApp'tan yazın ya da doğrudan arayın.</p>
+      <div class="row">
+        <a href="../#siparis" class="btn btn-gold">{ikon("box")} Sipariş Formu</a>
+        <a href="https://wa.me/{S['whatsapp']}" class="btn btn-wa" target="_blank" rel="noopener">{ikon("wa","ico ico-f")} WhatsApp</a>
+        <a href="tel:{S['telefon']}" class="btn btn-ghost">{ikon("phone")} {S['telefon_gosterim']}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="container">
+    <div class="sec-h">
+      <span class="tag">Bilgi Köşesi</span>
+      <h2>İlgili Makaleler</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="art-g">{ilgili}
+    </div>
+  </div>
+</section>
+
+{footer('../')}
+
+{sabitler()}
+
+<script src="../assets/site.js?v={VER}" defer></script>
+</body>
+</html>
+'''
+
 # ─────────────────────────── Merchant Center feed ───────────────────────────
 def feed():
     if KARGO is None:
@@ -884,6 +1049,9 @@ def main():
 
     for u in URUNLER:
         satirlar.append(yaz(os.path.join(KOK, 'urun', u['slug'], 'index.html'), urun_sayfasi(u)))
+
+    for slug in MAKALE_SIRA:
+        satirlar.append(yaz(os.path.join(KOK, slug, 'index.html'), makale_sayfasi(slug)))
 
     for slug, baslik, ozet, govde in bilgi_sayfalari():
         satirlar.append(yaz(os.path.join(KOK, slug, 'index.html'), bilgi_sayfasi(slug, baslik, ozet, govde)))
