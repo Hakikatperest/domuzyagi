@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css?v=4">
+<link rel="stylesheet" href="../../assets/site.css?v=5">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17831951098"></script>
 <script>
@@ -242,8 +242,8 @@
             <div class="buy-tot"><span>Toplam</span><b class="buy-v">250 ₺</b></div>
           </div>
           <p class="buy-kargo"></p>
+          <a href="#siparis" class="btn btn-gold btn-lg btn-block"><svg class="ico"><use href="#i-box"></use></svg> Siparişi Tamamla</a>
           <a href="https://wa.me/905516412065?text=Merhaba%2C%20Domuz%20Ya%C4%9F%C4%B1%2050%20gram%20%28250%20%E2%82%BA%29%20sipari%C5%9F%20etmek%20istiyorum." class="btn btn-wa btn-lg btn-block wa-order" target="_blank" rel="noopener"><svg class="ico ico-f"><use href="#i-wa"></use></svg> WhatsApp ile Sipariş Ver</a>
-          <a href="tel:+905516412065" class="btn btn-line btn-lg btn-block"><svg class="ico"><use href="#i-phone"></use></svg> Telefonla Sipariş Ver — 0551 641 20 65</a>
         </div>
 
         <div class="pdp-trust">
@@ -285,6 +285,91 @@
   </div>
 </section>
 
+<section class="sec sec-cream">
+  <div class="container">
+    <div class="cekout" id="siparis">
+  <div class="cekout-h">
+    <h3>Siparişinizi Tamamlayın</h3>
+    <p>Adet seçin, bilgilerinizi bırakın. Siparişiniz WhatsApp'a hazır olarak gelsin — üyelik gerekmez.</p>
+  </div>
+
+  <form class="oform cekout-g" novalidate>
+    <input type="text" name="_gizli" class="of-tuzak" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <input type="hidden" name="Sipariş" class="of-urun" value="">
+
+    <div class="cekout-sol">
+      <h4>Teslimat Bilgileri</h4>
+      <div class="of-g">
+        <label class="of-f">
+          <span>Ad Soyad <i>*</i></span>
+          <input type="text" name="Ad Soyad" autocomplete="name" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>Telefon <i>*</i></span>
+          <input type="tel" name="Telefon" autocomplete="tel" inputmode="tel" placeholder="05xx xxx xx xx" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>İl / İlçe <i>*</i></span>
+          <input type="text" name="İl / İlçe" autocomplete="address-level2" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>E-posta</span>
+          <input type="email" name="E-posta" autocomplete="email" placeholder="isteğe bağlı">
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f of-tam">
+          <span>Teslimat Adresi <i>*</i></span>
+          <textarea name="Adres" rows="3" autocomplete="street-address" required></textarea>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f of-tam">
+          <span>Sipariş notu</span>
+          <textarea name="Not" rows="2" placeholder="Eklemek istedikleriniz"></textarea>
+        </label>
+      </div>
+    </div>
+
+    <aside class="cekout-sag">
+      <h4>Sipariş Özeti</h4>
+      <div class="cekout-tek"><span class="of-ozet-v">Henüz ürün seçilmedi</span></div>
+
+      <div class="ship-bar">
+        <div class="ship-txt">
+          <svg class="ico"><use href="#i-truck"></use></svg>
+          <span class="ship-msg">Ücretsiz kargo için 2.500 ₺ ve üzeri sipariş verin.</span>
+        </div>
+        <div class="ship-track"><div class="ship-fill"></div></div>
+      </div>
+
+      <div class="sum-row"><span>Ara toplam</span><b class="sum-ara">0 ₺</b></div>
+      <div class="sum-row"><span>Kargo</span><b class="sum-kargo">200 ₺</b></div>
+      <div class="sum-tot"><span>Toplam</span><b class="sum-toplam">0 ₺</b></div>
+
+      <label class="of-kvkk">
+        <input type="checkbox" required>
+        <span>Siparişimin oluşturulması ve teslimatı için ad, telefon ve adres bilgilerimin işlenmesine onay veriyorum. <a href="../../gizlilik-politikasi/">Gizlilik Politikası</a></span>
+        <em class="of-hata"></em>
+      </label>
+
+      <button type="submit" class="btn btn-gold btn-lg btn-block of-gonder"><svg class="ico"><use href="#i-box"></use></svg> Siparişi Gönder</button>
+      <p class="of-durum" role="status"></p>
+
+      <div class="cekout-alt">
+        <span>veya doğrudan</span>
+        <div class="cekout-alt-b">
+          <a href="https://wa.me/905516412065" class="btn btn-wa btn-sm wa-order" target="_blank" rel="noopener"><svg class="ico ico-f"><use href="#i-wa"></use></svg> WhatsApp</a>
+          <a href="tel:+905516412065" class="btn btn-line btn-sm"><svg class="ico"><use href="#i-phone"></use></svg> 0551 641 20 65</a>
+        </div>
+      </div>
+    </aside>
+  </form>
+</div>
+  </div>
+</section>
+
 <section class="sec">
   <div class="container">
     <div class="sec-h">
@@ -313,71 +398,7 @@
   </div>
 </section>
 
-<section class="sec sec-cream" id="siparis-formu">
-  <div class="container">
-    <div class="sec-h">
-      <span class="tag">Sipariş Formu</span>
-      <h2>Bilgilerinizi Bırakın, Biz Arayalım</h2>
-      <p>Formu doldurun; siparişinizi teyit etmek için en kısa sürede size dönelim. Dilerseniz WhatsApp veya telefonla da sipariş verebilirsiniz.</p>
-      <div class="rule"></div>
-    </div>
 
-    <form class="oform" novalidate>
-      <input type="text" name="_gizli" class="of-tuzak" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <input type="hidden" name="Sipariş" class="of-urun" value="">
-
-      <div class="of-g">
-        <label class="of-f">
-          <span>Ad Soyad <i>*</i></span>
-          <input type="text" name="Ad Soyad" autocomplete="name" required>
-          <em class="of-hata"></em>
-        </label>
-        <label class="of-f">
-          <span>Telefon <i>*</i></span>
-          <input type="tel" name="Telefon" autocomplete="tel" inputmode="tel" placeholder="05xx xxx xx xx" required>
-          <em class="of-hata"></em>
-        </label>
-        <label class="of-f">
-          <span>İl / İlçe <i>*</i></span>
-          <input type="text" name="İl / İlçe" autocomplete="address-level2" required>
-          <em class="of-hata"></em>
-        </label>
-        <label class="of-f">
-          <span>E-posta</span>
-          <input type="email" name="E-posta" autocomplete="email">
-          <em class="of-hata"></em>
-        </label>
-        <label class="of-f of-tam">
-          <span>Teslimat Adresi <i>*</i></span>
-          <textarea name="Adres" rows="3" autocomplete="street-address" required></textarea>
-          <em class="of-hata"></em>
-        </label>
-        <label class="of-f of-tam">
-          <span>Sipariş notu</span>
-          <textarea name="Not" rows="2" placeholder="Eklemek istedikleriniz"></textarea>
-        </label>
-      </div>
-
-      <div class="of-ozet">
-        <span>Siparişiniz</span>
-        <b class="of-ozet-v">Henüz ürün seçilmedi</b>
-      </div>
-
-      <label class="of-kvkk">
-        <input type="checkbox" required>
-        <span>Siparişimin oluşturulması ve teslimatı amacıyla ad, telefon ve adres bilgilerimin işlenmesine onay veriyorum. <a href="../../gizlilik-politikasi/">Gizlilik Politikası</a></span>
-        <em class="of-hata"></em>
-      </label>
-
-      <button type="submit" class="btn btn-gold btn-lg btn-block of-gonder"><svg class="ico"><use href="#i-box"></use></svg> Siparişi Gönder</button>
-      <p class="of-durum" role="status"></p>
-
-      <p class="of-alt">Formu doldurmak istemiyorsanız
-        <a href="https://wa.me/905516412065" target="_blank" rel="noopener">WhatsApp</a> veya
-        <a href="tel:+905516412065">0551 641 20 65</a> ile de sipariş verebilirsiniz.</p>
-    </form>
-  </div>
-</section>
 
 <footer class="ftr">
   <div class="container">
@@ -434,6 +455,6 @@
   <div class="lb-cap"></div>
 </div>
 
-<script src="../../assets/site.js?v=4" defer></script>
+<script src="../../assets/site.js?v=5" defer></script>
 </body>
 </html>

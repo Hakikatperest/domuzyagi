@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 4                                    # assets/site.css?v=N
+VER  = 5                                    # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -180,25 +180,30 @@ def sabitler():
 </div>'''
 
 
-def siparis_formu(kok='/'):
+def siparis_bolumu(kok='/', tekil=False):
+    """Ürün seçimi + müşteri bilgileri tek formda. tekil=True → ürün detay sayfası."""
     ep = S.get('form_endpoint')
     action = f' action="{ep}" method="POST"' if ep else ''
-    gizli = ('<input type="hidden" name="_subject" value="domuzyagi.com - Yeni siparis">\n      '
-             '<input type="hidden" name="_captcha" value="false">\n      '
-             '<input type="hidden" name="_template" value="table">\n      ') if ep else ''
-    return f'''<section class="sec sec-cream" id="siparis-formu">
-  <div class="container">
-    <div class="sec-h">
-      <span class="tag">Sipariş Formu</span>
-      <h2>Bilgilerinizi Bırakın, Biz Arayalım</h2>
-      <p>Formu doldurun; siparişinizi teyit etmek için en kısa sürede size dönelim. Dilerseniz WhatsApp veya telefonla da sipariş verebilirsiniz.</p>
-      <div class="rule"></div>
-    </div>
+    gizli = ('<input type="hidden" name="_subject" value="domuzyagi.com - Yeni siparis">\n        '
+             '<input type="hidden" name="_captcha" value="false">\n        '
+             '<input type="hidden" name="_template" value="table">\n        ') if ep else ''
 
-    <form class="oform"{action} novalidate>
-      {gizli}<input type="text" name="_gizli" class="of-tuzak" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <input type="hidden" name="Sipariş" class="of-urun" value="">
+    # özet gövdesi: anasayfada sepet listesi, ürün sayfasında tek satır
+    ozet_ic = ('<div class="cekout-tek"><span class="of-ozet-v">Henüz ürün seçilmedi</span></div>'
+               if tekil else '<div class="cart-list"></div>')
 
+    return f'''<div class="cekout" id="siparis">
+  <div class="cekout-h">
+    <h3>Siparişinizi Tamamlayın</h3>
+    <p>{"Adet seçin, bilgilerinizi bırakın." if tekil else "Yukarıdaki ürünlerden adet seçin, bilgilerinizi bırakın."} Siparişiniz WhatsApp'a hazır olarak gelsin — üyelik gerekmez.</p>
+  </div>
+
+  <form class="oform cekout-g"{action} novalidate>
+    {gizli}<input type="text" name="_gizli" class="of-tuzak" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <input type="hidden" name="Sipariş" class="of-urun" value="">
+
+    <div class="cekout-sol">
+      <h4>Teslimat Bilgileri</h4>
       <div class="of-g">
         <label class="of-f">
           <span>Ad Soyad <i>*</i></span>
@@ -217,7 +222,7 @@ def siparis_formu(kok='/'):
         </label>
         <label class="of-f">
           <span>E-posta</span>
-          <input type="email" name="E-posta" autocomplete="email">
+          <input type="email" name="E-posta" autocomplete="email" placeholder="isteğe bağlı">
           <em class="of-hata"></em>
         </label>
         <label class="of-f of-tam">
@@ -230,27 +235,44 @@ def siparis_formu(kok='/'):
           <textarea name="Not" rows="2" placeholder="Eklemek istedikleriniz"></textarea>
         </label>
       </div>
+    </div>
 
-      <div class="of-ozet">
-        <span>Siparişiniz</span>
-        <b class="of-ozet-v">Henüz ürün seçilmedi</b>
+    <aside class="cekout-sag">
+      <h4>Sipariş Özeti</h4>
+      {ozet_ic}
+
+      <div class="ship-bar">
+        <div class="ship-txt">
+          {ikon("truck")}
+          <span class="ship-msg">Ücretsiz kargo için {tl(ESIK)} ve üzeri sipariş verin.</span>
+        </div>
+        <div class="ship-track"><div class="ship-fill"></div></div>
       </div>
+
+      <div class="sum-row"><span>Ara toplam</span><b class="sum-ara">0 ₺</b></div>
+      <div class="sum-row"><span>Kargo</span><b class="sum-kargo">{tl(KARGO) if KARGO is not None else "Alıcıya ait"}</b></div>
+      <div class="sum-tot"><span>Toplam</span><b class="sum-toplam">0 ₺</b></div>
 
       <label class="of-kvkk">
         <input type="checkbox" required>
-        <span>Siparişimin oluşturulması ve teslimatı amacıyla ad, telefon ve adres bilgilerimin işlenmesine onay veriyorum. <a href="{kok}gizlilik-politikasi/">Gizlilik Politikası</a></span>
+        <span>Siparişimin oluşturulması ve teslimatı için ad, telefon ve adres bilgilerimin işlenmesine onay veriyorum. <a href="{kok}gizlilik-politikasi/">Gizlilik Politikası</a></span>
         <em class="of-hata"></em>
       </label>
 
       <button type="submit" class="btn btn-gold btn-lg btn-block of-gonder">{ikon("box")} Siparişi Gönder</button>
       <p class="of-durum" role="status"></p>
 
-      <p class="of-alt">Formu doldurmak istemiyorsanız
-        <a href="https://wa.me/{S['whatsapp']}" target="_blank" rel="noopener">WhatsApp</a> veya
-        <a href="tel:{S['telefon']}">{S['telefon_gosterim']}</a> ile de sipariş verebilirsiniz.</p>
-    </form>
-  </div>
-</section>'''
+      <div class="cekout-alt">
+        <span>veya doğrudan</span>
+        <div class="cekout-alt-b">
+          <a href="https://wa.me/{S['whatsapp']}" class="btn btn-wa btn-sm wa-order" target="_blank" rel="noopener">{ikon("wa","ico ico-f")} WhatsApp</a>
+          <a href="tel:{S['telefon']}" class="btn btn-line btn-sm">{ikon("phone")} {S['telefon_gosterim']}</a>
+        </div>
+      </div>
+    </aside>
+  </form>
+</div>'''
+
 
 # ─────────────────────────── ürün kartı (anasayfa) ───────────────────────────
 def urun_karti(u):
@@ -465,8 +487,8 @@ def urun_sayfasi(u):
             <div class="buy-tot"><span>Toplam</span><b class="buy-v">{tl(u['fiyat'])}</b></div>
           </div>
           <p class="buy-kargo"></p>
+          <a href="#siparis" class="btn btn-gold btn-lg btn-block">{ikon("box")} Siparişi Tamamla</a>
           <a href="{wa(mesaj)}" class="btn btn-wa btn-lg btn-block wa-order" target="_blank" rel="noopener">{ikon("wa","ico ico-f")} WhatsApp ile Sipariş Ver</a>
-          <a href="tel:{S['telefon']}" class="btn btn-line btn-lg btn-block">{ikon("phone")} Telefonla Sipariş Ver — {S['telefon_gosterim']}</a>
         </div>
 
         <div class="pdp-trust">
@@ -508,6 +530,12 @@ def urun_sayfasi(u):
   </div>
 </section>
 
+<section class="sec sec-cream">
+  <div class="container">
+    {siparis_bolumu('../../', tekil=True)}
+  </div>
+</section>
+
 <section class="sec">
   <div class="container">
     <div class="sec-h">
@@ -520,7 +548,7 @@ def urun_sayfasi(u):
   </div>
 </section>
 
-{siparis_formu('../../')}
+
 
 {footer('../../')}
 
@@ -826,11 +854,12 @@ def anasayfa():
                              + json.dumps(blok, ensure_ascii=False, indent=2)
                              + '\n</script>') + s[m.end():]
 
-    s = isaretci_degistir(s, 'SIPARIS-FORM', siparis_formu('/'))
+    s = isaretci_degistir(s, 'SIPARIS', siparis_bolumu('/'))
 
     cfg = {
         "whatsapp": S['whatsapp'],
         "esik": ESIK,
+        "kargo": KARGO,
         "urunler": {u['id']: {"ad": u['tam_ad'], "fiyat": u['fiyat']} for u in URUNLER},
     }
     s = isaretci_degistir(

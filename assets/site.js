@@ -4,98 +4,88 @@
 (function(){
 'use strict';
 
-/* Yapılandırma sayfadan gelir (_src/build.py yazar). Yedek değerler
-   yalnızca DY_CFG hiç basılmamışsa devreye girer. */
+/* Yapılandırma sayfadan gelir (_src/build.py yazar). */
 var CFG     = window.DY_CFG || {};
 var WA_NO   = CFG.whatsapp || '905516412065';
-var ESIK    = CFG.esik     || 2500;        /* ücretsiz kargo eşiği */
+var ESIK    = CFG.esik     || 2500;
+var KARGO   = (CFG.kargo === 0 || CFG.kargo) ? CFG.kargo : null;
 var URUNLER = CFG.urunler  || {};
 
 function tl(n){ return n.toLocaleString('tr-TR') + ' ₺'; }
 function $(s,c){ return (c||document).querySelector(s); }
 function $$(s,c){ return Array.prototype.slice.call((c||document).querySelectorAll(s)); }
 
-/* Seçilen siparişi form özetine yazar. Form sayfada yoksa sessizce geçer.
-   Betik defer ile yüklendiğinden DOM hazırdır; blok sırası önemli değil. */
-function siparisYaz(metin, tutar){
-  var oz = $('.of-ozet-v'), hid = $('.of-urun');
-  if(!oz || !hid) return;
-  var v = metin ? metin + (tutar ? '  —  Toplam: ' + tl(tutar) : '') : '';
-  hid.value = v;
-  oz.textContent = v || 'Henüz ürün seçilmedi';
-}
 
-/* ── yıl ── */
+/* ══════════ arayüz ══════════ */
+
 $$('.yil').forEach(function(e){ e.textContent = new Date().getFullYear(); });
 
-/* ── header gölgesi ── */
 var hdr = $('.hdr');
 if(hdr){
-  var onScroll = function(){ hdr.classList.toggle('stuck', window.scrollY > 8); };
-  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+  var golge = function(){ hdr.classList.toggle('stuck', window.scrollY > 8); };
+  golge(); window.addEventListener('scroll', golge, {passive:true});
 }
 
-/* ── mobil menü ── */
 var nav = $('.nav'), burger = $('.burger'), navX = $('.nav-x'), scrim = $('.scrim');
-function menu(open){
+function menu(ac){
   if(!nav) return;
-  nav.classList.toggle('on', open);
-  if(scrim) scrim.classList.toggle('on', open);
-  document.body.style.overflow = open ? 'hidden' : '';
+  nav.classList.toggle('on', ac);
+  if(scrim) scrim.classList.toggle('on', ac);
+  document.body.style.overflow = ac ? 'hidden' : '';
 }
 if(burger) burger.addEventListener('click', function(){ menu(!nav.classList.contains('on')); });
 if(navX)   navX.addEventListener('click', function(){ menu(false); });
 if(scrim)  scrim.addEventListener('click', function(){ menu(false); });
 if(nav) $$('.nav a').forEach(function(a){ a.addEventListener('click', function(){ menu(false); }); });
 
-/* ── yumuşak kaydırma ── */
+function kaydir(hedef){
+  window.scrollTo({ top: hedef.getBoundingClientRect().top + window.scrollY - 84, behavior:'smooth' });
+}
 $$('a[href^="#"]').forEach(function(a){
-  a.addEventListener('click', function(e){
+  a.addEventListener('click', function(ev){
     var h = a.getAttribute('href');
     if(h === '#' || h.length < 2) return;
     var t = document.getElementById(h.slice(1));
     if(!t) return;
-    e.preventDefault();
-    window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 84, behavior:'smooth' });
+    ev.preventDefault();
+    kaydir(t);
   });
 });
 
-/* ── SSS akordiyon ── */
 $$('.faq-q').forEach(function(q){
   q.addEventListener('click', function(){
-    var item = q.closest('.faq'), a = $('.faq-a', item), acik = item.classList.contains('open');
+    var madde = q.closest('.faq'), cevap = $('.faq-a', madde), acik = madde.classList.contains('open');
     $$('.faq').forEach(function(f){
       f.classList.remove('open');
       $('.faq-a', f).style.maxHeight = null;
       $('.faq-q', f).setAttribute('aria-expanded','false');
     });
     if(!acik){
-      item.classList.add('open');
-      a.style.maxHeight = a.scrollHeight + 'px';
+      madde.classList.add('open');
+      cevap.style.maxHeight = cevap.scrollHeight + 'px';
       q.setAttribute('aria-expanded','true');
     }
   });
 });
 
-/* ── giriş animasyonu ── */
 var fx = $$('.fx');
 if(fx.length){
   if(!('IntersectionObserver' in window)){
     fx.forEach(function(e){ e.classList.add('in'); });
   } else {
-    var io = new IntersectionObserver(function(ents){
-      ents.forEach(function(en){
-        if(!en.isIntersecting) return;
-        var kar = Array.prototype.slice.call(en.target.parentElement.children).filter(function(c){ return c.classList.contains('fx'); });
-        setTimeout(function(){ en.target.classList.add('in'); }, kar.indexOf(en.target) * 70);
-        io.unobserve(en.target);
+    var io = new IntersectionObserver(function(girisler){
+      girisler.forEach(function(g){
+        if(!g.isIntersecting) return;
+        var kardes = Array.prototype.slice.call(g.target.parentElement.children)
+                       .filter(function(c){ return c.classList.contains('fx'); });
+        setTimeout(function(){ g.target.classList.add('in'); }, kardes.indexOf(g.target) * 70);
+        io.unobserve(g.target);
       });
     }, { threshold:.08, rootMargin:'0px 0px -40px 0px' });
     fx.forEach(function(e){ io.observe(e); });
   }
 }
 
-/* ── lightbox ── */
 var lb = $('.lb');
 if(lb){
   var lbImg = $('img', lb), lbCap = $('.lb-cap', lb);
@@ -107,264 +97,272 @@ if(lb){
       document.body.style.overflow = 'hidden';
     });
   });
-  var kapat = function(){ lb.classList.remove('on'); document.body.style.overflow=''; };
+  var kapat = function(){ lb.classList.remove('on'); document.body.style.overflow = ''; };
   lb.addEventListener('click', kapat);
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') kapat(); });
 }
 
-/* ── sipariş paneli ── */
+
+/* ══════════ sipariş özeti — tek kaynak ══════════
+   Hem anasayfadaki sepet hem ürün sayfasındaki adet kutusu buraya yazar.
+   Ekranda ne varsa onu günceller; olmayan öğeyi sessizce atlar.        */
+
+var waMesaji = 'Merhaba, domuz yağı hakkında bilgi almak istiyorum.';
+var sonAra   = 0;
+
+function ozetiCiz(satirlar, ara){
+  sonAra = ara;
+  var bedava = ara >= ESIK || satirlar.bedava === true;
+
+  var el;
+  if((el = $('.sum-ara')))    el.textContent = tl(ara);
+  if((el = $('.sum-toplam'))) el.textContent = tl(ara);
+  if((el = $('.sum-kargo'))){
+    el.textContent = bedava ? 'Ücretsiz' : (KARGO !== null ? tl(KARGO) : 'Alıcıya ait');
+    var satir = el.closest('.sum-row');
+    if(satir) satir.classList.toggle('free', bedava);
+  }
+
+  var fill = $('.ship-fill'), txt = $('.ship-txt'), msg = $('.ship-msg');
+  if(fill){
+    fill.style.width = Math.min(100, (ara / ESIK) * 100) + '%';
+    fill.classList.toggle('done', bedava);
+  }
+  if(txt) txt.classList.toggle('done', bedava);
+  if(msg){
+    msg.textContent = bedava ? 'Tebrikler, kargo bizden!'
+      : (ara === 0 ? 'Ücretsiz kargo için ' + tl(ESIK) + ' ve üzeri sipariş verin.'
+                   : 'Ücretsiz kargoya ' + tl(ESIK - ara) + ' kaldı.');
+  }
+
+  /* form için düz metin */
+  var duz = satirlar.metin.join(' · ');
+  if((el = $('.of-urun')))   el.value = duz ? duz + '  —  Toplam: ' + tl(ara) : '';
+  if((el = $('.of-ozet-v'))) el.textContent = duz || 'Henüz ürün seçilmedi';
+
+  /* WhatsApp kısayolu */
+  waMesaji = satirlar.metin.length
+    ? 'Merhaba, sipariş vermek istiyorum:\n' + satirlar.metin.map(function(m){ return '• ' + m; }).join('\n') +
+      '\n\nAra toplam: ' + tl(ara) +
+      '\nKargo: ' + (bedava ? 'Ücretsiz (' + tl(ESIK) + ' üzeri)' : (KARGO !== null ? tl(KARGO) : 'Alıcıya ait'))
+    : 'Merhaba, domuz yağı hakkında bilgi almak istiyorum.';
+  $$('.wa-order').forEach(function(b){
+    b.href = 'https://wa.me/' + WA_NO + '?text=' + encodeURIComponent(waMesaji);
+  });
+
+  /* mobil alt çubuk */
+  var mt = $('.mbar-tot');
+  if(mt){
+    mt.style.display = ara ? 'flex' : 'none';
+    var mv = $('.mbar-tot b'); if(mv) mv.textContent = tl(ara);
+    var ml = $('.mbar-lbl');   if(ml) ml.textContent = ara ? 'Siparişi Gönder' : 'WhatsApp';
+  }
+}
+
+
+/* ══════════ anasayfa: çoklu ürün sepeti ══════════ */
+
 var cartList = $('.cart-list');
 if(cartList){
   var sepet = {};
 
-  function wa(mesaj){ return 'https://wa.me/' + WA_NO + '?text=' + encodeURIComponent(mesaj); }
-
-  function ciz(){
-    var ara = 0, satirlar = [], metin = [];
+  function sepetiCiz(){
+    var ara = 0, kutular = [], metin = [];
 
     Object.keys(URUNLER).forEach(function(k){
       var ad = sepet[k] || 0;
       if(!ad) return;
       var u = URUNLER[k], tutar = u.fiyat * ad;
       ara += tutar;
-      satirlar.push(
+      kutular.push(
         '<div class="cart-row"><span class="n">' + u.ad + ' <i>× ' + ad + '</i></span>' +
         '<span class="p">' + tl(tutar) + '</span>' +
-        '<button class="rm" data-rm="' + k + '" aria-label="Kaldır"><svg class="ico"><use href="#i-x"></use></svg></button></div>'
+        '<button type="button" class="rm" data-rm="' + k + '" aria-label="Kaldır">' +
+        '<svg class="ico"><use href="#i-x"></use></svg></button></div>'
       );
-      metin.push('• ' + u.ad + ' × ' + ad + ' = ' + tl(tutar));
+      metin.push(u.ad + ' × ' + ad + ' = ' + tl(tutar));
     });
 
-    var bedava = ara >= ESIK;
+    cartList.innerHTML = kutular.length ? kutular.join('')
+      : '<div class="cart-empty">Henüz ürün seçmediniz — yukarıdaki ürünlerden adet ekleyin.</div>';
 
-    cartList.innerHTML = satirlar.length ? satirlar.join('') :
-      '<div class="cart-empty">Henüz ürün seçmediniz — yukarıdaki ürünlerden adet ekleyin.</div>';
-
-    $('.sum-ara').textContent = tl(ara);
-    var kargoEl = $('.sum-kargo');
-    kargoEl.textContent = bedava ? 'Ücretsiz' : 'Alıcıya ait';
-    kargoEl.closest('.sum-row').classList.toggle('free', bedava);
-    $('.sum-toplam').textContent = tl(ara);
-
-    var kalan = Math.max(0, ESIK - ara);
-    var oran  = Math.min(100, (ara / ESIK) * 100);
-    var fill  = $('.ship-fill'), txt = $('.ship-txt');
-    fill.style.width = oran + '%';
-    fill.classList.toggle('done', bedava);
-    txt.classList.toggle('done', bedava);
-    $('.ship-msg').textContent = bedava
-      ? 'Tebrikler, kargo bizden!'
-      : (ara === 0
-          ? 'Ücretsiz kargo için ' + tl(ESIK) + ' ve üzeri sipariş verin.'
-          : 'Ücretsiz kargoya ' + tl(kalan) + ' kaldı.');
-
-    var mesaj = satirlar.length
-      ? 'Merhaba, sipariş vermek istiyorum:\n' + metin.join('\n') +
-        '\n\nAra toplam: ' + tl(ara) +
-        '\nKargo: ' + (bedava ? 'Ücretsiz (2.500 ₺ üzeri)' : 'Alıcıya ait')
-      : 'Merhaba, domuz yağı hakkında bilgi almak istiyorum.';
-
-    $$('.wa-order').forEach(function(b){ b.href = wa(mesaj); });
-
-    /* mobil bar */
-    var mt = $('.mbar-tot');
-    if(mt){
-      mt.style.display = ara ? 'flex' : 'none';
-      $('.mbar-tot b').textContent = tl(ara);
-      var mb = $('.mbar .wa-order');
-      if(mb) $('.mbar-lbl', mb).textContent = ara ? 'Siparişi Gönder' : 'WhatsApp';
-    }
-
-    siparisYaz(metin.join(' · ').replace(/•\s*/g, ''), ara);
-
-    /* kart altı ara toplamlar */
     Object.keys(URUNLER).forEach(function(k){
       var el = $('.p-sub[data-sub="' + k + '"]');
-      if(!el) return;
-      var ad = sepet[k] || 0;
-      el.innerHTML = ad ? 'Ara toplam: <b>' + tl(URUNLER[k].fiyat * ad) + '</b>' : '';
+      if(el) el.innerHTML = sepet[k] ? 'Ara toplam: <b>' + tl(URUNLER[k].fiyat * sepet[k]) + '</b>' : '';
     });
+
+    ozetiCiz({ metin: metin }, ara);
   }
 
-  $$('.qty').forEach(function(q){
-    var k = q.getAttribute('data-p'), inp = $('input', q);
+  $$('.qty[data-p]').forEach(function(q){
+    var k = q.getAttribute('data-p'), inp = $('input', q), eksi = $('[data-act="eksi"]', q);
     var uygula = function(v){
-      v = Math.max(0, Math.min(99, v|0));
-      sepet[k] = v; inp.value = v;
-      $('[data-act="eksi"]', q).disabled = (v === 0);
-      ciz();
+      v = Math.max(0, Math.min(99, v | 0));
+      sepet[k] = v; inp.value = v; eksi.disabled = (v === 0);
+      sepetiCiz();
     };
-    $('[data-act="eksi"]', q).addEventListener('click', function(){ uygula((sepet[k]||0) - 1); });
-    $('[data-act="arti"]', q).addEventListener('click', function(){ uygula((sepet[k]||0) + 1); });
-    inp.addEventListener('input',  function(){ uygula(parseInt(inp.value,10) || 0); });
-    inp.addEventListener('blur',   function(){ inp.value = sepet[k] || 0; });
+    eksi.addEventListener('click', function(){ uygula((sepet[k] || 0) - 1); });
+    $('[data-act="arti"]', q).addEventListener('click', function(){ uygula((sepet[k] || 0) + 1); });
+    inp.addEventListener('input', function(){ uygula(parseInt(inp.value, 10) || 0); });
+    inp.addEventListener('blur',  function(){ inp.value = sepet[k] || 0; });
     uygula(0);
   });
 
-  cartList.addEventListener('click', function(e){
-    var b = e.target.closest('[data-rm]');
+  cartList.addEventListener('click', function(ev){
+    var b = ev.target.closest('[data-rm]');
     if(!b) return;
     var k = b.getAttribute('data-rm');
     sepet[k] = 0;
-    var inp = $('.qty[data-p="' + k + '"] input');
-    if(inp) inp.value = 0;
-    var eksi = $('.qty[data-p="' + k + '"] [data-act="eksi"]');
-    if(eksi) eksi.disabled = true;
-    ciz();
+    var inp = $('.qty[data-p="' + k + '"] input'); if(inp) inp.value = 0;
+    var eksi = $('.qty[data-p="' + k + '"] [data-act="eksi"]'); if(eksi) eksi.disabled = true;
+    sepetiCiz();
   });
 
-  /* "Sipariş Ver" → panele kaydır + 1 adet ekle */
+  /* kart üzerindeki "Sipariş Ver" → 1 adet ekle + forma in */
   $$('[data-ekle]').forEach(function(b){
-    b.addEventListener('click', function(e){
-      e.preventDefault();
+    b.addEventListener('click', function(ev){
+      ev.preventDefault();
       var k = b.getAttribute('data-ekle');
       if(!sepet[k]){
-        var inp = $('.qty[data-p="' + k + '"] input');
         sepet[k] = 1;
-        if(inp) inp.value = 1;
-        var eksi = $('.qty[data-p="' + k + '"] [data-act="eksi"]');
-        if(eksi) eksi.disabled = false;
-        ciz();
+        var inp = $('.qty[data-p="' + k + '"] input'); if(inp) inp.value = 1;
+        var eksi = $('.qty[data-p="' + k + '"] [data-act="eksi"]'); if(eksi) eksi.disabled = false;
+        sepetiCiz();
       }
-      var t = $('#siparis');
-      if(t) window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 84, behavior:'smooth' });
+      var t = $('#siparis'); if(t) kaydir(t);
     });
   });
 
-  ciz();
+  sepetiCiz();
 }
 
-/* ── tekil ürün sipariş kutusu (ürün detay sayfası) ── */
+
+/* ══════════ ürün sayfası: tek ürün adet kutusu ══════════ */
+
 var buy = $('.buy');
 if(buy){
   var bAd     = buy.getAttribute('data-ad');
   var bFiyat  = parseFloat(buy.getAttribute('data-fiyat')) || 0;
   var bBedava = buy.getAttribute('data-bedava') === '1';
-  var bQty    = $('.qty', buy);
-  var bInp    = $('input', bQty);
-  var bEksi   = $('[data-act="eksi"]', bQty);
-  var bArti   = $('[data-act="arti"]', bQty);
+  var bQty    = $('.qty', buy), bInp = $('input', bQty);
+  var bEksi   = $('[data-act="eksi"]', bQty), bArti = $('[data-act="arti"]', bQty);
 
-  var bCiz = function(){
+  var urunuCiz = function(){
     var ad = parseInt(bInp.value, 10);
     if(!ad || ad < 1) ad = 1;
     if(ad > 99) ad = 99;
     bInp.value = ad;
-
-    var tutar  = bFiyat * ad;
-    var bedava = bBedava || tutar >= ESIK;
-
-    $('.buy-v').textContent = tl(tutar);
     bEksi.disabled = (ad === 1);
 
+    var tutar = bFiyat * ad;
+    var bv = $('.buy-v'); if(bv) bv.textContent = tl(tutar);
+
     var kEl = $('.buy-kargo');
-    kEl.textContent = bedava ? 'Bu siparişte kargo ücretsiz.'
-                             : 'Ücretsiz kargoya ' + tl(ESIK - tutar) + ' kaldı.';
-    kEl.classList.toggle('done', bedava);
-
-    var mesaj = 'Merhaba, sipariş vermek istiyorum:\n• ' + bAd + ' × ' + ad + ' = ' + tl(tutar) +
-                '\n\nToplam: ' + tl(tutar) +
-                '\nKargo: ' + (bedava ? 'Ücretsiz' : 'Alıcıya ait');
-    $$('.wa-order').forEach(function(b){
-      b.href = 'https://wa.me/' + WA_NO + '?text=' + encodeURIComponent(mesaj);
-    });
-
-    var mt = $('.mbar-tot');
-    if(mt){
-      mt.style.display = 'flex';
-      $('.mbar-tot b').textContent = tl(tutar);
-      var ml = $('.mbar-lbl');
-      if(ml) ml.textContent = 'Siparişi Gönder';
+    if(kEl){
+      var bedava = bBedava || tutar >= ESIK;
+      kEl.textContent = bedava ? 'Bu siparişte kargo ücretsiz.'
+                               : 'Ücretsiz kargoya ' + tl(ESIK - tutar) + ' kaldı.';
+      kEl.classList.toggle('done', bedava);
     }
 
-    siparisYaz(bAd + ' × ' + ad, tutar);
+    ozetiCiz({ metin: [bAd + ' × ' + ad + ' = ' + tl(tutar)], bedava: bBedava }, tutar);
   };
 
-  bEksi.addEventListener('click', function(){ bInp.value = (parseInt(bInp.value,10)||1) - 1; bCiz(); });
-  bArti.addEventListener('click', function(){ bInp.value = (parseInt(bInp.value,10)||1) + 1; bCiz(); });
-  bInp.addEventListener('input', bCiz);
-  bInp.addEventListener('blur',  bCiz);
-  bCiz();
+  bEksi.addEventListener('click', function(){ bInp.value = (parseInt(bInp.value,10)||1) - 1; urunuCiz(); });
+  bArti.addEventListener('click', function(){ bInp.value = (parseInt(bInp.value,10)||1) + 1; urunuCiz(); });
+  bInp.addEventListener('input', urunuCiz);
+  bInp.addEventListener('blur',  urunuCiz);
+  urunuCiz();
 }
 
-/* ── sipariş formu ── */
+
+/* ══════════ sipariş formu ══════════ */
+
 var form = $('.oform');
 if(form){
-  var urunEl  = $('.of-urun', form);
-  var durum   = $('.of-durum', form);
-  var gonder  = $('.of-gonder', form);
-  var kvkk    = $('.of-kvkk', form);
-  var uzak    = form.getAttribute('action');   /* form servisi tanımlı mı */
-
+  var durum  = $('.of-durum', form);
+  var gonder = $('.of-gonder', form);
+  var kvkk   = $('.of-kvkk', form);
+  var uzak   = form.getAttribute('action');
   var alanlar = $$('.of-f', form);
 
   var dogrula = function(){
-    var ilkHata = null;
+    var ilk = null;
     alanlar.forEach(function(f){
       var g = $('input', f) || $('textarea', f);
       if(!g) return;
-      /* zorunlu olmayan alanlar boşsa atlanır, doluysa formatı yine denetlenir */
       if(!g.required && !g.value.trim()){ f.classList.remove('err'); return; }
-      var bos = g.required && !g.value.trim();
-      var eposta = (g.type === 'email' && g.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(g.value.trim()));
-      var tel = (g.type === 'tel' && g.value.replace(/\D/g,'').length < 10);
-      var kotu = bos || eposta || tel;
+
+      var bos    = g.required && !g.value.trim();
+      var eposta = g.type === 'email' && g.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(g.value.trim());
+      var tel    = g.type === 'tel'   && g.value.replace(/\D/g,'').length < 10;
+      var kotu   = bos || eposta || tel;
+
       f.classList.toggle('err', kotu);
       if(kotu){
         var h = $('.of-hata', f);
         if(h) h.textContent = bos ? 'Bu alan zorunlu.'
-          : (eposta ? 'Geçerli bir e-posta yazın.' : 'Telefon numarası eksik görünüyor.');
-        if(!ilkHata) ilkHata = g;
+              : (eposta ? 'Geçerli bir e-posta yazın.' : 'Telefon numarası eksik görünüyor.');
+        if(!ilk) ilk = g;
       }
     });
+
     var onay = $('input', kvkk);
     kvkk.classList.toggle('err', !onay.checked);
     if(!onay.checked){
-      $('.of-hata', kvkk).textContent = 'Devam etmek için onay vermelisiniz.';
-      if(!ilkHata) ilkHata = onay;
+      var hk = $('.of-hata', kvkk);
+      if(hk) hk.textContent = 'Devam etmek için onay vermelisiniz.';
+      if(!ilk) ilk = onay;
     }
-    if(ilkHata){
-      ilkHata.focus({preventScroll:true});
-      window.scrollTo({top: ilkHata.getBoundingClientRect().top + window.scrollY - 120, behavior:'smooth'});
+
+    if(!ilk && !sonAra){
+      durum.className = 'of-durum on no';
+      durum.textContent = 'Önce yukarıdan ürün ve adet seçin.';
+      var u = $('#urunler'); if(u) kaydir(u);
+      return false;
     }
-    return !ilkHata;
+
+    if(ilk){
+      ilk.focus({preventScroll:true});
+      window.scrollTo({ top: ilk.getBoundingClientRect().top + window.scrollY - 120, behavior:'smooth' });
+    }
+    return !ilk;
   };
 
   alanlar.forEach(function(f){
     var g = $('input', f) || $('textarea', f);
-    if(g) g.addEventListener('input', function(){ if(f.classList.contains('err')) f.classList.remove('err'); });
+    if(g) g.addEventListener('input', function(){ f.classList.remove('err'); });
   });
   $('input', kvkk).addEventListener('change', function(){ kvkk.classList.remove('err'); });
 
   form.addEventListener('submit', function(ev){
-    if($('.of-tuzak', form).value){ ev.preventDefault(); return; }   /* bot */
+    if($('.of-tuzak', form).value){ ev.preventDefault(); return; }
     if(!dogrula()){ ev.preventDefault(); return; }
 
     if(uzak){
       gonder.disabled = true;
       durum.className = 'of-durum on';
       durum.textContent = 'Gönderiliyor…';
-      return;                       /* form servisi devralır */
+      return;
     }
 
-    /* Servis tanımlı değil → siparişi WhatsApp'a yapılandırılmış olarak taşı */
     ev.preventDefault();
-    var al = function(n){ var g = form.querySelector('[name="'+n+'"]'); return g ? g.value.trim() : ''; };
-    var satir = [
-      'Merhaba, sipariş vermek istiyorum.',
-      '',
-      urunEl.value ? 'Sipariş: ' + urunEl.value : null,
-      'Ad Soyad: ' + al('Ad Soyad'),
-      'Telefon: '  + al('Telefon'),
+    var al = function(n){ var g = form.querySelector('[name="' + n + '"]'); return g ? g.value.trim() : ''; };
+    var metin = [
+      waMesaji, '',
+      '── Teslimat bilgileri ──',
+      'Ad Soyad: '  + al('Ad Soyad'),
+      'Telefon: '   + al('Telefon'),
       'İl / İlçe: ' + al('İl / İlçe'),
       al('E-posta') ? 'E-posta: ' + al('E-posta') : null,
-      'Adres: '    + al('Adres'),
+      'Adres: '     + al('Adres'),
       al('Not') ? 'Not: ' + al('Not') : null
-    ].filter(Boolean).join('\n');
+    ].filter(function(x){ return x !== null; }).join('\n');
 
     durum.className = 'of-durum on ok';
     durum.textContent = 'Siparişiniz WhatsApp’a aktarılıyor — açılan pencereden gönder’e basmanız yeterli.';
-    window.open('https://wa.me/' + WA_NO + '?text=' + encodeURIComponent(satir), '_blank', 'noopener');
+    window.open('https://wa.me/' + WA_NO + '?text=' + encodeURIComponent(metin), '_blank', 'noopener');
   });
 }
+
 })();
