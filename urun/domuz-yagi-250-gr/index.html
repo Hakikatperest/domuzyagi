@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css?v=11">
+<link rel="stylesheet" href="../../assets/site.css?v=12">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17831951098"></script>
 <script>
@@ -142,6 +142,8 @@
 <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></symbol>
 <symbol id="i-zoom" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></symbol>
 <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></symbol>
 </defs></svg>
 
 <div class="announce">
@@ -535,9 +537,22 @@
 </div>
 
 <div class="mbar">
-  <div class="mbar-tot"><span>Toplam</span><b>0 ₺</b></div>
-  <a href="tel:+905516412065" class="btn btn-tel btn-sm"><svg class="ico"><use href="#i-phone"></use></svg> Ara</a>
-  <a href="https://wa.me/905516412065" class="btn btn-wa btn-sm wa-order" target="_blank" rel="noopener"><svg class="ico ico-f"><use href="#i-wa"></use></svg> <span class="mbar-lbl">WhatsApp</span></a>
+  <button type="button" class="mbar-sum" aria-expanded="false" aria-controls="mbar-sepet" hidden>
+    <span class="mbar-ic"><svg class="ico"><use href="#i-cart"></use></svg><b class="mbar-n">0</b></span>
+    <span class="mbar-tx">
+      <b class="mbar-ad">Sepetiniz</b>
+      <span class="mbar-alt">Henüz ürün eklemediniz</span>
+    </span>
+    <span class="mbar-v">0 ₺</span>
+    <span class="mbar-ok"><svg class="ico"><use href="#i-down"></use></svg></span>
+  </button>
+
+  <div class="mbar-list" id="mbar-sepet" hidden></div>
+
+  <div class="mbar-b">
+    <a href="tel:+905516412065" class="btn btn-tel btn-sm"><svg class="ico"><use href="#i-phone"></use></svg> Ara</a>
+    <a href="https://wa.me/905516412065" class="btn btn-wa btn-sm wa-order" target="_blank" rel="noopener"><svg class="ico ico-f"><use href="#i-wa"></use></svg> <span class="mbar-lbl">WhatsApp</span></a>
+  </div>
 </div>
 
 <div class="onl" hidden>
@@ -557,6 +572,6 @@
 </div>
 
 <script>window.DY_CFG={"whatsapp":"905516412065","esik":0,"kargo":0,"hepbedava":true,"saat":[9,21],"urunler":{"DY-050":{"ad":"Domuz Yağı 50 gr","fiyat":450},"DY-115":{"ad":"Domuz Yağı 115 gr","fiyat":700},"DY-250":{"ad":"Domuz Yağı 250 gr","fiyat":1500},"DY-5LI":{"ad":"Domuz Yağı 5'li Paket (5 × 115 gr)","fiyat":2500},"DY-1KG":{"ad":"Domuz Yağı 1 kg","fiyat":5000}}};</script>
-<script src="../../assets/site.js?v=11" defer></script>
+<script src="../../assets/site.js?v=12" defer></script>
 </body>
 </html>

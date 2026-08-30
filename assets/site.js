@@ -60,6 +60,21 @@ if(navX)   navX.addEventListener('click', function(){ menu(false); });
 if(scrim)  scrim.addEventListener('click', function(){ menu(false); });
 if(nav) $$('.nav a').forEach(function(a){ a.addEventListener('click', function(){ menu(false); }); });
 
+function oz(v){
+  return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* Alt şeridin yüksekliği sepet doldukça değişir; gövde payı ve çevrimiçi
+   balonu bu ölçüyü takip etsin diye CSS değişkenine yazılır. */
+function olcMbar(){
+  var m = $('.mbar');
+  var y = m ? m.offsetHeight : 0;
+  document.documentElement.style.setProperty('--mbar-h', (y || 74) + 'px');
+}
+window.addEventListener('resize', olcMbar, {passive:true});
+window.addEventListener('load', olcMbar);
+
 function kaydir(hedef){
   var pay = parseInt(getComputedStyle(document.documentElement)
               .getPropertyValue('--yapiskan-h'), 10) || 110;
@@ -175,13 +190,54 @@ function ozetiCiz(satirlar, ara){
     b.href = 'https://wa.me/' + WA_NO + '?text=' + encodeURIComponent(waMesaji);
   });
 
-  /* mobil alt çubuk */
-  var mt = $('.mbar-tot');
-  if(mt){
-    mt.style.display = ara ? 'flex' : 'none';
-    var mv = $('.mbar-tot b'); if(mv) mv.textContent = tl(ara);
-    var ml = $('.mbar-lbl');   if(ml) ml.textContent = ara ? 'Siparişi Gönder' : 'WhatsApp';
+  /* mobil alt şerit: sepet satırı ayrı, çağrı butonları kendi satırında.
+     Toplam yazısı butonları daraltmaz; kullanıcı listeden ürün çıkarabilir. */
+  var mSum = $('.mbar-sum'), mList = $('.mbar-list');
+  if(mSum){
+    var kalem = satirlar.kalem || [];
+    var adet  = 0;
+    kalem.forEach(function(x){ adet += x.adet; });
+
+    mSum.hidden = (adet === 0);
+    if(!adet){
+      mSum.setAttribute('aria-expanded', 'false');
+      if(mList) mList.hidden = true;
+    }
+
+    var m;
+    if((m = $('.mbar-n')))  m.textContent = adet;
+    if((m = $('.mbar-v')))  m.textContent = tl(ara);
+    if((m = $('.mbar-ad'))) m.textContent = kalem.length === 1 ? kalem[0].ad : adet + ' ürün seçildi';
+    if((m = $('.mbar-alt'))){
+      m.textContent = kalem.length === 1
+        ? kalem[0].adet + ' adet · ' + tl(kalem[0].tutar)
+        : kalem.map(function(x){ return x.ad + ' ×' + x.adet; }).join('  ·  ');
+    }
+    if((m = $('.mbar-lbl'))) m.textContent = adet ? 'Siparişi Gönder' : 'WhatsApp';
+
+    if(mList){
+      mList.innerHTML = kalem.map(function(x){
+        return '<div class="mrow">' +
+          '<span class="mrow-n">' + oz(x.ad) + '</span>' +
+          '<div class="qty-xs">' +
+            '<button type="button" data-mact="eksi" data-k="' + oz(x.k) + '" aria-label="Azalt">' +
+              '<svg class="ico"><use href="#i-minus"></use></svg></button>' +
+            '<b>' + x.adet + '</b>' +
+            '<button type="button" data-mact="arti" data-k="' + oz(x.k) + '" aria-label="Artır">' +
+              '<svg class="ico"><use href="#i-plus"></use></svg></button>' +
+          '</div>' +
+          '<span class="mrow-p">' + tl(x.tutar) + '</span>' +
+          '<button type="button" class="mrow-x" data-mrm="' + oz(x.k) + '" ' +
+            'aria-label="' + oz(x.ad) + ' ürününü sepetten çıkar">' +
+            '<svg class="ico"><use href="#i-trash"></use></svg></button>' +
+        '</div>';
+      }).join('') + (kalem.length
+        ? '<button type="button" class="mbar-bosalt">' +
+          '<svg class="ico"><use href="#i-trash"></use></svg> Sepeti boşalt</button>'
+        : '');
+    }
   }
+  olcMbar();
 }
 
 
@@ -236,7 +292,7 @@ if(qtyKutulari.length){
   }
 
   function sepetiCiz(){
-    var ara = 0, kutular = [], metin = [];
+    var ara = 0, kutular = [], metin = [], kalemler = [];
 
     Object.keys(URUNLER).forEach(function(k){
       var ad = sepet[k] || 0;
@@ -244,12 +300,13 @@ if(qtyKutulari.length){
       var u = URUNLER[k], tutar = u.fiyat * ad;
       ara += tutar;
       kutular.push(
-        '<div class="cart-row"><span class="n">' + u.ad + ' <i>× ' + ad + '</i></span>' +
+        '<div class="cart-row"><span class="n">' + oz(u.ad) + ' <i>× ' + ad + '</i></span>' +
         '<span class="p">' + tl(tutar) + '</span>' +
         '<button type="button" class="rm" data-rm="' + k + '" aria-label="Kaldır">' +
         '<svg class="ico"><use href="#i-x"></use></svg></button></div>'
       );
       metin.push(u.ad + ' × ' + ad + ' = ' + tl(tutar));
+      kalemler.push({ k: k, ad: u.ad, adet: ad, tutar: tutar });
     });
 
     if(cartList){
@@ -278,7 +335,7 @@ if(qtyKutulari.length){
 
     kutulariEsitle();
     sepetYaz(sepet);
-    ozetiCiz({ metin: metin }, ara);
+    ozetiCiz({ metin: metin, kalem: kalemler }, ara);
   }
 
   function uygula(k, v){
@@ -311,6 +368,30 @@ if(qtyKutulari.length){
       var t = $('#siparis'); if(t) kaydir(t);
     });
   });
+
+  /* alt şerit: özeti aç/kapa, listeden adet değiştir veya ürünü çıkar */
+  var mSumBtn = $('.mbar-sum'), mListEl = $('.mbar-list');
+  if(mSumBtn && mListEl){
+    mSumBtn.addEventListener('click', function(){
+      var acik = mSumBtn.getAttribute('aria-expanded') === 'true';
+      mSumBtn.setAttribute('aria-expanded', acik ? 'false' : 'true');
+      mListEl.hidden = acik;
+      olcMbar();
+    });
+
+    mListEl.addEventListener('click', function(ev){
+      var b = ev.target.closest('.mbar-bosalt,[data-mrm],[data-mact]');
+      if(!b) return;
+      if(b.classList.contains('mbar-bosalt')){
+        Object.keys(sepet).forEach(function(k){ delete sepet[k]; });
+        sepetiCiz();
+        return;
+      }
+      if(b.hasAttribute('data-mrm')){ uygula(b.getAttribute('data-mrm'), 0); return; }
+      var k = b.getAttribute('data-k');
+      uygula(k, (sepet[k] || 0) + (b.getAttribute('data-mact') === 'arti' ? 1 : -1));
+    });
+  }
 
   /* başka sekmede sepet değişirse burada da güncellensin */
   window.addEventListener('storage', function(ev){

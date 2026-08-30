@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 11                                   # assets/site.css?v=N
+VER  = 12                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -255,9 +255,22 @@ def sabitler():
 </div>
 
 <div class="mbar">
-  <div class="mbar-tot"><span>Toplam</span><b>0 ₺</b></div>
-  <a href="tel:{S['telefon']}" class="btn btn-tel btn-sm">{ikon("phone")} Ara</a>
-  <a href="https://wa.me/{S['whatsapp']}" class="btn btn-wa btn-sm wa-order" target="_blank" rel="noopener">{ikon("wa","ico ico-f")} <span class="mbar-lbl">WhatsApp</span></a>
+  <button type="button" class="mbar-sum" aria-expanded="false" aria-controls="mbar-sepet" hidden>
+    <span class="mbar-ic">{ikon("cart")}<b class="mbar-n">0</b></span>
+    <span class="mbar-tx">
+      <b class="mbar-ad">Sepetiniz</b>
+      <span class="mbar-alt">Henüz ürün eklemediniz</span>
+    </span>
+    <span class="mbar-v">0 ₺</span>
+    <span class="mbar-ok">{ikon("down")}</span>
+  </button>
+
+  <div class="mbar-list" id="mbar-sepet" hidden></div>
+
+  <div class="mbar-b">
+    <a href="tel:{S['telefon']}" class="btn btn-tel btn-sm">{ikon("phone")} Ara</a>
+    <a href="https://wa.me/{S['whatsapp']}" class="btn btn-wa btn-sm wa-order" target="_blank" rel="noopener">{ikon("wa","ico ico-f")} <span class="mbar-lbl">WhatsApp</span></a>
+  </div>
 </div>
 
 <div class="onl" hidden>
@@ -1155,30 +1168,55 @@ def anasayfa():
     p = os.path.join(KOK, 'index.html')
     s = open(p, encoding='utf-8').read()
 
+    # ikon seti de üreticiden gelsin — index.html'de bayat kopya kalmasın
+    s = isaretci_degistir(s, 'IKONLAR', IKONLAR.rstrip())
     s = isaretci_degistir(s, 'DUYURU', duyuru())
     s = isaretci_degistir(s, 'HEADER', header('/'))
     s = isaretci_degistir(s, 'FOOTER', footer('/'))
 
     s = isaretci_degistir(s, 'URUNLER', "\n".join(urun_karti(u) for u in URUNLER))
 
-    # Fiyat şeridi ızgara: ayraç <div>'leri yok, hücreler kendi kendine hizalanır.
-    # Rozet akışın içinde ilk satır — mutlak konumlu değil, etiketin üstüne binmez.
-    ogeler = []
-    for u in URUNLER:
-        vurgu = u['one_cikan'] if HEP_BEDAVA else u['kargo_bedava']
-        etiket = (u['rozet'] or 'Fırsat') if HEP_BEDAVA else 'Ücretsiz Kargo'
-        rozet = f'<span class="hp-free">{t(etiket)}</span>' if vurgu else ''
-        sinif = ' is-vurgu' if vurgu else ''
-        ogeler.append(
-            f'<div class="hp-item{sinif}">{rozet}'
-            f'<span class="hp-g">{t(u["gramaj_etiket"].split(" —")[0])}</span>'
-            f'<span class="hp-v">{tl(u["fiyat"])}</span></div>')
+    # Fiyat şeridi: normal gramajlar tek tip ızgarada (2/4 sütun, tek başına kalan
+    # hücre olmasın), kampanya ise ALTINDA kendi kartında — ne aldığını ve ne
+    # kazandığını açıkça yazar. Kazanç products.json'dan hesaplanır, elle girilmez.
+    normal  = [u for u in URUNLER if not u['one_cikan']]
+    kampanya = next((u for u in URUNLER if u['one_cikan']), None)
+
+    ogeler = [f'<div class="hp-item">'
+              f'<span class="hp-g">{t(u["gramaj_etiket"].split(" —")[0])}</span>'
+              f'<span class="hp-v">{tl(u["fiyat"])}</span></div>' for u in normal]
+
+    kmp_kart = ''
+    if kampanya:
+        # paketin tek tek alınsa tutacağı fiyat: aynı gramajdaki tekil ürünün katı
+        birim_urun = None
+        if kampanya.get('multipack'):
+            tek_gram = kampanya['gram'] / kampanya['multipack']
+            birim_urun = next((x for x in URUNLER
+                               if x is not kampanya and x['gram'] == tek_gram), None)
+        kar = ''
+        if birim_urun:
+            liste = birim_urun['fiyat'] * kampanya['multipack']
+            if liste > kampanya['fiyat']:
+                kar = (f'<s class="hp-k-eski">{tl(liste)}</s>'
+                       f'<span class="hp-k-kar">{tl(liste - kampanya["fiyat"])} kazanç</span>')
+        kmp_kart = f'''
+      <div class="hp-kmp">
+        <div class="hp-k-u">
+          <span class="hp-k-rz">{t(kampanya['rozet'] or 'Kampanya')}</span>
+          <span class="hp-k-ad">{t(kampanya['gramaj_etiket'])}</span>
+        </div>
+        <div class="hp-k-a">
+          <b class="hp-k-yeni">{tl(kampanya['fiyat'])}</b>
+          {kar}
+        </div>
+      </div>'''
 
     kargo_satiri = (f'      <p class="hero-kargo">{ikon("truck")} <b>Tüm siparişlerde</b> kargo bizden</p>'
                     if HEP_BEDAVA else
                     f'      <p class="hero-kargo">{ikon("truck")} <b>{tl(ESIK)} ve üzeri</b> alışverişlerde kargo bizden</p>')
     serit = ('<div class="hero-price">\n        ' + "\n        ".join(ogeler)
-             + '\n      </div>\n' + kargo_satiri)
+             + '\n      </div>' + kmp_kart + '\n' + kargo_satiri)
     s = isaretci_degistir(s, 'HERO-FIYAT', '      ' + serit)
 
     semalar = [urun_semasi(u) for u in URUNLER]
