@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 33                                   # assets/site.css?v=N
+VER  = 34                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -613,9 +613,6 @@ def urun_sayfasi(u):
 <meta name="twitter:card" content="summary_large_image">
 
 {IKON_HEAD}
-<link rel="preconnect" href="https://www.googletagmanager.com">
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/manrope-latin.woff2" crossorigin>
 {SPEK}
 <link rel="stylesheet" href="../../assets/site.css?v={VER}">
 
@@ -776,9 +773,6 @@ def bilgi_sayfasi(slug, baslik, ozet, govde):
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#132428">
 {IKON_HEAD}
-<link rel="preconnect" href="https://www.googletagmanager.com">
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/manrope-latin.woff2" crossorigin>
 {SPEK}
 <link rel="stylesheet" href="../assets/site.css?v={VER}">
 <script type="application/ld+json">
@@ -1040,9 +1034,6 @@ def makale_sayfasi(slug):
 <meta name="twitter:card" content="summary_large_image">
 
 {IKON_HEAD}
-<link rel="preconnect" href="https://www.googletagmanager.com">
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/manrope-latin.woff2" crossorigin>
 {SPEK}
 <link rel="stylesheet" href="../assets/site.css?v={VER}">
 
