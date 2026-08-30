@@ -65,11 +65,11 @@ def main():
     # Başlık/alt bilgi logosu 46 px kutuda duruyor; 4× çözünürlük retina için.
     logo = Image.open(USTA_LOGO).convert('RGBA')
     logo = logo.crop(logo.getbbox())
-    en = 184
+    en = 138            # 46 px kutuda 3× — 184'te dosya gereksiz büyüktü
     boy = round(logo.size[1] * en / logo.size[0])
     logo.resize((en, boy), Image.LANCZOS).save(
         os.path.join(KOK, 'images', 'logo.webp'), format='WEBP',
-        quality=88, method=6)
+        quality=84, method=6)
     print(f'  ✓ images/logo.webp                  {en}×{boy}')
     print('── bitti ──')
 

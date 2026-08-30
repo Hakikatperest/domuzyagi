@@ -1,3 +1,18 @@
+/* ── yazı tipleri: yerelden servis ediliyor ──────────────────────────────
+   Önce fonts.googleapis.com'dan bir stil dosyası çekiliyordu; o dosya
+   RENDER ENGELLİYOR ve iki ayrı üçüncü taraf bağlantısı (DNS + TLS) açtırıyordu.
+   Artık dosyalar assets/fonts altında ve Türkçe için gereken karakterlere
+   daraltılmış: Inter 130 KB → 52 KB, Manrope 39 KB → 34 KB.
+   İkisi de DEĞİŞKEN yazı tipi; tek dosya bütün kalınlıkları veriyor. */
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;
+  src:url(/assets/fonts/inter-latinext.woff2) format('woff2');unicode-range:U+0100-017F, U+018F, U+0192, U+01FA-01FF}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;
+  src:url(/assets/fonts/inter-latin.woff2) format('woff2');unicode-range:U+0020-007E, U+00A0-00FF, U+2010-2015, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+20AC, U+20BA, U+2122, U+2190-2193, U+2212, U+00D7, U+FEFF, U+FFFD}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:200 800;font-display:swap;
+  src:url(/assets/fonts/manrope-latinext.woff2) format('woff2');unicode-range:U+0100-017F, U+018F, U+0192, U+01FA-01FF}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:200 800;font-display:swap;
+  src:url(/assets/fonts/manrope-latin.woff2) format('woff2');unicode-range:U+0020-007E, U+00A0-00FF, U+2010-2015, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+20AC, U+20BA, U+2122, U+2190-2193, U+2212, U+00D7, U+FEFF, U+FFFD}
+
 /* ============================================================
    Doğal Domuz Yağı — ortak stil
    ============================================================ */

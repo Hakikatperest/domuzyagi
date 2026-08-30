@@ -15,11 +15,11 @@ Tek gerçek kaynak: _src/products.json
 Kullanım:  python3 _src/build.py
 """
 import json, os, re, sys, html
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 31                                   # assets/site.css?v=N
+VER  = 32                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -45,6 +45,13 @@ IKON_HEAD = """<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">"""
+
+# Sayfalar arası geçiş: bağlantının üstüne gelindiğinde (moderate) hedef sayfa
+# arka planda indirilir, tıklanınca anında açılır. prerender DEĞİL prefetch —
+# prerender hedef sayfanın JS'ini de çalıştırır, Ads etiketi erken tetiklenirdi.
+SPEK = ('<script type="speculationrules">'
+        '{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}'
+        '</script>')
 
 
 # ─────────────────────────── yardımcılar ───────────────────────────
@@ -487,6 +494,20 @@ def urun_semasi(u, tekil=False):
         "availability": "https://schema.org/InStock",
         "itemCondition": "https://schema.org/NewCondition",
         "seller": {"@id": f"{URL}/#org"},
+        # Google, fiyatın ne zamana kadar geçerli olduğunu bekliyor; yoksa
+        # Search Console "priceValidUntil eksik" uyarısı veriyor.
+        "priceValidUntil": (datetime.now(timezone.utc) + timedelta(days=365)).strftime('%Y-%m-%d'),
+        # İade politikası: /iade-ve-cayma-hakki sayfasındaki metnin birebir karşılığı
+        # (14 gün cayma, ambalajı açılmamış ürünler). Hijyen istisnası şemada
+        # ifade edilemiyor, o yüzden yalnız süre ve yöntem yazılıyor.
+        "hasMerchantReturnPolicy": {
+            "@type": "MerchantReturnPolicy",
+            "applicableCountry": "TR",
+            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+            "merchantReturnDays": 14,
+            "returnMethod": "https://schema.org/ReturnByMail",
+            "merchantReturnLink": f"{URL}/iade-ve-cayma-hakki/",
+        },
     }
     if KARGO is not None:
         teklif["shippingDetails"] = {
@@ -497,6 +518,14 @@ def urun_semasi(u, tekil=False):
                 "currency": S['para_birimi'],
             },
             "shippingDestination": {"@type": "DefinedRegion", "addressCountry": "TR"},
+            # /teslimat-ve-odeme: teyitten sonra aynı gün kargo, 1-3 iş günü teslim
+            "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "handlingTime": {"@type": "QuantitativeValue", "minValue": 0,
+                                 "maxValue": 1, "unitCode": "DAY"},
+                "transitTime": {"@type": "QuantitativeValue", "minValue": 1,
+                                "maxValue": 3, "unitCode": "DAY"},
+            },
         }
     d = {
         "@type": "Product",
@@ -584,9 +613,10 @@ def urun_sayfasi(u):
 <meta name="twitter:card" content="summary_large_image">
 
 {IKON_HEAD}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/manrope-latin.woff2" crossorigin>
+{SPEK}
 <link rel="stylesheet" href="../../assets/site.css?v={VER}">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id={S['ga_id']}"></script>
@@ -746,9 +776,10 @@ def bilgi_sayfasi(slug, baslik, ozet, govde):
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#132428">
 {IKON_HEAD}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/manrope-latin.woff2" crossorigin>
+{SPEK}
 <link rel="stylesheet" href="../assets/site.css?v={VER}">
 <script type="application/ld+json">
 {json.dumps(semalar, ensure_ascii=False, indent=2)}
@@ -1009,9 +1040,10 @@ def makale_sayfasi(slug):
 <meta name="twitter:card" content="summary_large_image">
 
 {IKON_HEAD}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/manrope-latin.woff2" crossorigin>
+{SPEK}
 <link rel="stylesheet" href="../assets/site.css?v={VER}">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id={S['ga_id']}"></script>
@@ -1110,13 +1142,22 @@ def feed():
 <description>{e(S['ad'])} ürün akışı. %100 saf ve doğal domuz yağı.</description>
 <lastBuildDate>{simdi}</lastBuildDate>''']
 
+    def feed_aciklama(metin):
+        """Merchant Center açıklamasında tanıtım/promosyon metni yasak
+        ('Kargo ücretsiz', 'ücretsiz kargo', 'indirim' vb.). Kargo bilgisi
+        zaten g:shipping alanından geliyor, cümleyi açıklamadan atıyoruz."""
+        for kalip in ('Kargo ücretsiz.', 'Kargo ücretsizdir.', 'Ücretsiz kargo.',
+                      'Kargo bizden.', 'Kargo dahil.'):
+            metin = metin.replace(kalip + ' ', '').replace(' ' + kalip, '').replace(kalip, '')
+        return ' '.join(metin.split())
+
     for u in URUNLER:
         kargo_tutar = '0.00' if u['kargo_bedava'] else f"{KARGO:.2f}"
         multipack = f"\n  <g:multipack>{u['multipack']}</g:multipack>" if u.get('multipack') else ""
         parcalar.append(f'''<item>
   <g:id>{e(u['id'])}</g:id>
   <g:title>{e(u['feed_baslik'])}</g:title>
-  <g:description>{e(u['feed_aciklama'])}</g:description>
+  <g:description>{e(feed_aciklama(u['feed_aciklama']))}</g:description>
   <g:link>{URL}/urun/{u['slug']}/</g:link>
   <g:image_link>{URL}/images/{u['gorsel']}</g:image_link>
   <g:availability>in_stock</g:availability>
@@ -1136,6 +1177,10 @@ def feed():
     <g:price>{kargo_tutar} {S['para_birimi']}</g:price>
   </g:shipping>
   <g:shipping_label>{"ucretsiz" if u['kargo_bedava'] else "standart"}</g:shipping_label>
+  <g:min_handling_time>0</g:min_handling_time>
+  <g:max_handling_time>1</g:max_handling_time>
+  <g:min_transit_time>1</g:min_transit_time>
+  <g:max_transit_time>3</g:max_transit_time>
   <g:custom_label_0>{e(u['kisa'])}</g:custom_label_0>
 </item>''')
 
