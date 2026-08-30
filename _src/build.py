@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 10                                   # assets/site.css?v=N
+VER  = 11                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -1161,22 +1161,24 @@ def anasayfa():
 
     s = isaretci_degistir(s, 'URUNLER', "\n".join(urun_karti(u) for u in URUNLER))
 
+    # Fiyat şeridi ızgara: ayraç <div>'leri yok, hücreler kendi kendine hizalanır.
+    # Rozet akışın içinde ilk satır — mutlak konumlu değil, etiketin üstüne binmez.
     ogeler = []
-    for i, u in enumerate(URUNLER):
-        if i: ogeler.append('<div class="hp-div"></div>')
-        # kargo hepsinde bedavayken ürün başına rozet bilgi taşımaz; öne çıkan ürün vurgulanır
+    for u in URUNLER:
         vurgu = u['one_cikan'] if HEP_BEDAVA else u['kargo_bedava']
         etiket = (u['rozet'] or 'Fırsat') if HEP_BEDAVA else 'Ücretsiz Kargo'
         rozet = f'<span class="hp-free">{t(etiket)}</span>' if vurgu else ''
-        sinif = ' hp-item--free' if vurgu else ''
+        sinif = ' is-vurgu' if vurgu else ''
         ogeler.append(
             f'<div class="hp-item{sinif}">{rozet}'
             f'<span class="hp-g">{t(u["gramaj_etiket"].split(" —")[0])}</span>'
             f'<span class="hp-v">{tl(u["fiyat"])}</span></div>')
-    serit = ('<div class="hero-price">\n        ' + "\n        ".join(ogeler) + '\n      </div>\n'
-             '      <p class="hero-kargo"><span>🙂</span> <b>Tüm siparişlerde</b> kargo bizden!</p>'
-             if HEP_BEDAVA else
-             f'      <p class="hero-kargo"><span>🙂</span> <b>{tl(ESIK)} ve üzeri</b> alışverişlerde kargo bizden!</p>')
+
+    kargo_satiri = (f'      <p class="hero-kargo">{ikon("truck")} <b>Tüm siparişlerde</b> kargo bizden</p>'
+                    if HEP_BEDAVA else
+                    f'      <p class="hero-kargo">{ikon("truck")} <b>{tl(ESIK)} ve üzeri</b> alışverişlerde kargo bizden</p>')
+    serit = ('<div class="hero-price">\n        ' + "\n        ".join(ogeler)
+             + '\n      </div>\n' + kargo_satiri)
     s = isaretci_degistir(s, 'HERO-FIYAT', '      ' + serit)
 
     semalar = [urun_semasi(u) for u in URUNLER]

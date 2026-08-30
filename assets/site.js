@@ -27,6 +27,27 @@ if(hdr){
   golge(); window.addEventListener('scroll', golge, {passive:true});
 }
 
+/* Duyuru şeridi ve başlık birlikte yapışkan duruyor. Şeridin yüksekliği
+   satır kaymasıyla değiştiği için ölçülüp CSS değişkenine yazılır; başlık
+   da çıpa kaydırmaları da bu değere göre hizalanır.                      */
+var duyuru = $('.announce');
+try{
+  if(window.CSS && CSS.supports &&
+     (CSS.supports('backdrop-filter','blur(1px)') || CSS.supports('-webkit-backdrop-filter','blur(1px)'))){
+    document.documentElement.classList.add('bf');
+  }
+}catch(e){}
+function yapiskanOlc(){
+  var d = duyuru ? duyuru.offsetHeight : 0;
+  var h = hdr ? hdr.offsetHeight : 0;
+  var k = document.documentElement.style;
+  k.setProperty('--duyuru-h', d + 'px');
+  k.setProperty('--yapiskan-h', (d + h + 14) + 'px');
+}
+yapiskanOlc();
+window.addEventListener('resize', yapiskanOlc, {passive:true});
+window.addEventListener('load', yapiskanOlc);
+
 var nav = $('.nav'), burger = $('.burger'), navX = $('.nav-x'), scrim = $('.scrim');
 function menu(ac){
   if(!nav) return;
@@ -40,7 +61,9 @@ if(scrim)  scrim.addEventListener('click', function(){ menu(false); });
 if(nav) $$('.nav a').forEach(function(a){ a.addEventListener('click', function(){ menu(false); }); });
 
 function kaydir(hedef){
-  window.scrollTo({ top: hedef.getBoundingClientRect().top + window.scrollY - 84, behavior:'smooth' });
+  var pay = parseInt(getComputedStyle(document.documentElement)
+              .getPropertyValue('--yapiskan-h'), 10) || 110;
+  window.scrollTo({ top: hedef.getBoundingClientRect().top + window.scrollY - pay, behavior:'smooth' });
 }
 $$('a[href^="#"]').forEach(function(a){
   a.addEventListener('click', function(ev){
