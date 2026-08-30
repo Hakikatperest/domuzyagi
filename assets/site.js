@@ -268,7 +268,12 @@ function sepetYaz(s){
 }
 
 var qtyKutulari = $$('.qty[data-p]');
-if(qtyKutulari.length){
+/* Motor, ürün listesi geldiği HER sayfada çalışır — adet kutusu olup olmaması
+   şart değil. Makale ve politika sayfalarında kutu yok ama alt şeritteki sepet
+   yine görünmeli; aksi hâlde kullanıcı sepeti sıfırlanmış sanıyor. Liste
+   içindeki adet/çıkar düğmeleri olay delegasyonuyla çalıştığı için statik
+   kutuya ihtiyaç duymaz. */
+if(Object.keys(URUNLER).length){
   var sepet   = sepetOku();
   var cartList = $('.cart-list');
   var buyEl   = $('.buy');
