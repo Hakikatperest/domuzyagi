@@ -74,6 +74,7 @@ def duyuru():
 
 
 def header(kok='/'):
+    capa = '' if kok == '/' else kok      # anasayfada çıplak #çapa → yumuşak kaydırma
     return f'''<header class="hdr">
   <div class="container hdr-in">
     <a href="{kok}" class="logo">
@@ -87,15 +88,15 @@ def header(kok='/'):
     <nav class="nav" aria-label="Ana menü">
       <button class="nav-x" aria-label="Menüyü kapat">{ikon("x")}</button>
       <ul>
-        <li><a href="{kok}#urunler">Ürünler</a></li>
+        <li><a href="{capa}#urunler">Ürünler</a></li>
         <li class="has-drop">
-          <a href="{kok}#urunler">Tüm Ürünler {ikon("down","ico caret")}</a>
+          <a href="{capa}#urunler">Tüm Ürünler {ikon("down","ico caret")}</a>
           <ul class="drop">
             {"".join(f'<li><a href="{kok}urun/{u["slug"]}/">{t(u["tam_ad"])}</a></li>' for u in URUNLER)}
           </ul>
         </li>
         <li class="has-drop">
-          <a href="{kok}#makaleler">Faydaları {ikon("down","ico caret")}</a>
+          <a href="{capa}#makaleler">Faydaları {ikon("down","ico caret")}</a>
           <ul class="drop">
             <li><a href="{kok}domuz-yaginin-faydalari/">Domuz Yağının Faydaları</a></li>
             <li><a href="{kok}domuz-yaginin-insanlara-faydalari/">İnsanlara Faydaları</a></li>
@@ -104,14 +105,14 @@ def header(kok='/'):
           </ul>
         </li>
         <li><a href="{kok}domuz-yagi-fiyatlari/">Fiyatlar</a></li>
-        <li><a href="{kok}#sss">SSS</a></li>
-        <li><a href="{kok}#iletisim">İletişim</a></li>
+        <li><a href="{capa}#sss">SSS</a></li>
+        <li><a href="{capa}#iletisim">İletişim</a></li>
       </ul>
     </nav>
 
     <div class="hdr-cta">
       <a href="tel:{S['telefon']}" class="hdr-tel">{ikon("phone")}<span>{S['telefon_gosterim']}</span></a>
-      <a href="{kok}#urunler" class="btn btn-gold btn-sm">Sipariş Ver</a>
+      <a href="{capa}#urunler" class="btn btn-gold btn-sm">Sipariş Ver</a>
       <button class="burger" aria-label="Menüyü aç">{ikon("menu")}</button>
     </div>
   </div>
@@ -120,6 +121,7 @@ def header(kok='/'):
 
 
 def footer(kok='/'):
+    capa = '' if kok == '/' else kok
     urun_linkleri = "".join(
         f'<li><a href="{kok}urun/{u["slug"]}/">{t(u["tam_ad"])}</a></li>' for u in URUNLER)
     return f'''<footer class="ftr">
