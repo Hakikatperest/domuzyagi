@@ -53,6 +53,8 @@ IKON_HEAD = """<link rel="icon" href="/favicon.ico" sizes="32x32">
 # Silinirse Merchant Center site sahipligi duser -> urunler listeden cikar.
 DOGRULAMA = '<meta name="google-site-verification" content="ZbkLmTkxEBunTYwxjdwCI4zDjGX5qxle7ubpUmiq5Eo">'
 
+TESLIM_GUN = 4   # Google Müşteri Yorumları anketi için tahmini teslim (0-1 hazırlık + 1-3 yol)
+
 SPEK = ('<script type="speculationrules">'
         '{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}'
         '</script>')
@@ -842,6 +844,45 @@ def bilgi_sayfasi(slug, baslik, ozet, govde, indeksle=True):
 '''
 
 
+def gcr_blok():
+    """Google Müşteri Yorumları (Customer Reviews) katılım modülü.
+    YALNIZ sipariş onay sayfasında çalışır — Google modülü satın almanın hemen
+    ardından göstermeyi şart koşuyor. Değerler sessionStorage'daki gerçek siparişten
+    okunur; Google'ın verdiği örnek kod ORDER_ID/CUSTOMER_EMAIL gibi yer tutucular
+    içerir ve olduğu gibi konursa çalışmaz.
+    ⚠ E-posta zorunlu alan değil; müşteri boş bıraktıysa modül hiç açılmaz
+      (Google e-posta olmadan anket gönderemiyor). Bu bilinçli sessiz çıkış.
+    ⚠ GTIN yok (identifier_exists:no) -> "products" alanı bilinçli olarak verilmiyor.
+    Kapatmak için products.json'da site.merchant_id -> null yeterli."""
+    mid = S.get('merchant_id')
+    if not mid:
+        return ''
+    return f"""
+<script>
+window.renderOptIn = function() {{
+  var p = null;
+  try {{ p = JSON.parse(sessionStorage.getItem('dy_son_siparis') || 'null'); }} catch (e) {{}}
+  var no = (p && p.no) || new URLSearchParams(location.search).get('no') || '';
+  var eposta = (p && p.musteri && p.musteri.eposta) || '';
+  if (!no || !eposta || !window.gapi) {{ return; }}
+  var t = new Date();
+  t.setDate(t.getDate() + {TESLIM_GUN});   /* hazırlık + yol süresi */
+  var iki = function (n) {{ return (n < 10 ? '0' : '') + n; }};
+  var tahmin = t.getFullYear() + '-' + iki(t.getMonth() + 1) + '-' + iki(t.getDate());
+  window.gapi.load('surveyoptin', function () {{
+    window.gapi.surveyoptin.render({{
+      merchant_id: {int(mid)},
+      order_id: no,
+      email: eposta,
+      delivery_country: 'TR',
+      estimated_delivery_date: tahmin
+    }});
+  }});
+}};
+</script>
+<script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>"""
+
+
 def siparis_alindi_sayfasi():
     """Sipariş sonrası onay ekranı. Google Merchant Center, satın almanın SİTEDE
     tamamlanmasını istiyor; müşteri buraya düşüp sipariş numarasını görüyor.
@@ -886,7 +927,7 @@ def siparis_alindi_sayfasi():
       </div>
 
       <p data-ok-yok class="ok-yok" hidden>Görüntülenecek sipariş bulunamadı.
-      <a href="../#siparis">Sipariş formuna dönün</a>.</p>'''
+      <a href="../#siparis">Sipariş formuna dönün</a>.</p>''' + gcr_blok()
 
     return bilgi_sayfasi('siparis-alindi', 'Siparişiniz Alındı',
                          'Sipariş numaranız, sipariş özetiniz ve ödeme bilgileri.',
@@ -925,6 +966,7 @@ def bilgi_sayfalari():
       <ul>
         <li><strong>Kargo firması</strong> — gönderiyi teslim edebilmek için ad, telefon ve adres bilgisi paylaşılır.</li>
         <li><strong>Form servisi</strong> — sipariş formunu doldurursanız, form içeriği bize e-posta olarak iletilir.</li>
+        <li><strong>Google Müşteri Yorumları</strong> — siparişinizden sonra Google'ın memnuniyet anketi gönderebilmesi için sipariş numaranız, e-posta adresiniz ve tahmini teslim tarihiniz Google ile paylaşılır. Anket isteğe bağlıdır; onay ekranındaki kutucuğu işaretlemezseniz hiçbir veri gönderilmez.</li>
         <li><strong>Google Analytics / Google Ads</strong> — sitenin kullanımına dair anonim istatistikler için çerez kullanılır. Bu veriler kimliğinizi tanımlamaz.</li>
       </ul>
       <p>Bunların dışında hiçbir üçüncü tarafla veri paylaşmayız.</p>

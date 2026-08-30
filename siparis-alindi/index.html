@@ -182,6 +182,29 @@
 
       <p data-ok-yok class="ok-yok" hidden>Görüntülenecek sipariş bulunamadı.
       <a href="../#siparis">Sipariş formuna dönün</a>.</p>
+<script>
+window.renderOptIn = function() {
+  var p = null;
+  try { p = JSON.parse(sessionStorage.getItem('dy_son_siparis') || 'null'); } catch (e) {}
+  var no = (p && p.no) || new URLSearchParams(location.search).get('no') || '';
+  var eposta = (p && p.musteri && p.musteri.eposta) || '';
+  if (!no || !eposta || !window.gapi) { return; }
+  var t = new Date();
+  t.setDate(t.getDate() + 4);   /* hazırlık + yol süresi */
+  var iki = function (n) { return (n < 10 ? '0' : '') + n; };
+  var tahmin = t.getFullYear() + '-' + iki(t.getMonth() + 1) + '-' + iki(t.getDate());
+  window.gapi.load('surveyoptin', function () {
+    window.gapi.surveyoptin.render({
+      merchant_id: 5847458810,
+      order_id: no,
+      email: eposta,
+      delivery_country: 'TR',
+      estimated_delivery_date: tahmin
+    });
+  });
+};
+</script>
+<script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
       <div class="note">
         <p>Sorularınız için <a href="mailto:info@domuzyagi.com">info@domuzyagi.com</a> adresinden veya
         <a href="tel:+905516412065">0551 641 20 65</a> numarasından bize ulaşabilirsiniz.</p>
