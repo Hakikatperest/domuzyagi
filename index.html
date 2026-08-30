@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=3">
+<link rel="stylesheet" href="assets/site.css?v=4">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17831951098"></script>
 <script>
@@ -79,7 +79,7 @@
           "name": "Kargo ücreti ne kadar?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Kargo ücreti alıcıya aittir. 2.500 ₺ ve üzeri siparişlerde kargo ücretini biz karşılıyoruz. 5'li paket (2.500 ₺) bu kapsamdadır."
+            "text": "Kargo ücreti alıcıya aittir. 2.500 ₺ ve üzeri siparişlerde kargo ücretini biz karşılıyoruz. 5'li paket (2.500 ₺) doğrudan bu kapsamdadır; farklı ürünlerden oluşan sepetiniz 2.500 ₺'yi geçtiğinde de kargo bizden."
           }
         },
         {
@@ -87,7 +87,15 @@
           "name": "Nasıl sipariş verebilirim?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sitedeki ürünlerden istediğiniz adedi seçip WhatsApp ile siparişinizi gönderebilir ya da 0551 641 20 65 numaralı telefondan doğrudan arayarak sipariş verebilirsiniz."
+            "text": "İki yolu var: Ürünler bölümünden istediğiniz adedi seçip WhatsApp ile Sipariş Ver butonuna basın — siparişiniz mesaja hazır olarak gelir. Ya da 0551 641 20 65 numarasını arayıp doğrudan sipariş verin. Üyelik veya form doldurma gerekmez."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Siparişim ne zaman elime ulaşır?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Siparişleriniz Türkiye'nin her yerine kargo ile gönderilir. Teslim süresi bulunduğunuz ile göre değişmekle birlikte genellikle birkaç iş günü içindedir. Ürünler ısıya dayanıklı özel ambalajla gönderildiği için yolda bozulma riski en aza indirilir."
           }
         },
         {
@@ -100,10 +108,10 @@
         },
         {
           "@type": "Question",
-          "name": "Domuz yağı ne kadar sürede etki gösterir?",
+          "name": "Ürünü nasıl kullanmalıyım?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Etki süresi kullanım amacına ve kişiden kişiye değişiklik gösterir. Yanık ve yara tedavisinde genellikle 3–7 gün içinde gözle görülür iyileşme başlar. Cilt kırışıklıkları ve izler için düzenli kullanımda 2–4 hafta sonra etkiler fark edilebilir."
+            "text": "Temiz cilde ince bir tabaka hâlinde sürülür ve masaj yaparak yedirilir. Yoğun bir ürün olduğu için az miktar yeterlidir. Gıda olarak tüketilmez, yalnızca harici kullanım içindir."
           }
         },
         {
@@ -111,7 +119,7 @@
           "name": "Domuz yağı alerjik reaksiyona neden olur mu?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "%100 saf domuz yağı katkı maddesi, parfüm veya koruyucu içermediğinden genellikle alerjik reaksiyona neden olmaz. Ancak çok nadiren hassas ciltlerde reaksiyon görülebilir. İlk kullanımda küçük bir alanda test etmenizi öneririz."
+            "text": "Ürünümüz %100 saf domuz yağıdır; katkı maddesi, parfüm veya koruyucu içermez. Yine de her ciltte farklı tepki oluşabilir. İlk kullanımda kolunuzun iç kısmı gibi küçük bir alanda test etmenizi, tahriş olursa kullanmayı bırakmanızı öneririz."
           }
         },
         {
@@ -119,7 +127,7 @@
           "name": "Domuz yağı nasıl saklanmalıdır?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Serin ve kuru bir yerde, direkt güneş ışığından uzakta saklanmalıdır. Açıldıktan sonra buzdolabında muhafaza edilmesi önerilir. Uygun koşullarda saklandığında 1 yıl boyunca etkinliğini korur."
+            "text": "Serin ve kuru bir yerde, direkt güneş ışığından uzakta saklanmalıdır. Açıldıktan sonra buzdolabında muhafaza edilmesi önerilir. Uygun koşullarda saklandığında 1 yıl boyunca etkinliğini korur. Isıya dayanıklı özel ambalajlarımız kargo sırasında bozulma riskini en aza indirir."
           }
         }
       ]
@@ -159,6 +167,18 @@
         "itemCondition": "https://schema.org/NewCondition",
         "seller": {
           "@id": "https://www.domuzyagi.com/#org"
+        },
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "200",
+            "currency": "TRY"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "TR"
+          }
         }
       }
     },
@@ -188,6 +208,18 @@
         "itemCondition": "https://schema.org/NewCondition",
         "seller": {
           "@id": "https://www.domuzyagi.com/#org"
+        },
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "200",
+            "currency": "TRY"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "TR"
+          }
         }
       }
     },
@@ -217,6 +249,18 @@
         "itemCondition": "https://schema.org/NewCondition",
         "seller": {
           "@id": "https://www.domuzyagi.com/#org"
+        },
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "0",
+            "currency": "TRY"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "TR"
+          }
         }
       }
     }
@@ -310,8 +354,8 @@
     <div>
       <span class="hero-badge"><svg class="ico"><use href="#i-drop"></use></svg> Doğal &amp; Saf &amp; Güvenilir</span>
       <h1>%100 Saf ve Doğal<br><em>Domuz Yağı</em> Ürünleri</h1>
-      <p class="hero-lead">Cilt bakımı, yanık tedavisi, ağrı ve sızılar için etkili doğal çözüm. Katkı maddesi yok, doğrudan doğadan kapınıza.</p>
-      <p class="hero-sub">Yanık izleri, lazer sonrası tahrişler, sivilce izleri, hemoroid, ameliyat dikiş izleri, diz kireçlenmesi ve daha fazlası için.</p>
+      <p class="hero-lead">Geleneksel yöntemle eritilmiş, katkısız domuz yağı. Cilt bakımında ve masaj uygulamalarında harici olarak kullanılır — doğrudan doğadan kapınıza.</p>
+      <p class="hero-sub">Kuru ve yıpranmış ciltler, iz görünümünün bakımı ve masaj uygulamaları için tercih edilir.</p>
 
       <div class="hero-price">
         <!-- HERO-FIYAT:BAŞ -->
@@ -542,19 +586,18 @@
     <div class="info-tx fx">
       <span class="tag">Neden Domuz Yağı?</span>
       <h2>Domuz Yağı Ne İşe Yarar?</h2>
-      <p>Domuz yağı faydaları özellikle cilt sağlığı alanında oldukça etkilidir. Geleneksel formülüyle cilt ve kas sağlığını destekler.</p>
-      <p>Cilt yanıkları, lazer sonrası tahrişler ve yatak yaraları gibi durumlarda cildi nemlendirir, onarır ve yenilenmesini destekler. Sivilce izleri, hemoroid ve ameliyat dikiş izleri için de doğal bir bakım sunar.</p>
-      <p>Diz kireçlenmesi ve menisküs ağrılarında harici masaj yağı olarak rahatlatıcı etkisiyle kullanılabilir.</p>
+      <p>Domuz yağı, Anadolu'da uzun yıllardır cilt bakımında kullanılan geleneksel bir üründür. Yoğun ve zengin yapısı sayesinde cilt üzerinde kolay yayılır.</p>
+      <p>Kuruyan ve yıpranan ciltte nem kaybını azaltmaya yardımcı olur, cildin yumuşamasını destekler. Geleneksel olarak iz görünümünün bakımında da tercih edilir.</p>
+      <p>Masaj yağı olarak harici kullanıma uygundur; ciltte kolay yayılır ve kayganlık sağlar.</p>
       <div class="use-box">
         <h4>Kullanım Alanları</h4>
         <ul>
-          <li><svg class="ico"><use href="#i-dot"></use></svg> Cilt yanıkları ve yaraları</li>
-          <li><svg class="ico"><use href="#i-dot"></use></svg> Sivilce ve akne izleri</li>
-          <li><svg class="ico"><use href="#i-dot"></use></svg> Ameliyat dikiş izleri</li>
-          <li><svg class="ico"><use href="#i-dot"></use></svg> Hemoroid</li>
-          <li><svg class="ico"><use href="#i-dot"></use></svg> Diz ağrıları ve kireçlenme</li>
-          <li><svg class="ico"><use href="#i-dot"></use></svg> Cilt kırışıklıkları</li>
-          <li><svg class="ico"><use href="#i-dot"></use></svg> Hayvan yaraları ve cilt problemleri</li>
+          <li><svg class="ico"><use href="#i-dot"></use></svg> Kuru ve yıpranmış ciltler</li>
+          <li><svg class="ico"><use href="#i-dot"></use></svg> İz görünümünün bakımı</li>
+          <li><svg class="ico"><use href="#i-dot"></use></svg> El, ayak ve dirsek gibi sertleşen bölgeler</li>
+          <li><svg class="ico"><use href="#i-dot"></use></svg> Masaj uygulamaları</li>
+          <li><svg class="ico"><use href="#i-dot"></use></svg> Soğuk havada cilt koruması</li>
+          <li><svg class="ico"><use href="#i-dot"></use></svg> Evcil hayvanlarda tüy ve cilt bakımı</li>
         </ul>
       </div>
     </div>
@@ -583,7 +626,7 @@
         <div class="art-i"><img src="images/makale-insan.webp" alt="Domuz yağının insanlara faydaları" width="612" height="408" loading="lazy"></div>
         <div class="art-b">
           <h3>İnsanlara Faydaları</h3>
-          <p>Kullananların deneyimleri, cilt bakımındaki rolü ve terapötik etkileri hakkında kapsamlı rehber.</p>
+          <p>Domuz yağının cilt bakımındaki geleneksel kullanımı hakkında kapsamlı rehber.</p>
           <a href="/domuz-yaginin-insanlara-faydalari/" class="art-l">Devamını Oku <svg class="ico"><use href="#i-right"></use></svg></a>
         </div>
       </article>
@@ -607,47 +650,77 @@
   </div>
 </section>
 
-<!-- ═══ YORUMLAR ═══ -->
-<section class="sec sec-ink">
+
+<!-- SIPARIS-FORM:BAŞ -->
+<section class="sec sec-cream" id="siparis-formu">
   <div class="container">
     <div class="sec-h">
-      <span class="tag">Müşteri Yorumları</span>
-      <h2>Google 5 Yıldızlı Değerlendirmeler</h2>
-      <p>Müşterilerimizin gerçek deneyimleri</p>
+      <span class="tag">Sipariş Formu</span>
+      <h2>Bilgilerinizi Bırakın, Biz Arayalım</h2>
+      <p>Formu doldurun; siparişinizi teyit etmek için en kısa sürede size dönelim. Dilerseniz WhatsApp veya telefonla da sipariş verebilirsiniz.</p>
       <div class="rule"></div>
     </div>
-    <div class="rev-g">
-      <div class="rev fx">
-        <div class="rev-h"><span class="rev-n">Ahmet Y.</span><span class="rev-s"><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg></span></div>
-        <p class="rev-t">Yanık izlerim için kullandım, gerçekten mucizevi etkisi oldu. 3 haftada izler neredeyse tamamen kayboldu. Kesinlikle tavsiye ediyorum.</p>
-        <span class="rev-d">2 hafta önce</span>
+
+    <form class="oform" novalidate>
+      <input type="text" name="_gizli" class="of-tuzak" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input type="hidden" name="Sipariş" class="of-urun" value="">
+
+      <div class="of-g">
+        <label class="of-f">
+          <span>Ad Soyad <i>*</i></span>
+          <input type="text" name="Ad Soyad" autocomplete="name" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>Telefon <i>*</i></span>
+          <input type="tel" name="Telefon" autocomplete="tel" inputmode="tel" placeholder="05xx xxx xx xx" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>İl / İlçe <i>*</i></span>
+          <input type="text" name="İl / İlçe" autocomplete="address-level2" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>E-posta</span>
+          <input type="email" name="E-posta" autocomplete="email">
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f of-tam">
+          <span>Teslimat Adresi <i>*</i></span>
+          <textarea name="Adres" rows="3" autocomplete="street-address" required></textarea>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f of-tam">
+          <span>Sipariş notu</span>
+          <textarea name="Not" rows="2" placeholder="Eklemek istedikleriniz"></textarea>
+        </label>
       </div>
-      <div class="rev fx">
-        <div class="rev-h"><span class="rev-n">Zeynep K.</span><span class="rev-s"><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg></span></div>
-        <p class="rev-t">Ameliyat dikiş izim için aldım. İlk başta şüpheliydim ama 1 aylık kullanım sonunda iz neredeyse görünmez hale geldi. Teşekkürler!</p>
-        <span class="rev-d">1 ay önce</span>
+
+      <div class="of-ozet">
+        <span>Siparişiniz</span>
+        <b class="of-ozet-v">Henüz ürün seçilmedi</b>
       </div>
-      <div class="rev fx">
-        <div class="rev-h"><span class="rev-n">Mehmet T.</span><span class="rev-s"><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg></span></div>
-        <p class="rev-t">Köpeğimin cilt problemleri vardı, veteriner önerisiyle domuz yağı aldık. 2 haftada tüyleri yeniden çıkmaya başladı. Harika bir ürün!</p>
-        <span class="rev-d">3 hafta önce</span>
-      </div>
-      <div class="rev fx">
-        <div class="rev-h"><span class="rev-n">Ayşe S.</span><span class="rev-s"><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg></span></div>
-        <p class="rev-t">Diz kireçlenmem için kullanıyorum. Ağrılarımda gözle görülür azalma oldu. Doğal olduğu için içim rahat. Teşekkür ederim.</p>
-        <span class="rev-d">2 ay önce</span>
-      </div>
-      <div class="rev fx">
-        <div class="rev-h"><span class="rev-n">Can D.</span><span class="rev-s"><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg><svg class="ico"><use href="#i-star"></use></svg></span></div>
-        <p class="rev-t">Sivilce izleri için denedim ve sonuç mükemmel! Cildim daha pürüzsüz ve canlı görünüyor. Hızlı kargo için de teşekkürler.</p>
-        <span class="rev-d">1 hafta önce</span>
-      </div>
-    </div>
+
+      <label class="of-kvkk">
+        <input type="checkbox" required>
+        <span>Siparişimin oluşturulması ve teslimatı amacıyla ad, telefon ve adres bilgilerimin işlenmesine onay veriyorum. <a href="/gizlilik-politikasi/">Gizlilik Politikası</a></span>
+        <em class="of-hata"></em>
+      </label>
+
+      <button type="submit" class="btn btn-gold btn-lg btn-block of-gonder"><svg class="ico"><use href="#i-box"></use></svg> Siparişi Gönder</button>
+      <p class="of-durum" role="status"></p>
+
+      <p class="of-alt">Formu doldurmak istemiyorsanız
+        <a href="https://wa.me/905516412065" target="_blank" rel="noopener">WhatsApp</a> veya
+        <a href="tel:+905516412065">0551 641 20 65</a> ile de sipariş verebilirsiniz.</p>
+    </form>
   </div>
 </section>
+      <!-- SIPARIS-FORM:SON -->
 
 <!-- ═══ SSS ═══ -->
-<section class="sec sec-cream" id="sss">
+<section class="sec" id="sss">
   <div class="container">
     <div class="sec-h">
       <span class="tag">Sık Sorulanlar</span>
@@ -655,9 +728,7 @@
       <p>Sipariş, kargo ve kullanım hakkında en çok sorulanlar</p>
       <div class="rule"></div>
     </div>
-    <div class="faq-w">
-
-      <div class="faq">
+    <div class="faq-w"><div class="faq">
         <h3 class="faq-h"><button class="faq-q" aria-expanded="false"><span>Kargo ücreti ne kadar?</span><span class="faq-ic"><svg class="ico"><use href="#i-down"></use></svg></span></button></h3>
         <div class="faq-a"><div><p><strong>Kargo ücreti alıcıya aittir.</strong> 2.500 ₺ ve üzeri siparişlerde kargo ücretini biz karşılıyoruz. 5'li paket (2.500 ₺) doğrudan bu kapsamdadır; farklı ürünlerden oluşan sepetiniz 2.500 ₺'yi geçtiğinde de kargo bizden.</p></div></div>
       </div>
@@ -678,13 +749,13 @@
       </div>
 
       <div class="faq">
-        <h3 class="faq-h"><button class="faq-q" aria-expanded="false"><span>Domuz yağı ne kadar sürede etki gösterir?</span><span class="faq-ic"><svg class="ico"><use href="#i-down"></use></svg></span></button></h3>
-        <div class="faq-a"><div><p>Etki süresi kullanım amacına ve kişiden kişiye değişiklik gösterir. Yanık ve yara tedavisinde genellikle 3–7 gün içinde gözle görülür iyileşme başlar. Cilt kırışıklıkları ve izler için düzenli kullanımda 2–4 hafta sonra etkiler fark edilebilir. Diz ağrıları için masaj uygulandığında rahatlama çok daha hızlı hissedilebilir.</p></div></div>
+        <h3 class="faq-h"><button class="faq-q" aria-expanded="false"><span>Ürünü nasıl kullanmalıyım?</span><span class="faq-ic"><svg class="ico"><use href="#i-down"></use></svg></span></button></h3>
+        <div class="faq-a"><div><p>Temiz cilde ince bir tabaka hâlinde sürülür ve masaj yaparak yedirilir. Yoğun bir ürün olduğu için az miktar yeterlidir. Gıda olarak tüketilmez, yalnızca harici kullanım içindir.</p></div></div>
       </div>
 
       <div class="faq">
         <h3 class="faq-h"><button class="faq-q" aria-expanded="false"><span>Domuz yağı alerjik reaksiyona neden olur mu?</span><span class="faq-ic"><svg class="ico"><use href="#i-down"></use></svg></span></button></h3>
-        <div class="faq-a"><div><p>%100 saf domuz yağı katkı maddesi, parfüm veya koruyucu içermediğinden genellikle alerjik reaksiyona neden olmaz. Ancak çok nadiren hassas ciltlerde reaksiyon görülebilir. İlk kullanımda küçük bir alanda test etmenizi öneririz.</p></div></div>
+        <div class="faq-a"><div><p>Ürünümüz %100 saf domuz yağıdır; katkı maddesi, parfüm veya koruyucu içermez. Yine de her ciltte farklı tepki oluşabilir. İlk kullanımda kolunuzun iç kısmı gibi küçük bir alanda test etmenizi, tahriş olursa kullanmayı bırakmanızı öneririz.</p></div></div>
       </div>
 
       <div class="faq">
@@ -692,11 +763,7 @@
         <div class="faq-a"><div><p>Serin ve kuru bir yerde, direkt güneş ışığından uzakta saklanmalıdır. Açıldıktan sonra buzdolabında muhafaza edilmesi önerilir. Uygun koşullarda saklandığında 1 yıl boyunca etkinliğini korur. Isıya dayanıklı özel ambalajlarımız kargo sırasında bozulma riskini en aza indirir.</p></div></div>
       </div>
 
-      <div class="faq">
-        <h3 class="faq-h"><button class="faq-q" aria-expanded="false"><span>Domuz yağı kremi kullananlar memnun mu?</span><span class="faq-ic"><svg class="ico"><use href="#i-down"></use></svg></span></button></h3>
-        <div class="faq-a"><div><p>Evet, kullanıcıların büyük çoğunluğu üründen memnun kalmaktadır. Özellikle yanık tedavisinde, ameliyat izlerinde ve cilt problemlerinde olumlu sonuçlar bildirilmektedir. 15+ yıllık tecrübemiz ve binlerce müşterimizin memnuniyeti en büyük referansımızdır.</p></div></div>
-      </div>
-
+      
     </div>
   </div>
 </section>
@@ -797,6 +864,6 @@
 <!-- URUN-JS:BAŞ -->
 <script>window.DY_CFG={"whatsapp":"905516412065","esik":2500,"urunler":{"DY-050":{"ad":"Domuz Yağı 50 gr","fiyat":250},"DY-115":{"ad":"Domuz Yağı 115 gr","fiyat":500},"DY-5LI":{"ad":"Domuz Yağı 5'li Paket (5 × 115 gr)","fiyat":2500}}};</script>
       <!-- URUN-JS:SON -->
-<script src="assets/site.js?v=3" defer></script>
+<script src="assets/site.js?v=4" defer></script>
 </body>
 </html>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+<channel>
+<title>Doğal Domuz Yağı — Ürün Listesi</title>
+<link>https://www.domuzyagi.com/</link>
+<description>Doğal Domuz Yağı ürün akışı. %100 saf ve doğal domuz yağı.</description>
+<lastBuildDate>Sun, 30 Aug 2026 02:13:54 +0000</lastBuildDate>
+<item>
+  <g:id>DY-050</g:id>
+  <g:title>Doğal Domuz Yağı 50 gr — %100 Saf, Katkısız</g:title>
+  <g:description>Doğal yöntemle eritilmiş %100 saf domuz yağı. 50 gram, ısıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Harici kullanım için üretilmiştir.</g:description>
+  <g:link>https://www.domuzyagi.com/urun/domuz-yagi-50-gr/</g:link>
+  <g:image_link>https://www.domuzyagi.com/images/urun-50gr.webp</g:image_link>
+  <g:availability>in_stock</g:availability>
+  <g:price>250.00 TRY</g:price>
+  <g:condition>new</g:condition>
+  <g:brand>Doğal Domuz Yağı</g:brand>
+  <g:mpn>DY-050</g:mpn>
+  <g:identifier_exists>no</g:identifier_exists>
+  <g:google_product_category>6104</g:google_product_category>
+  <g:product_type>Health &amp; Beauty &gt; Personal Care &gt; Cosmetics &gt; Skin Care &gt; Body Oil</g:product_type>
+  <g:unit_pricing_measure>50 g</g:unit_pricing_measure>
+  <g:unit_pricing_base_measure>100 g</g:unit_pricing_base_measure>
+  <g:shipping_weight>110 g</g:shipping_weight>
+  <g:shipping>
+    <g:country>TR</g:country>
+    <g:service>Standart Kargo</g:service>
+    <g:price>200.00 TRY</g:price>
+  </g:shipping>
+  <g:shipping_label>standart</g:shipping_label>
+  <g:custom_label_0>50 gr</g:custom_label_0>
+</item>
+<item>
+  <g:id>DY-115</g:id>
+  <g:title>Doğal Domuz Yağı 115 gr — %100 Saf, Katkısız</g:title>
+  <g:description>Doğal yöntemle eritilmiş %100 saf domuz yağı. 115 gram, ısıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Harici kullanım için üretilmiştir.</g:description>
+  <g:link>https://www.domuzyagi.com/urun/domuz-yagi-115-gr/</g:link>
+  <g:image_link>https://www.domuzyagi.com/images/urun-115gr.webp</g:image_link>
+  <g:availability>in_stock</g:availability>
+  <g:price>500.00 TRY</g:price>
+  <g:condition>new</g:condition>
+  <g:brand>Doğal Domuz Yağı</g:brand>
+  <g:mpn>DY-115</g:mpn>
+  <g:identifier_exists>no</g:identifier_exists>
+  <g:google_product_category>6104</g:google_product_category>
+  <g:product_type>Health &amp; Beauty &gt; Personal Care &gt; Cosmetics &gt; Skin Care &gt; Body Oil</g:product_type>
+  <g:unit_pricing_measure>115 g</g:unit_pricing_measure>
+  <g:unit_pricing_base_measure>100 g</g:unit_pricing_base_measure>
+  <g:shipping_weight>175 g</g:shipping_weight>
+  <g:shipping>
+    <g:country>TR</g:country>
+    <g:service>Standart Kargo</g:service>
+    <g:price>200.00 TRY</g:price>
+  </g:shipping>
+  <g:shipping_label>standart</g:shipping_label>
+  <g:custom_label_0>115 gr</g:custom_label_0>
+</item>
+<item>
+  <g:id>DY-5LI</g:id>
+  <g:title>Doğal Domuz Yağı 5&#x27;li Paket — 5 x 115 gr, Toplam 575 gr</g:title>
+  <g:description>Doğal yöntemle eritilmiş %100 saf domuz yağı. 5 adet 115 gramlık paket, toplam 575 gram. Isıya dayanıklı ambalajda. Katkı maddesi, parfüm ve koruyucu içermez. Kargo ücretsiz. Harici kullanım için üretilmiştir.</g:description>
+  <g:link>https://www.domuzyagi.com/urun/domuz-yagi-5li-paket/</g:link>
+  <g:image_link>https://www.domuzyagi.com/images/urun-5li.webp</g:image_link>
+  <g:availability>in_stock</g:availability>
+  <g:price>2500.00 TRY</g:price>
+  <g:condition>new</g:condition>
+  <g:brand>Doğal Domuz Yağı</g:brand>
+  <g:mpn>DY-5LI</g:mpn>
+  <g:identifier_exists>no</g:identifier_exists>
+  <g:google_product_category>6104</g:google_product_category>
+  <g:product_type>Health &amp; Beauty &gt; Personal Care &gt; Cosmetics &gt; Skin Care &gt; Body Oil</g:product_type>
+  <g:unit_pricing_measure>575 g</g:unit_pricing_measure>
+  <g:unit_pricing_base_measure>100 g</g:unit_pricing_base_measure>
+  <g:multipack>5</g:multipack>
+  <g:shipping_weight>635 g</g:shipping_weight>
+  <g:shipping>
+    <g:country>TR</g:country>
+    <g:service>Standart Kargo</g:service>
+    <g:price>0.00 TRY</g:price>
+  </g:shipping>
+  <g:shipping_label>ucretsiz</g:shipping_label>
+  <g:custom_label_0>5 × 115 gr</g:custom_label_0>
+</item>
+</channel>
+</rss>

@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 3                                    # assets/site.css?v=N
+VER  = 4                                    # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -130,7 +130,7 @@ def footer(kok='/'):
           <img src="{kok}images/logo.webp" alt="{e(S['ad'])} logosu" width="46" height="46" loading="lazy">
           <span>{t(S['ad'])}</span>
         </div>
-        <p>%100 saf ve doğal domuz yağı ürünleri. Cilt bakımı, yanık tedavisi ve hayvan sağlığı için etkili çözümler. 15+ yıllık güvenilir hizmet.</p>
+        <p>%100 saf ve doğal domuz yağı. Geleneksel yöntemle eritilir, katkı maddesi içermez. Harici kullanım için üretilir; 15+ yıllık güvenilir hizmet.</p>
       </div>
       <div>
         <h4>Ürünler</h4>
@@ -146,9 +146,16 @@ def footer(kok='/'):
         </ul>
       </div>
     </div>
+    <div class="ftr-yasal">
+      <a href="{kok}gizlilik-politikasi/">Gizlilik Politikası</a>
+      <a href="{kok}iade-ve-cayma-hakki/">İade ve Cayma Hakkı</a>
+      <a href="{kok}teslimat-ve-odeme/">Teslimat ve Ödeme</a>
+    </div>
+    <div class="ftr-uyari">
+      <p><b>Sağlık uyarısı:</b> Ürünlerimiz kozmetik amaçlı, harici kullanım içindir. Gıda veya ilaç değildir; hastalıkların teşhis, tedavi veya önlenmesinde kullanılmaz. Sağlık sorunlarınız için hekiminize başvurun.</p>
+    </div>
     <div class="ftr-bt">
       <p>&copy; <span class="yil"></span> {t(S['ad'])}. Tüm hakları saklıdır.</p>
-      <p>Ürünlerimiz gıda değildir; yalnızca harici kullanım içindir.</p>
     </div>
   </div>
 </footer>'''
@@ -172,6 +179,78 @@ def sabitler():
   <div class="lb-cap"></div>
 </div>'''
 
+
+def siparis_formu(kok='/'):
+    ep = S.get('form_endpoint')
+    action = f' action="{ep}" method="POST"' if ep else ''
+    gizli = ('<input type="hidden" name="_subject" value="domuzyagi.com - Yeni siparis">\n      '
+             '<input type="hidden" name="_captcha" value="false">\n      '
+             '<input type="hidden" name="_template" value="table">\n      ') if ep else ''
+    return f'''<section class="sec sec-cream" id="siparis-formu">
+  <div class="container">
+    <div class="sec-h">
+      <span class="tag">Sipariş Formu</span>
+      <h2>Bilgilerinizi Bırakın, Biz Arayalım</h2>
+      <p>Formu doldurun; siparişinizi teyit etmek için en kısa sürede size dönelim. Dilerseniz WhatsApp veya telefonla da sipariş verebilirsiniz.</p>
+      <div class="rule"></div>
+    </div>
+
+    <form class="oform"{action} novalidate>
+      {gizli}<input type="text" name="_gizli" class="of-tuzak" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input type="hidden" name="Sipariş" class="of-urun" value="">
+
+      <div class="of-g">
+        <label class="of-f">
+          <span>Ad Soyad <i>*</i></span>
+          <input type="text" name="Ad Soyad" autocomplete="name" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>Telefon <i>*</i></span>
+          <input type="tel" name="Telefon" autocomplete="tel" inputmode="tel" placeholder="05xx xxx xx xx" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>İl / İlçe <i>*</i></span>
+          <input type="text" name="İl / İlçe" autocomplete="address-level2" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>E-posta</span>
+          <input type="email" name="E-posta" autocomplete="email">
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f of-tam">
+          <span>Teslimat Adresi <i>*</i></span>
+          <textarea name="Adres" rows="3" autocomplete="street-address" required></textarea>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f of-tam">
+          <span>Sipariş notu</span>
+          <textarea name="Not" rows="2" placeholder="Eklemek istedikleriniz"></textarea>
+        </label>
+      </div>
+
+      <div class="of-ozet">
+        <span>Siparişiniz</span>
+        <b class="of-ozet-v">Henüz ürün seçilmedi</b>
+      </div>
+
+      <label class="of-kvkk">
+        <input type="checkbox" required>
+        <span>Siparişimin oluşturulması ve teslimatı amacıyla ad, telefon ve adres bilgilerimin işlenmesine onay veriyorum. <a href="{kok}gizlilik-politikasi/">Gizlilik Politikası</a></span>
+        <em class="of-hata"></em>
+      </label>
+
+      <button type="submit" class="btn btn-gold btn-lg btn-block of-gonder">{ikon("box")} Siparişi Gönder</button>
+      <p class="of-durum" role="status"></p>
+
+      <p class="of-alt">Formu doldurmak istemiyorsanız
+        <a href="https://wa.me/{S['whatsapp']}" target="_blank" rel="noopener">WhatsApp</a> veya
+        <a href="tel:{S['telefon']}">{S['telefon_gosterim']}</a> ile de sipariş verebilirsiniz.</p>
+    </form>
+  </div>
+</section>'''
 
 # ─────────────────────────── ürün kartı (anasayfa) ───────────────────────────
 def urun_karti(u):
@@ -423,7 +502,7 @@ def urun_sayfasi(u):
       <p>Üyelik veya form doldurmak gerekmez. Adedi seçip <strong>WhatsApp ile Sipariş Ver</strong> butonuna basın — siparişiniz mesaja hazır olarak gelir. Dilerseniz <a href="tel:{S['telefon']}">{S['telefon_gosterim']}</a> numarasını arayarak doğrudan sipariş verebilirsiniz. Her gün {S['calisma_saati']} arası ulaşabilirsiniz.</p>
 
       <div class="note">
-        <p><b>Önemli:</b> Ürünlerimiz gıda değildir, yalnızca harici kullanım içindir. İlk kullanımda küçük bir alanda test etmenizi öneririz.</p>
+        <p><b>Önemli:</b> Bu ürün kozmetik amaçlı, harici kullanım içindir. Gıda veya ilaç değildir; hastalıkların teşhis, tedavi veya önlenmesinde kullanılmaz. İlk kullanımda küçük bir alanda test etmenizi öneririz.</p>
       </div>
     </div>
   </div>
@@ -441,6 +520,8 @@ def urun_sayfasi(u):
   </div>
 </section>
 
+{siparis_formu('../../')}
+
 {footer('../../')}
 
 {sabitler()}
@@ -450,6 +531,173 @@ def urun_sayfasi(u):
 </html>
 '''
 
+
+# ─────────────────────────── bilgi sayfaları ───────────────────────────
+def bilgi_sayfasi(slug, baslik, ozet, govde):
+    semalar = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "WebPage", "name": baslik, "description": ozet,
+             "url": f"{URL}/{slug}/", "inLanguage": "tr-TR"},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": f"{URL}/"},
+                {"@type": "ListItem", "position": 2, "name": baslik}]},
+        ],
+    }
+    return f'''<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{t(baslik)} | {t(S['ad'])}</title>
+<meta name="description" content="{e(ozet)}">
+<link rel="canonical" href="{URL}/{slug}/">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#132428">
+<link rel="icon" href="../images/logo.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v={VER}">
+<script type="application/ld+json">
+{json.dumps(semalar, ensure_ascii=False, indent=2)}
+</script>
+</head>
+<body>
+
+{IKONLAR}
+
+{duyuru()}
+
+{header('../')}
+
+<div class="crumb-bar">
+  <div class="container">
+    <nav class="crumb" aria-label="Site haritası">
+      <a href="../">Ana Sayfa</a>{ikon("right")}
+      <span>{t(baslik)}</span>
+    </nav>
+  </div>
+</div>
+
+<section class="sec">
+  <div class="container">
+    <div class="pg-body">
+      <h1>{t(baslik)}</h1>
+      <p class="pg-ozet">{t(ozet)}</p>
+      {govde}
+      <div class="note">
+        <p>Sorularınız için <a href="mailto:{S['eposta']}">{S['eposta']}</a> adresinden veya
+        <a href="tel:{S['telefon']}">{S['telefon_gosterim']}</a> numarasından bize ulaşabilirsiniz.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{footer('../')}
+
+{sabitler()}
+
+<script src="../assets/site.js?v={VER}" defer></script>
+</body>
+</html>
+'''
+
+
+def bilgi_sayfalari():
+    esik, kargo = tl(ESIK), tl(KARGO) if KARGO is not None else 'kargo ücreti'
+    return [
+      ('gizlilik-politikasi', 'Gizlilik Politikası ve KVKK Aydınlatma Metni',
+       'Sipariş sürecinde topladığımız kişisel verileri hangi amaçla işlediğimizi ve haklarınızı açıklar.',
+       f'''<h2>Hangi verileri topluyoruz?</h2>
+      <p>Siparişinizi oluşturabilmek için yalnızca teslimat için gereken bilgileri alıyoruz:</p>
+      <ul>
+        <li><strong>Ad soyad</strong> — kargo gönderisinin alıcısı olarak</li>
+        <li><strong>Telefon numarası</strong> — siparişi teyit etmek ve kargo bilgisi vermek için</li>
+        <li><strong>Adres, il ve ilçe</strong> — gönderinin teslimi için</li>
+        <li><strong>E-posta adresi</strong> — isterseniz; sipariş bilgilendirmesi için</li>
+      </ul>
+      <p>Bu bilgileri sipariş formu, WhatsApp veya telefon yoluyla siz bize iletirsiniz. Kredi kartı bilgisi <strong>toplamıyoruz</strong>; sitemizde online ödeme alınmaz.</p>
+
+      <h2>Verileri hangi amaçla kullanıyoruz?</h2>
+      <p>Verileriniz yalnızca siparişinizin hazırlanması, teyit edilmesi, kargoya verilmesi ve size ulaşması amacıyla kullanılır. İzniniz olmadan pazarlama amaçlı mesaj göndermeyiz, verilerinizi satmayız.</p>
+
+      <h2>Kimlerle paylaşıyoruz?</h2>
+      <ul>
+        <li><strong>Kargo firması</strong> — gönderiyi teslim edebilmek için ad, telefon ve adres bilgisi paylaşılır.</li>
+        <li><strong>Form servisi</strong> — sipariş formunu doldurursanız, form içeriği bize e-posta olarak iletilir.</li>
+        <li><strong>Google Analytics / Google Ads</strong> — sitenin kullanımına dair anonim istatistikler için çerez kullanılır. Bu veriler kimliğinizi tanımlamaz.</li>
+      </ul>
+      <p>Bunların dışında hiçbir üçüncü tarafla veri paylaşmayız.</p>
+
+      <h2>Ne kadar süre saklıyoruz?</h2>
+      <p>Sipariş kayıtları, ilgili mevzuatın öngördüğü yasal saklama süreleri boyunca tutulur. Bu sürenin sonunda silinir. Silinmesini daha erken talep edebilirsiniz.</p>
+
+      <h2>KVKK kapsamındaki haklarınız</h2>
+      <p>6698 sayılı Kişisel Verilerin Korunması Kanunu'nun 11. maddesi uyarınca; kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenmişse bilgi talep etme, işlenme amacını öğrenme, eksik veya yanlış işlenmişse düzeltilmesini isteme, silinmesini veya yok edilmesini isteme ve işlemenin kanuna aykırı olması hâlinde zararın giderilmesini talep etme haklarına sahipsiniz.</p>
+      <p>Bu haklarınızı kullanmak için <a href="mailto:{S['eposta']}">{S['eposta']}</a> adresine yazabilir veya <a href="tel:{S['telefon']}">{S['telefon_gosterim']}</a> numarasını arayabilirsiniz. Talebiniz en geç 30 gün içinde sonuçlandırılır.</p>
+
+      <h2>Çerezler</h2>
+      <p>Sitemizde ölçümleme amacıyla Google Analytics ve Google Ads çerezleri kullanılır. Tarayıcı ayarlarınızdan çerezleri reddedebilirsiniz; bu durumda sitenin temel işlevleri çalışmaya devam eder.</p>'''),
+
+      ('iade-ve-cayma-hakki', 'İade ve Cayma Hakkı',
+       'Cayma hakkınız, iade koşulları, hijyen istisnası ve bedel iadesi süreci.',
+       f'''<h2>Cayma hakkı</h2>
+      <p>Mesafeli Sözleşmeler Yönetmeliği uyarınca, ürünü teslim aldığınız tarihten itibaren <strong>14 gün</strong> içinde hiçbir gerekçe göstermeden ve cezai şart ödemeden sözleşmeden cayma hakkınız vardır.</p>
+      <p>Cayma hakkınızı kullanmak için bu süre içinde <a href="mailto:{S['eposta']}">{S['eposta']}</a> adresine yazmanız ya da <a href="tel:{S['telefon']}">{S['telefon_gosterim']}</a> numarasını aramanız yeterlidir.</p>
+
+      <h2>Hijyen istisnası — önemli</h2>
+      <div class="note">
+        <p><b>Ambalajı açılmış ürünler iade alınamaz.</b> Ürünlerimiz cilde uygulanan kozmetik ürünlerdir. Mesafeli Sözleşmeler Yönetmeliği'nin 15. maddesi uyarınca, tesliminden sonra ambalajı açılmış olan ve sağlık ile hijyen açısından iadesi uygun olmayan ürünlerde cayma hakkı kullanılamaz.</p>
+      </div>
+      <p>Ambalajı <strong>açılmamış</strong>, kullanılmamış ve yeniden satılabilir durumdaki ürünler 14 gün içinde iade edilebilir.</p>
+
+      <h2>Hasarlı, kusurlu veya yanlış gönderilen ürün</h2>
+      <p>Bu durum yukarıdaki istisnanın dışındadır. Kargodan hasarlı çıkan, kusurlu olan veya sipariş ettiğinizden farklı gelen ürünlerde:</p>
+      <ul>
+        <li>Ürünü <strong>ücretsiz</strong> değiştiriyoruz veya bedelini iade ediyoruz.</li>
+        <li>İade kargo ücreti <strong>bize aittir</strong>.</li>
+        <li>Lütfen teslim aldığınızda paketi kontrol edin; hasar varsa kargo görevlisine tutanak tutturun ve bizi arayın.</li>
+      </ul>
+
+      <h2>İade kargo ücreti</h2>
+      <p>Cayma hakkı kapsamındaki iadelerde kargo ücreti alıcıya aittir. Hasarlı, kusurlu veya yanlış gönderilen ürünlerde iade kargo ücretini biz karşılarız.</p>
+
+      <h2>Bedel iadesi</h2>
+      <p>İade edilen ürün tarafımıza ulaştıktan sonra, ödediğiniz bedel <strong>14 gün içinde</strong> ödemeyi yaptığınız yöntemle iade edilir. Havale/EFT ile ödeme yaptıysanız iade, bildireceğiniz IBAN'a yapılır.</p>
+
+      <h2>Şikâyet ve itiraz</h2>
+      <p>Uyuşmazlık durumunda, parasal sınırlara göre bulunduğunuz yerdeki Tüketici Hakem Heyetine veya Tüketici Mahkemesine başvurabilirsiniz.</p>'''),
+
+      ('teslimat-ve-odeme', 'Teslimat ve Ödeme Koşulları',
+       f'Kargo ücreti, {esik} ücretsiz kargo eşiği, teslim süresi ve kabul edilen ödeme yöntemleri.',
+       f'''<h2>Kargo ücreti</h2>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>Sipariş tutarı</th><th>Kargo ücreti</th></tr>
+          <tr><td>{esik} altı</td><td>{kargo} — alıcıya aittir</td></tr>
+          <tr><td>{esik} ve üzeri</td><td><strong>Ücretsiz</strong> — kargo bize aittir</td></tr>
+        </table>
+      </div>
+      <p>5'li Paket ({tl(2500)}) doğrudan ücretsiz kargo kapsamındadır. Farklı ürünlerden oluşan siparişinizin toplamı {esik} ve üzerine ulaştığında da kargo ücreti alınmaz.</p>
+
+      <h2>Teslim süresi</h2>
+      <p>Siparişiniz teyit edildikten sonra <strong>aynı gün</strong> kargoya verilir. Teslim süresi bulunduğunuz ile göre değişmekle birlikte genellikle <strong>{S['kargo_sure']}</strong> içindedir. Türkiye'nin her yerine gönderim yapılır.</p>
+      <p>Ürünler ısıya dayanıklı özel ambalajla gönderilir; bu sayede kargo sırasında bozulma riski en aza indirilir.</p>
+
+      <h2>Ödeme yöntemleri</h2>
+      <ul>
+        <li><strong>Havale / EFT</strong> — sipariş teyidinden sonra hesap bilgileri paylaşılır.</li>
+        <li><strong>Kapıda nakit ödeme</strong> — ürünü teslim alırken kargo görevlisine ödersiniz.</li>
+      </ul>
+      <p>Sitemizde online kart ödemesi alınmaz; kredi kartı bilgisi talep etmeyiz. Bu bilgileri isteyen mesajlara itibar etmeyin.</p>
+
+      <h2>Sipariş nasıl verilir?</h2>
+      <p>Üç yolu var: ürün sayfalarındaki <strong>sipariş formunu</strong> doldurabilir, <a href="https://wa.me/{S['whatsapp']}" target="_blank" rel="noopener">WhatsApp</a> üzerinden yazabilir veya <a href="tel:{S['telefon']}">{S['telefon_gosterim']}</a> numarasını arayabilirsiniz. Her gün {S['calisma_saati']} arası ulaşabilirsiniz.</p>
+
+      <h2>Sipariş takibi</h2>
+      <p>Kargoya verildiğinde takip numaranız telefonla veya WhatsApp üzerinden size iletilir.</p>'''),
+    ]
 
 # ─────────────────────────── Merchant Center feed ───────────────────────────
 def feed():
@@ -506,6 +754,7 @@ def sitemap():
         'domuz-yagi-fiyatlari', 'domuz-yaginin-faydalari',
         'domuz-yaginin-insanlara-faydalari', 'domuz-yaginin-hayvanlara-faydalari',
         'domuz-yagi-nasil-kullanilir']]
+    sayfalar += [(f'{URL}/{s}/', '0.3', 'yearly') for s, *_ in bilgi_sayfalari()]
     g = "\n".join(f'  <url><loc>{u}</loc><lastmod>{bugun}</lastmod>'
                   f'<changefreq>{c}</changefreq><priority>{p}</priority></url>'
                   for u, p, c in sayfalar)
@@ -553,6 +802,28 @@ def anasayfa():
         json.dumps({"@context": "https://schema.org", "@graph": semalar}, ensure_ascii=False, indent=2) +
         '\n</script>')
 
+
+    # SSS şemasını sayfadaki gerçek SSS bloklarından türet (ikisi ayrışmasın)
+    sorular = re.findall(
+        r'<h3 class="faq-h"><button[^>]*><span>(.*?)</span>.*?<div class="faq-a"><div>(.*?)</div></div>',
+        s, re.S)
+    if sorular:
+        m = re.search(r'<script type="application/ld\+json">\s*(\{.*?\})\s*</script>', s, re.S)
+        blok = json.loads(m.group(1))
+        for dugum in blok.get('@graph', []):
+            if dugum.get('@type') == 'FAQPage':
+                dugum['mainEntity'] = [{
+                    "@type": "Question",
+                    "name": html.unescape(re.sub(r'<[^>]+>', '', soru)).strip(),
+                    "acceptedAnswer": {"@type": "Answer",
+                                       "text": html.unescape(re.sub(r'<[^>]+>', ' ', cevap)).replace('  ', ' ').strip()},
+                } for soru, cevap in sorular]
+        s = s[:m.start()] + ('<script type="application/ld+json">\n'
+                             + json.dumps(blok, ensure_ascii=False, indent=2)
+                             + '\n</script>') + s[m.end():]
+
+    s = isaretci_degistir(s, 'SIPARIS-FORM', siparis_formu('/'))
+
     cfg = {
         "whatsapp": S['whatsapp'],
         "esik": ESIK,
@@ -580,6 +851,9 @@ def main():
 
     for u in URUNLER:
         satirlar.append(yaz(os.path.join(KOK, 'urun', u['slug'], 'index.html'), urun_sayfasi(u)))
+
+    for slug, baslik, ozet, govde in bilgi_sayfalari():
+        satirlar.append(yaz(os.path.join(KOK, slug, 'index.html'), bilgi_sayfasi(slug, baslik, ozet, govde)))
 
     satirlar.append(yaz(os.path.join(KOK, 'sitemap.xml'), sitemap()))
     satirlar.append(yaz(os.path.join(KOK, 'robots.txt'), robots()))

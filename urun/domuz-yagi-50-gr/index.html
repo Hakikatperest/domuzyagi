@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css?v=3">
+<link rel="stylesheet" href="../../assets/site.css?v=4">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17831951098"></script>
 <script>
@@ -64,6 +64,18 @@
         "itemCondition": "https://schema.org/NewCondition",
         "seller": {
           "@id": "https://www.domuzyagi.com/#org"
+        },
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "200",
+            "currency": "TRY"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "TR"
+          }
         }
       }
     },
@@ -267,7 +279,7 @@
       <p>Üyelik veya form doldurmak gerekmez. Adedi seçip <strong>WhatsApp ile Sipariş Ver</strong> butonuna basın — siparişiniz mesaja hazır olarak gelir. Dilerseniz <a href="tel:+905516412065">0551 641 20 65</a> numarasını arayarak doğrudan sipariş verebilirsiniz. Her gün 09:00 – 21:00 arası ulaşabilirsiniz.</p>
 
       <div class="note">
-        <p><b>Önemli:</b> Ürünlerimiz gıda değildir, yalnızca harici kullanım içindir. İlk kullanımda küçük bir alanda test etmenizi öneririz.</p>
+        <p><b>Önemli:</b> Bu ürün kozmetik amaçlı, harici kullanım içindir. Gıda veya ilaç değildir; hastalıkların teşhis, tedavi veya önlenmesinde kullanılmaz. İlk kullanımda küçük bir alanda test etmenizi öneririz.</p>
       </div>
     </div>
   </div>
@@ -301,6 +313,72 @@
   </div>
 </section>
 
+<section class="sec sec-cream" id="siparis-formu">
+  <div class="container">
+    <div class="sec-h">
+      <span class="tag">Sipariş Formu</span>
+      <h2>Bilgilerinizi Bırakın, Biz Arayalım</h2>
+      <p>Formu doldurun; siparişinizi teyit etmek için en kısa sürede size dönelim. Dilerseniz WhatsApp veya telefonla da sipariş verebilirsiniz.</p>
+      <div class="rule"></div>
+    </div>
+
+    <form class="oform" novalidate>
+      <input type="text" name="_gizli" class="of-tuzak" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input type="hidden" name="Sipariş" class="of-urun" value="">
+
+      <div class="of-g">
+        <label class="of-f">
+          <span>Ad Soyad <i>*</i></span>
+          <input type="text" name="Ad Soyad" autocomplete="name" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>Telefon <i>*</i></span>
+          <input type="tel" name="Telefon" autocomplete="tel" inputmode="tel" placeholder="05xx xxx xx xx" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>İl / İlçe <i>*</i></span>
+          <input type="text" name="İl / İlçe" autocomplete="address-level2" required>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f">
+          <span>E-posta</span>
+          <input type="email" name="E-posta" autocomplete="email">
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f of-tam">
+          <span>Teslimat Adresi <i>*</i></span>
+          <textarea name="Adres" rows="3" autocomplete="street-address" required></textarea>
+          <em class="of-hata"></em>
+        </label>
+        <label class="of-f of-tam">
+          <span>Sipariş notu</span>
+          <textarea name="Not" rows="2" placeholder="Eklemek istedikleriniz"></textarea>
+        </label>
+      </div>
+
+      <div class="of-ozet">
+        <span>Siparişiniz</span>
+        <b class="of-ozet-v">Henüz ürün seçilmedi</b>
+      </div>
+
+      <label class="of-kvkk">
+        <input type="checkbox" required>
+        <span>Siparişimin oluşturulması ve teslimatı amacıyla ad, telefon ve adres bilgilerimin işlenmesine onay veriyorum. <a href="../../gizlilik-politikasi/">Gizlilik Politikası</a></span>
+        <em class="of-hata"></em>
+      </label>
+
+      <button type="submit" class="btn btn-gold btn-lg btn-block of-gonder"><svg class="ico"><use href="#i-box"></use></svg> Siparişi Gönder</button>
+      <p class="of-durum" role="status"></p>
+
+      <p class="of-alt">Formu doldurmak istemiyorsanız
+        <a href="https://wa.me/905516412065" target="_blank" rel="noopener">WhatsApp</a> veya
+        <a href="tel:+905516412065">0551 641 20 65</a> ile de sipariş verebilirsiniz.</p>
+    </form>
+  </div>
+</section>
+
 <footer class="ftr">
   <div class="container">
     <div class="ftr-g">
@@ -309,7 +387,7 @@
           <img src="../../images/logo.webp" alt="Doğal Domuz Yağı logosu" width="46" height="46" loading="lazy">
           <span>Doğal Domuz Yağı</span>
         </div>
-        <p>%100 saf ve doğal domuz yağı ürünleri. Cilt bakımı, yanık tedavisi ve hayvan sağlığı için etkili çözümler. 15+ yıllık güvenilir hizmet.</p>
+        <p>%100 saf ve doğal domuz yağı. Geleneksel yöntemle eritilir, katkı maddesi içermez. Harici kullanım için üretilir; 15+ yıllık güvenilir hizmet.</p>
       </div>
       <div>
         <h4>Ürünler</h4>
@@ -325,9 +403,16 @@
         </ul>
       </div>
     </div>
+    <div class="ftr-yasal">
+      <a href="../../gizlilik-politikasi/">Gizlilik Politikası</a>
+      <a href="../../iade-ve-cayma-hakki/">İade ve Cayma Hakkı</a>
+      <a href="../../teslimat-ve-odeme/">Teslimat ve Ödeme</a>
+    </div>
+    <div class="ftr-uyari">
+      <p><b>Sağlık uyarısı:</b> Ürünlerimiz kozmetik amaçlı, harici kullanım içindir. Gıda veya ilaç değildir; hastalıkların teşhis, tedavi veya önlenmesinde kullanılmaz. Sağlık sorunlarınız için hekiminize başvurun.</p>
+    </div>
     <div class="ftr-bt">
       <p>&copy; <span class="yil"></span> Doğal Domuz Yağı. Tüm hakları saklıdır.</p>
-      <p>Ürünlerimiz gıda değildir; yalnızca harici kullanım içindir.</p>
     </div>
   </div>
 </footer>
@@ -349,6 +434,6 @@
   <div class="lb-cap"></div>
 </div>
 
-<script src="../../assets/site.js?v=3" defer></script>
+<script src="../../assets/site.js?v=4" defer></script>
 </body>
 </html>

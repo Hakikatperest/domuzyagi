@@ -15,6 +15,16 @@ function tl(n){ return n.toLocaleString('tr-TR') + ' ₺'; }
 function $(s,c){ return (c||document).querySelector(s); }
 function $$(s,c){ return Array.prototype.slice.call((c||document).querySelectorAll(s)); }
 
+/* Seçilen siparişi form özetine yazar. Form sayfada yoksa sessizce geçer.
+   Betik defer ile yüklendiğinden DOM hazırdır; blok sırası önemli değil. */
+function siparisYaz(metin, tutar){
+  var oz = $('.of-ozet-v'), hid = $('.of-urun');
+  if(!oz || !hid) return;
+  var v = metin ? metin + (tutar ? '  —  Toplam: ' + tl(tutar) : '') : '';
+  hid.value = v;
+  oz.textContent = v || 'Henüz ürün seçilmedi';
+}
+
 /* ── yıl ── */
 $$('.yil').forEach(function(e){ e.textContent = new Date().getFullYear(); });
 
@@ -165,6 +175,8 @@ if(cartList){
       if(mb) $('.mbar-lbl', mb).textContent = ara ? 'Siparişi Gönder' : 'WhatsApp';
     }
 
+    siparisYaz(metin.join(' · ').replace(/•\s*/g, ''), ara);
+
     /* kart altı ara toplamlar */
     Object.keys(URUNLER).forEach(function(k){
       var el = $('.p-sub[data-sub="' + k + '"]');
@@ -264,6 +276,8 @@ if(buy){
       var ml = $('.mbar-lbl');
       if(ml) ml.textContent = 'Siparişi Gönder';
     }
+
+    siparisYaz(bAd + ' × ' + ad, tutar);
   };
 
   bEksi.addEventListener('click', function(){ bInp.value = (parseInt(bInp.value,10)||1) - 1; bCiz(); });
@@ -271,5 +285,86 @@ if(buy){
   bInp.addEventListener('input', bCiz);
   bInp.addEventListener('blur',  bCiz);
   bCiz();
+}
+
+/* ── sipariş formu ── */
+var form = $('.oform');
+if(form){
+  var urunEl  = $('.of-urun', form);
+  var durum   = $('.of-durum', form);
+  var gonder  = $('.of-gonder', form);
+  var kvkk    = $('.of-kvkk', form);
+  var uzak    = form.getAttribute('action');   /* form servisi tanımlı mı */
+
+  var alanlar = $$('.of-f', form);
+
+  var dogrula = function(){
+    var ilkHata = null;
+    alanlar.forEach(function(f){
+      var g = $('input', f) || $('textarea', f);
+      if(!g) return;
+      /* zorunlu olmayan alanlar boşsa atlanır, doluysa formatı yine denetlenir */
+      if(!g.required && !g.value.trim()){ f.classList.remove('err'); return; }
+      var bos = g.required && !g.value.trim();
+      var eposta = (g.type === 'email' && g.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(g.value.trim()));
+      var tel = (g.type === 'tel' && g.value.replace(/\D/g,'').length < 10);
+      var kotu = bos || eposta || tel;
+      f.classList.toggle('err', kotu);
+      if(kotu){
+        var h = $('.of-hata', f);
+        if(h) h.textContent = bos ? 'Bu alan zorunlu.'
+          : (eposta ? 'Geçerli bir e-posta yazın.' : 'Telefon numarası eksik görünüyor.');
+        if(!ilkHata) ilkHata = g;
+      }
+    });
+    var onay = $('input', kvkk);
+    kvkk.classList.toggle('err', !onay.checked);
+    if(!onay.checked){
+      $('.of-hata', kvkk).textContent = 'Devam etmek için onay vermelisiniz.';
+      if(!ilkHata) ilkHata = onay;
+    }
+    if(ilkHata){
+      ilkHata.focus({preventScroll:true});
+      window.scrollTo({top: ilkHata.getBoundingClientRect().top + window.scrollY - 120, behavior:'smooth'});
+    }
+    return !ilkHata;
+  };
+
+  alanlar.forEach(function(f){
+    var g = $('input', f) || $('textarea', f);
+    if(g) g.addEventListener('input', function(){ if(f.classList.contains('err')) f.classList.remove('err'); });
+  });
+  $('input', kvkk).addEventListener('change', function(){ kvkk.classList.remove('err'); });
+
+  form.addEventListener('submit', function(ev){
+    if($('.of-tuzak', form).value){ ev.preventDefault(); return; }   /* bot */
+    if(!dogrula()){ ev.preventDefault(); return; }
+
+    if(uzak){
+      gonder.disabled = true;
+      durum.className = 'of-durum on';
+      durum.textContent = 'Gönderiliyor…';
+      return;                       /* form servisi devralır */
+    }
+
+    /* Servis tanımlı değil → siparişi WhatsApp'a yapılandırılmış olarak taşı */
+    ev.preventDefault();
+    var al = function(n){ var g = form.querySelector('[name="'+n+'"]'); return g ? g.value.trim() : ''; };
+    var satir = [
+      'Merhaba, sipariş vermek istiyorum.',
+      '',
+      urunEl.value ? 'Sipariş: ' + urunEl.value : null,
+      'Ad Soyad: ' + al('Ad Soyad'),
+      'Telefon: '  + al('Telefon'),
+      'İl / İlçe: ' + al('İl / İlçe'),
+      al('E-posta') ? 'E-posta: ' + al('E-posta') : null,
+      'Adres: '    + al('Adres'),
+      al('Not') ? 'Not: ' + al('Not') : null
+    ].filter(Boolean).join('\n');
+
+    durum.className = 'of-durum on ok';
+    durum.textContent = 'Siparişiniz WhatsApp’a aktarılıyor — açılan pencereden gönder’e basmanız yeterli.';
+    window.open('https://wa.me/' + WA_NO + '?text=' + encodeURIComponent(satir), '_blank', 'noopener');
+  });
 }
 })();

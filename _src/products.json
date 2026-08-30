@@ -15,13 +15,15 @@
     "calisma_saati": "09:00 – 21:00",
     "para_birimi": "TRY",
     "ucretsiz_kargo_esigi": 2500,
-    "kargo_ucreti": null,
+    "kargo_ucreti": 200,
     "_kargo_notu": "null = feed üretilmez. Kullanıcı tutarı verince sayı yazılacak (örn. 150).",
     "kargo_servis": "Standart Kargo",
     "kargo_sure": "1-3 iş günü",
     "google_kategori_id": "6104",
     "google_kategori": "Health & Beauty > Personal Care > Cosmetics > Skin Care > Body Oil",
-    "ga_id": "AW-17831951098"
+    "ga_id": "AW-17831951098",
+    "form_endpoint": null,
+    "_form_notu": "null ise form WhatsApp mesajı olarak gönderilir. FormSubmit aktive edilince: https://formsubmit.co/<hash>"
   },
   "urunler": [
     {
