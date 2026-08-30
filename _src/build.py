@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 27                                   # assets/site.css?v=N
+VER  = 28                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -1236,17 +1236,19 @@ def anasayfa():
             if liste > kampanya['fiyat']:
                 kar = (f'<s class="hp-k-eski">{tl(liste)}</s>'
                        f'<span class="hp-k-kar">{tl(liste - kampanya["fiyat"])} kazanç</span>')
+        # Kampanya kartı da tıklanabilir: normal kutularla aynı aç/kapa mantığı.
         kmp_kart = f'''
-      <div class="hp-kmp">
-        <div class="hp-k-u">
-          <span class="hp-k-rz">{t(kampanya['rozet'] or 'Kampanya')}</span>
+      <button type="button" class="hp-kmp" data-hp="{kampanya['id']}" aria-pressed="false"
+              aria-label="{e(kampanya['tam_ad'])} sepete ekle">
+        <span class="hp-k-u">
+          <span class="hp-k-r"><span class="hp-k-rz">{t(kampanya['rozet'] or 'Kampanya')}</span><span class="hp-ad" data-hp-ad="{kampanya['id']}"></span></span>
           <span class="hp-k-ad">{t(kampanya['gramaj_etiket'])}</span>
-        </div>
-        <div class="hp-k-a">
+        </span>
+        <span class="hp-k-a">
           <b class="hp-k-yeni">{tl(kampanya['fiyat'])}</b>
           {kar}
-        </div>
-      </div>'''
+        </span>
+      </button>'''
 
     kargo_satiri = (f'      <p class="hero-kargo">{ikon("truck")} <b>Tüm siparişlerde</b> kargo bizden</p>'
                     if HEP_BEDAVA else

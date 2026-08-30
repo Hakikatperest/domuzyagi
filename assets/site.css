@@ -144,6 +144,11 @@ ul{list-style:none}
    biniyordu. Yer daima ayrılır (.hp-g padding), seçince satır kaymaz. */
 .hp-ad{position:absolute;top:8px;right:8px;display:none;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;background:var(--gold);color:#17100a;font-family:var(--baslik);font-size:.68rem;font-weight:800;border-radius:100px;line-height:1}
 .hp-item.is-secili .hp-ad{display:inline-flex}
+.hp-kmp:focus-visible{outline:2px solid var(--yesil-2);outline-offset:3px}
+.hp-kmp:hover{border-color:rgba(75,214,164,.8)}
+.hp-kmp.is-secili{border-color:rgba(75,214,164,.95);
+  background:linear-gradient(150deg,rgba(15,143,104,.55) 0%,rgba(10,107,78,.22) 100%)}
+.hp-kmp.is-secili .hp-ad{display:inline-flex}
 .hp-item:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2);transform:translateY(-2px)}
 .hp-item:active{transform:translateY(0)}
 .hp-item.is-secili:hover{background:rgba(201,162,74,.22);border-color:rgba(201,162,74,.75)}
@@ -829,6 +834,9 @@ img,svg,video,iframe{max-width:100%;height:auto}
 /* kampanya kendi kartında: ne aldığın, normal fiyatı ve kazancın açıkça yazar */
 .hp-kmp{
   position:relative;isolation:isolate;
+  /* <button>: tarayıcı varsayılanları sıfırlanır, kart görünümü korunur */
+  width:100%;text-align:left;font-family:inherit;color:inherit;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
   gap:10px 18px;margin:9px 0 18px;padding:13px 17px;border-radius:16px;
   background:linear-gradient(150deg,rgba(15,143,104,.30) 0%,rgba(10,107,78,.08) 100%);
@@ -844,6 +852,8 @@ img,svg,video,iframe{max-width:100%;height:auto}
 @keyframes kmpNefes{0%,100%{opacity:.26}50%{opacity:.9}}
 @media(prefers-reduced-motion:reduce){.hp-kmp::before{animation:none;opacity:.5}}
 .hp-k-u{display:flex;flex-direction:column;gap:6px;min-width:0}
+.hp-k-r{display:flex;align-items:center;gap:8px}
+.hp-k-r .hp-ad{position:static;background:var(--yesil-2);color:#04352a}
 .hp-k-rz{
   align-self:flex-start;font-size:.57rem;font-weight:800;letter-spacing:.12em;
   text-transform:uppercase;color:#04291d;padding:3px 10px;border-radius:100px;white-space:nowrap;

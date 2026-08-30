@@ -365,7 +365,7 @@ if(Object.keys(URUNLER).length){
 
   /* Hero fiyat şeridindeki kutular: sepette adedi olan altın çerçeveli görünür,
      sağ üstte adet rozeti çıkar. Kutular <button>, ekleme aşağıda bağlanıyor. */
-  var hpKutulari = $$('.hp-item[data-hp]');
+  var hpKutulari = $$('[data-hp]');
   function hpEsitle(){
     hpKutulari.forEach(function(b){
       var k = b.getAttribute('data-hp'), v = sepet[k] || 0;
@@ -461,7 +461,10 @@ if(Object.keys(URUNLER).length){
      kutu seçili hâle geçer ve alt şeritteki sepet özeti kendiliğinden güncellenir. */
   hpKutulari.forEach(function(b){
     b.addEventListener('click', function(){
-      uygula(b.getAttribute('data-hp'), (sepet[b.getAttribute('data-hp')] || 0) + 1);
+      /* Aç/kapa: ilk tık sepete 1 adet ekler, ikinci tık ürünü tamamen çıkarır.
+         Adet artırma sepette ve ürün kartında yapılıyor, burada değil. */
+      var k = b.getAttribute('data-hp');
+      uygula(k, sepet[k] ? 0 : 1);
     });
   });
 
