@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 12                                   # assets/site.css?v=N
+VER  = 13                                   # assets/site.css?v=N
 
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
@@ -423,6 +423,14 @@ def siparis_bolumu(kok='/', tekil=False, aktif=None):
 
 
 # ─────────────────────────── ürün kartı (anasayfa) ───────────────────────────
+def kart_basligi(u):
+    """Kartta ve listelerde görünen ad: '50 Gram Domuz Yağı'.
+    Gramaj etiketinden türer, ayrı bir alan tutulmaz."""
+    g = u['gramaj_etiket'].split(' —')[0].strip()
+    g = re.sub(r'\b(gram|kilogram|gr|kg)\b', lambda m: m.group(1).capitalize(), g)
+    return f"{g} {u['ad']}"
+
+
 def urun_karti(u):
     sinif  = 'prod hot fx' if u['one_cikan'] else 'prod fx'
     rozet  = ''
@@ -438,9 +446,8 @@ def urun_karti(u):
           <span class="p-zoom">{ikon("right")}</span>
         </a>
         <div class="p-body">
-          <h3><a href="urun/{u['slug']}/">{t(u['ad'])}</a></h3>
-          <div class="p-gram">{t(u['gramaj_etiket'])}</div>
-          <div class="p-price"><span class="v">{tl(u['fiyat'])}</span><span class="u">{birim(u)}</span></div>
+          <h3><a href="urun/{u['slug']}/">{t(kart_basligi(u))}</a></h3>
+          <div class="p-price"><span class="v">{tl(u['fiyat'])}</span></div>
           <p class="p-desc">{t(u['ozet'])}</p>
           <ul class="p-feat">
             {ozel}
