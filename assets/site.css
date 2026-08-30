@@ -390,9 +390,9 @@ ul{list-style:none}
 .mbar-ad{font-size:.85rem;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mbar-alt{font-size:.72rem;color:var(--tx-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
 .mbar-v{font-family:var(--serif);font-size:1.24rem;font-weight:700;color:var(--ink);line-height:1;white-space:nowrap}
-.mbar-ok{display:flex;color:var(--tx-3);transition:transform .3s var(--ease)}
+.mbar-ok{display:flex;color:var(--tx-3);transition:transform .3s var(--ease);transform:rotate(180deg)}
 .mbar-ok .ico{width:16px;height:16px}
-.mbar-sum[aria-expanded="true"] .mbar-ok{transform:rotate(180deg)}
+.mbar-sum[aria-expanded="true"] .mbar-ok{transform:rotate(0deg)}
 
 /* açılır sepet listesi */
 .mbar-list{max-height:min(44vh,290px);overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--paper-2);border-bottom:1px solid var(--line-2)}
