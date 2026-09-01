@@ -21,6 +21,10 @@ KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
 VER  = 42                                   # assets/site.css?v=N
 
+# Web4Medya tıklama takip betiği — TÜM sayfaların <head>'ine girer.
+# index.html elle yönetildiği için oradaki kopyayı da birlikte güncelle.
+W4T  = '<script async src="https://www.web4medya.com/w4t.js" data-key="w4-f5jtux0nwu9nzkaz"></script>'
+
 with open(os.path.join(SRC, 'products.json'), encoding='utf-8') as f:
     VERI = json.load(f)
 S       = VERI['site']
@@ -703,6 +707,7 @@ def urun_sayfasi(u):
 <script type="application/ld+json">
 {json.dumps(semalar, ensure_ascii=False, indent=2)}
 </script>
+{W4T}
 </head>
 <body>
 
@@ -856,6 +861,7 @@ def bilgi_sayfasi(slug, baslik, ozet, govde, indeksle=True):
 <script type="application/ld+json">
 {json.dumps(semalar, ensure_ascii=False, indent=2)}
 </script>
+{W4T}
 </head>
 <body>
 
@@ -1378,6 +1384,7 @@ def makale_sayfasi(slug):
 <script type="application/ld+json">
 {json.dumps(semalar, ensure_ascii=False, indent=2)}
 </script>
+{W4T}
 </head>
 <body>
 
