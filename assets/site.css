@@ -426,6 +426,9 @@ ul{list-style:none}
 
 /* ── SSS ── */
 .faq-w{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq-cta{max-width:900px;margin:26px auto 0;text-align:center;font-size:1.05rem;color:var(--tx-2)}
+.faq-cta a{color:var(--gold);font-weight:700;text-decoration:none;white-space:nowrap;border-bottom:1px solid rgba(201,162,74,.45)}
+.faq-cta a:hover{color:var(--gold-2);border-bottom-color:var(--gold-2)}
 .faq{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;transition:.25s}
 .faq.open{border-color:rgba(201,162,74,.5);box-shadow:var(--sh)}
 .faq-q{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:20px 24px;cursor:pointer;transition:.25s;background:none;border:none;width:100%;text-align:left;font-family:var(--govde)}

@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 42                                   # assets/site.css?v=N
+VER  = 43                                   # assets/site.css?v=N
 
 # Web4Medya tıklama takip betiği — TÜM sayfaların <head>'ine girer.
 # index.html elle yönetildiği için oradaki kopyayı da birlikte güncelle.
@@ -513,6 +513,56 @@ def paket_kazanci(u):
             'yuzde': round((liste - u['fiyat']) / liste * 100)}
 
 
+
+def urun_icerik(u):
+    """Ürün sayfasının SEO gövdesi: _src/urun_icerik/<slug>.html.
+    Yer tutucular üreticiden dolar (fiyat ve yıl metne ELLE yazılmaz, bayatlamaz).
+    İkinci dönen değer, soru başlıklı H2'lerden türeyen SSS listesi → FAQPage şeması.
+    Dosya yoksa sessizce boş döner; ürün eklemek sayfayı bozmaz."""
+    yol = os.path.join(SRC, 'urun_icerik', u['slug'] + '.html')
+    if not os.path.exists(yol):
+        return '', []
+    s = open(yol, encoding='utf-8').read().strip()
+    kz = paket_kazanci(u)
+    for k, v in {
+        '[KOK]':     '../../',
+        '[FIYAT]':   tl(u['fiyat']),
+        '[YIL]':     str(datetime.now().year),
+        '[TELEFON]': S['telefon_gosterim'],
+        '[TEL]':     S['telefon'],
+        '[WA]':      wa(f"Merhaba, {u['tam_ad']} ({tl(u['fiyat'])}) sipariş etmek istiyorum."),
+        '[LISTE]':   tl(kz['liste'])  if kz else '',
+        '[KAZANC]':  tl(kz['kazanc']) if kz else '',
+    }.items():
+        s = s.replace(k, v)
+
+    # FAQPage'e YALNIZ soru başlıkları girer. "Domuz Yağı Satan Yerler" gibi düz
+    # başlıklar soru değil; şemaya sokmak yapılandırılmış veriyi yanlış beyan eder.
+    sss = []
+    for bas, govde in re.findall(r'<h2>(.*?)</h2>\s*(.*?)(?=\n<h2>|\Z)', s, re.S):
+        duz = html.unescape(re.sub(r'<[^>]+>', '', bas)).strip()
+        if not duz.endswith('?'):
+            continue
+        metin = re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', ' ', govde))).strip()
+        if metin:
+            sss.append((duz, metin))
+    return s, sss
+
+
+def makale_serit(kok='../../', haric=('domuz-yagi-fiyatlari',)):
+    """Ürün sayfasından makalelere giden bağlantı şeridi. Makale sayfalarında
+    ürün mini şeridi zaten vardı; bu onun ters yönü — iç bağlantı iki taraflı olsun.
+    ⚠ .art-g ızgarası 4 sütun: 5 kart basılırsa son kart tek başına satırda kalır.
+    Fiyatlar sayfası varsayılan olarak elenir — ürün gövdesinde zaten bağlantısı var."""
+    liste = [x for x in MAKALE_SIRA if x not in haric]
+    return "".join(f'''
+        <a class="art" href="{kok}{x}/">
+          <div class="art-i"><img src="{kok}images/{MAKALE_KART[x][1]}" alt="{e(MAKALE_KART[x][0])}" {olcu(MAKALE_KART[x][1])} loading="lazy"></div>
+          <div class="art-b"><h3>{t(MAKALE_KART[x][0])}</h3>
+          <span class="art-l">Devamını Oku {ikon("right")}</span></div>
+        </a>''' for x in liste)
+
+
 def urun_karti(u):
     sinif  = 'prod hot fx' if u['one_cikan'] else 'prod fx'
     rozet  = ''
@@ -615,6 +665,14 @@ def urun_semasi(u, tekil=False):
 
 # ─────────────────────────── ürün sayfası ───────────────────────────
 def urun_sayfasi(u):
+    # Görünen SEO başlığı ile Merchant Center ürün adı AYRI tutulur:
+    # h1/seo_title 'Satın Al' taşır, tam_ad/feed_baslik taşımaz (feed reddi riski).
+    ic_govde, ic_sss = urun_icerik(u)
+    h1 = u.get('h1') or u['tam_ad']
+    # SEO gövdesi zaten sipariş adımlarını anlatıyor; ikisi birden basılırsa
+    # aynı başlık iki kez çıkar. İçerik dosyası yoksa eski blok devreye girer.
+    siparis_blok = '' if ic_govde else f'''<h2>Nasıl Sipariş Verilir?</h2>
+      <p>Üyelik veya form doldurmak gerekmez. Adedi seçip <strong>WhatsApp ile Sipariş Ver</strong> butonuna basın — siparişiniz mesaja hazır olarak gelir. Dilerseniz <a href="tel:{S['telefon']}">{S['telefon_gosterim']}</a> numarasını arayarak doğrudan sipariş verebilirsiniz. Her gün {S['calisma_saati']} arası ulaşabilirsiniz.</p>'''
     digerleri = [x for x in URUNLER if x['id'] != u['id']]
     kart = "".join(f'''
         <a class="rel" href="../{x['slug']}/">
@@ -643,10 +701,17 @@ def urun_sayfasi(u):
 
     mesaj = f"Merhaba, {u['ad']} {u['gramaj_etiket']} ({tl(u['fiyat'])}) sipariş etmek istiyorum."
 
+    sss_sema = [{
+        "@type": "FAQPage",
+        "mainEntity": [{"@type": "Question", "name": q,
+                        "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in ic_sss],
+    }] if ic_sss else []
+
     semalar = {
         "@context": "https://schema.org",
         "@graph": [
             urun_semasi(u),
+            *sss_sema,
             {
                 "@type": "BreadcrumbList",
                 "itemListElement": [
@@ -668,14 +733,18 @@ def urun_sayfasi(u):
         ],
     }
 
-    baslik = f"{u['tam_ad']} — {tl(u['fiyat'])} | {S['ad']}"
+    baslik   = (u.get('seo_title') or f"{u['tam_ad']} — {tl(u['fiyat'])} | {S['ad']}"
+                ).replace('[FIYAT]', tl(u['fiyat']))
+    aciklama = (u.get('seo_desc') or
+                f"{u['feed_aciklama']} Fiyat: {tl(u['fiyat'])}. Telefon veya WhatsApp ile sipariş."
+                ).replace('[FIYAT]', tl(u['fiyat']))
     return f'''<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{t(baslik)}</title>
-<meta name="description" content="{e(u['feed_aciklama'])} Fiyat: {tl(u['fiyat'])}. Telefon veya WhatsApp ile sipariş.">
+<meta name="description" content="{e(aciklama)}">
 <link rel="canonical" href="{URL}/urun/{u['slug']}/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#132428">
@@ -684,8 +753,8 @@ def urun_sayfasi(u):
 <meta property="og:type" content="product">
 <meta property="og:site_name" content="{e(S['ad'])}">
 <meta property="og:locale" content="tr_TR">
-<meta property="og:title" content="{e(u['tam_ad'])} — {tl(u['fiyat'])}">
-<meta property="og:description" content="{e(u['feed_aciklama'])}">
+<meta property="og:title" content="{e(h1)} — {tl(u['fiyat'])}">
+<meta property="og:description" content="{e(aciklama)}">
 <meta property="og:url" content="{URL}/urun/{u['slug']}/">
 <meta property="og:image" content="{URL}/images/{u['gorsel']}">
 <meta property="product:price:amount" content="{u['fiyat']}">
@@ -737,7 +806,7 @@ def urun_sayfasi(u):
 
       <div class="pdp-info">
         {pdp_rozet}
-        <h1>{t(u['tam_ad'])}</h1>
+        <h1>{t(h1)}</h1>
         <div class="pdp-price">
           <span class="v">{tl(u['fiyat'])}</span>
         </div>
@@ -797,8 +866,8 @@ def urun_sayfasi(u):
         </table>
       </div>
 
-      <h2>Nasıl Sipariş Verilir?</h2>
-      <p>Üyelik veya form doldurmak gerekmez. Adedi seçip <strong>WhatsApp ile Sipariş Ver</strong> butonuna basın — siparişiniz mesaja hazır olarak gelir. Dilerseniz <a href="tel:{S['telefon']}">{S['telefon_gosterim']}</a> numarasını arayarak doğrudan sipariş verebilirsiniz. Her gün {S['calisma_saati']} arası ulaşabilirsiniz.</p>
+      {ic_govde}
+      {siparis_blok}
 
       <div class="note">
         <p><b>Önemli:</b> Bu ürün kozmetik amaçlı, harici kullanım içindir. Gıda veya ilaç değildir; hastalıkların teşhis, tedavi veya önlenmesinde kullanılmaz. İlk kullanımda küçük bir alanda test etmenizi öneririz.</p>
@@ -819,7 +888,17 @@ def urun_sayfasi(u):
   </div>
 </section>
 
-
+<section class="sec">
+  <div class="container">
+    <div class="sec-h">
+      <span class="tag">Bilgi Rehberleri</span>
+      <h2>Domuz Yağı Hakkında Merak Edilenler</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="art-g">{makale_serit()}
+    </div>
+  </div>
+</section>
 
 {footer('../../')}
 
@@ -1416,8 +1495,8 @@ def makale_sayfasi(slug):
 <section class="sec sec-cream">
   <div class="container">
     <div class="sec-h">
-      <span class="tag">Satın Al</span>
-      <h2>Domuz Yağı Fiyatları</h2>
+      <span class="tag">Ürünlerimiz</span>
+      <h2>Domuz Yağı Satın Al</h2>
       <p>%100 saf ve doğal. {"Tüm siparişlerde kargo bizden." if HEP_BEDAVA else f"{tl(ESIK)} ve üzeri siparişlerde kargo bizden."}</p>
       <div class="rule"></div>
     </div>
