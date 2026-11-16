@@ -471,6 +471,8 @@ ul{list-style:none}
 .ftr-c .ico{width:15px;height:15px;color:var(--gold-3);flex-shrink:0}
 .ftr-bt{border-top:1px solid rgba(255,255,255,.1);padding:26px 0 30px;text-align:center}
 .ftr-bt p{font-size:.8rem;color:rgba(255,255,255,.44);margin-bottom:6px}
+.ftr-imza a{color:rgba(255,255,255,.72);font-weight:600;transition:.2s}
+.ftr-imza a:hover{color:var(--gold-2)}
 @media(max-width:820px){.ftr-g{grid-template-columns:1fr;gap:34px}}
 
 /* ── sabit butonlar / mobil bar ── */

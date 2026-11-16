@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 
 KOK  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC  = os.path.join(KOK, '_src')
-VER  = 43                                   # assets/site.css?v=N
+VER  = 44                                   # assets/site.css?v=N
 
 # Web4Medya tıklama takip betiği — TÜM sayfaların <head>'ine girer.
 # index.html elle yönetildiği için oradaki kopyayı da birlikte güncelle.
@@ -277,6 +277,7 @@ def footer(kok='/'):
     </div>
     <div class="ftr-bt">
       <p>&copy; <span class="yil"></span> {t(S['ad'])}. Tüm hakları saklıdır.</p>
+      <p class="ftr-imza">Web Tasarım: <a href="https://www.web4medya.com/web-tasarim" target="_blank" rel="noopener" title="Web4Medya web tasarım">Web4Medya</a></p>
     </div>
   </div>
 </footer>'''
